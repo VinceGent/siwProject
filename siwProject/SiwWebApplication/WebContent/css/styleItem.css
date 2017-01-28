@@ -1,0 +1,372 @@
+@CHARSET "ISO-8859-1";
+
+.container {
+	height: 90%;
+	width: 90%;
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-right: auto;
+	margin-left: auto;
+	padding-top: 15px;
+	padding-right: 15px;
+	padding-right: 15px;
+}
+
+li.etalage_small_thumbs {
+	width: 250px !important;
+}
+
+#etalage .etalage_thumb {
+	background: white url(../images/loading.gif) center no-repeat;
+	border: 1px solid #EDEDED;
+}
+
+Large thumbnail - image (in case you want to add a border around the image within the frame
+	 ) #etalage .etalage_thumb_image {
+	
+}
+
+Small thumbnails:
+#etalage .etalage_small_thumbs li {
+	border: 1px solid #ddd;
+	margin: 10px;
+	cursor: pointer;
+}
+
+The one on the left that makes them slide
+#etalage ul li.etalage_smallthumb_first {
+	
+}
+
+The one on the right that makes them slide
+#etalage ul li.etalage_smallthumb_last {
+	
+}
+
+The currently active one
+#etalage ul li.etalage_smallthumb_active {
+	
+}
+
+Zoomed image area:
+#etalage .etalage_zoom_area, .etalage_zoom_area {
+	background: white url(../images/loading.gif) center no-repeat;
+}
+
+Magnifier area (thumbnail hovering rectangle ):
+#etalage .etalage_magnifier {
+	background: white;
+	border: 1px solid #bbb;
+}
+
+Icon that will apear at the left bottom of the large thumbnail (optional
+	 ):
+#etalage .etalage_icon {
+	background: url(../images/zoom.png) no-repeat;
+	width: 104px;
+	height: 104px;
+	border: 1px solid #EDEDED;
+}
+
+Hint that will apear at the top right of the large thumbnail (optional 
+	 ):
+#etalage .etalage_hint {
+	background: url(../images/hint.gif) no-repeat;
+	width: 130px;
+	height: 57px;
+}
+
+Description area (optional ) #etalage .etalage_description {
+	background: white;
+	font-style: italic;
+	margin: 10px;
+	padding: 6px 10px;
+}
+
+.etalage, .etalage_thumb, .etalage_thumb_image, .etalage_source_image,
+	.etalage_zoom_preview, .etalage_icon, .etalage_hint {
+	display: block;
+}
+
+.etalage_source_image {
+	display: block !important;
+}
+
+.etalage, .etalage ul, .etalage li, .etalage img, .etalage_hint,
+	.etalage_icon, .etalage_description {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	list-style: none
+}
+
+.etalage, .etalage_magnifier div, .etalage_magnifier div img,
+	.etalage_small_thumbs ul, ul .etalage_small_thumbs li,
+	.etalage_zoom_area div, .etalage_zoom_img {
+	position: relative
+}
+
+.etalage img, .etalage li {
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+	-webkit-user-drag: none;
+	-moz-user-drag: none;
+	user-drag: none
+}
+
+.etalage, .etalage_small_thumbs li {
+	float: left
+}
+
+.etalage_small_thumbs li img {
+	width: 60px !important;
+	height: 100% !important;
+}
+
+.etalage_small_thumbs {
+	width: 100% !important;
+}
+
+.etalage_right {
+	float: right
+}
+
+.etalage li {
+	position: absolute
+}
+
+.etalage img {
+	vertical-align: bottom;
+	max-width: none;
+}
+
+.etalage_thumb_image {
+	width: 100% !important;
+}
+
+.etalage_zoom_area div {
+	width: 530px !important;
+}
+
+.etalage_magnifier {
+	cursor: default
+}
+
+.etalage_magnifier div, .etalage_small_thumbs {
+	overflow: hidden
+}
+
+.etalage_magnifier div img {
+	display: block;
+}
+
+.etalage_icon, .etalage_hint {
+	cursor: default;
+	width: 0;
+	height: 0;
+	overflow: hidden
+}
+
+.etalage_small_thumbs li.vertical {
+	float: none
+}
+
+.etalage_zoom_area {
+	z-index: 996
+}
+
+.etalage_zoom_area div {
+	overflow: hidden;
+	z-index: 997
+}
+
+.etalage_zoom_preview {
+	position: absolute;
+	z-index: 998
+}
+
+.etalage_zoom_img, .etalage_hint {
+	z-index: 999
+}
+
+.etalage {
+	direction: ltr;
+}
+
+div.etalage_description {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	z-index: 999
+}
+
+div.etalage_description.rtl {
+	direction: rtl;
+	text-align: right
+}
+
+.available {
+	padding: 1em 0;
+}
+
+.available h6 {
+	font-size: 1.2em;
+	padding: 0 0 0.7em;
+}
+
+.available h6 {
+	color: #d2232a;
+	font-size: 1.4em;
+	padding: 0 0 1em;
+}
+
+.available ul li {
+	display: inline-block;
+	padding: 0 0.5em 0 0;
+	color: #4c4c4c;
+	font-size: 0.9em;
+}
+
+.available ul li select {
+	outline: none;
+	padding: 3px;
+}
+
+.available {
+	padding: 2em 0 1em;
+}
+
+.review {
+	float: left;
+	padding: 0 1em;
+}
+
+.star a {
+	text-decoration: none;
+	font-size: 1em;
+}
+
+.star a {
+	font-size: 0.87em;
+}
+
+.star {
+	padding: 1em 0;
+}
+
+.star ul {
+	float: left;
+}
+
+.star ul li {
+	display: inline-block;
+	vertical-align: sub;
+}
+
+.star ul li i {
+	height: 16px;
+	width: 16px;
+	background: url("../images/img-sprite.png") no-repeat -386px -114px;
+	display: inline-block;
+}
+
+.single-para h4 {
+	font-size: 1.5em;
+	color: #747272;
+	line-height: 1.5em;
+	font-weight: 600;
+}
+
+.single-para p {
+	font-size: 1em;
+	color: #747272;
+	line-height: 1.8em;
+}
+
+.single-para h4 {
+	font-size: 1.1em;
+}
+
+.single-para p {
+	font-size: 0.9em;
+	padding: 0.3em 0 0;
+}
+
+label.add-to {
+	display: block;
+	font-size: 2em;
+	color: #d2232a;
+}
+
+label.add-to {
+	font-size: 1.5em;
+}
+
+a.cart {
+	padding: 7px;
+	color: #FFF;
+	background: #d2232a;
+	margin: 1.5em 0 0;
+	font-size: 1em;
+	display: block;
+	line-height: 1.6em;
+	width: 32%;
+	text-align: center;
+	text-decoration: none;
+}
+
+a.cart:hover {
+	background: #0087d5;
+}
+
+#list_single_image {
+	position: relative;
+}
+
+#etalage {
+	display: block;
+	margin: 0;
+	padding-right: 12%;
+}
+
+#div-etalage {
+	position: relative;
+	width: 70% !important;
+	height: 30% !important;
+	margin: 0;
+	float: left;
+	padding-left: 3%;
+}
+
+#etalage li {
+	width: 10%;
+	display: inline-block;
+	vertical-align: top;
+	float: left;
+	margin-left: 1%;
+	padding: 0;
+	display: inline-block;
+}
+
+#etalage li img {
+	width: 100%;
+	height: 100%;
+}
+
+#div-description{
+position: relative;
+padding-top: 10%;
+width: 100%;
+height: 40%;
+padding-left: 50%;
+padding-bottom: 4%
+}
+
+#description-item{
+	width: 90%;
+	padding-left: 20%;
+	padding-bottom: 15%;
+}
