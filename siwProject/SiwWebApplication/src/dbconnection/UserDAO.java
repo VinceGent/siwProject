@@ -208,6 +208,7 @@ public class UserDAO extends DbManager {
 							mResultSet.getString("surname"), mResultSet.getString("address"),
 							mResultSet.getString("telephone"));
 				}
+				
 				closeConnection();
 			} catch (SQLException e) {
 				e.printStackTrace();
