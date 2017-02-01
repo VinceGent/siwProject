@@ -1,5 +1,5 @@
 package elements;
 
 public enum Sales_type {
-COMPRAORA,ASTA
+compraora,asta
 }

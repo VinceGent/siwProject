@@ -1,3 +1,6 @@
+<%@page import="elements.Sales_type"%>
+<%@page import="com.sun.xml.internal.ws.policy.jaxws.SafePolicyReader"%>
+<%@page import="elements.Insertion"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ page import="java.io.*,java.util.*"%>
@@ -25,7 +28,7 @@
 <!-- Gem jQuery -->
 
 </head>
-<body>
+<body >
 	<nav class="navbar navbar-inverse navbar-fixed-top">
 	<div class="container-fluid">
 		<!-- Brand and toggle get grouped for better mobile display -->
@@ -197,43 +200,46 @@
 					data-zoom-image="images/si1.jpg"></li>
 			</ul>
 		</div>
-
+		<%
+			Insertion insertion = (Insertion) request.getAttribute("insertion");
+		%>
 		<div class="col-md-7 single-top-in">
 			<div class="single-para">
-				<h1 id="name-item">NOME</h1>
-				<h3 id="category-item">Categoria:</h3>
+				<h4 id="name-item">
+					NOME:
+					<%
+					out.print(insertion.getName());
+				%>
+				</h4>
+				<h4 id="category-item">Categoria:</h4>
 
 				<h4 id="insertion-date">
 					Data inserzione:
 					<%
-					Date d = new Date();
-					out.print(d);
+					out.print(insertion.getInsertion_date());
 				%>
 				</h4>
 				<h4 id="expiration-date">
 					Data scadenza:
 					<%
-					Date c = new Date();
-					out.print(c);
+					out.print(insertion.getExpiration_date());
 				%>
 				</h4>
 				<h4 id="sales-type">
 					Tipo vendita:
-					<%
-					
-				%>
+			
 				</h4>
 				<h4 id="quantity">
 					Quantità rimanente:
 					<%
-					
+					out.print(insertion.getAmount());
 				%>
 				</h4>
 
 				<h4 id="price">
 					Prezzo:
 					<%
-					
+					out.print(insertion.getPrice());
 				%>
 				</h4>
 
@@ -252,33 +258,16 @@
 					<div class="clearfix"></div>
 				</div>
 
-
-
-				<div class="available">
-					<h6>Available Options :</h6>
-					<ul>
-
-						<li>Size:<select>
-								<option>Large</option>
-								<option>Medium</option>
-								<option>small</option>
-								<option>Large</option>
-								<option>small</option>
-						</select></li>
-						<li>Cost: <select>
-								<option>U.S.Dollar</option>
-								<option>Euro</option>
-						</select></li>
+				<div class="row">
+					<ul class="button-list">
+						<li><a id="buyNow" class="cart ">Compra subito</a></li>
+						<li><a id="auctionSale" class="cart ">piazza offerta</a></li>
 					</ul>
 				</div>
-
-				<a href="#" class="cart ">More details</a>
-
-
 			</div>
 		</div>
 
-		<div id="div-etalage">
+		<div id="div-etalage" class="col-md-6">
 			<ul id="etalage">
 				<li><img class="etalage_thumb_image img-responsive"
 					src="images/si1.jpg" alt=""></li>
@@ -292,13 +281,41 @@
 		</div>
 
 	</div>
-	<div id="div-description">
-		<h1>Descrizione:</h1>
-	</div>
-	<div>
-		<p id="description-item">bla bla bla
-			asaassssssssssssssssssssssssss sssssssssssssssssssssssssssss ssssssss sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</p>
+	<div class="panel panel-default container">
+		<div class="single-para panel-heading" id="div-description">
+			<h4>Descrizione:</h4>
+		</div>
+		<div class="panel-body">
+			<p id="description-item">
+				<%
+					out.print(insertion.getDescription());
+				%>
+			</p>
+		</div>
 	</div>
 
+					<%
+					if (insertion.getSales_type().equals(Sales_type.compraora)) {
+				%>
+					<script type="text/javascript">
+						buyNow();
+					</script>
+					<%
+						} else {
+							out.print(insertion.getSales_type().toString().toUpperCase());
+					%>
+					<script type="text/javascript">
+						auctionSale();
+					</script>
+					<%
+						}
+					%>
+					
+<script type="text/javascript">
+var id_item=<%=insertion.getId_item()%>;
+
+
+</script>
+					
 </body>
 </html>

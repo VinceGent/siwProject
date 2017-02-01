@@ -18,7 +18,7 @@ import elements.UserInformation;
 
 public class UserDAO extends DbManager {
 
-	public UserDAO() {
+	private UserDAO() {
 		super();
 	}
 
@@ -60,6 +60,24 @@ public class UserDAO extends DbManager {
 		}
 
 		return user;
+	}
+	public int getIdByUsername(String username) {
+		int id =-1;
+		final String query = "select id from users where users.username=?;";
+		try {
+			final Connection mConnection = createConnection();
+			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
+			mPreparedStatement.setString(1, username);
+			final ResultSet mResultSet = mPreparedStatement.executeQuery();
+			while (mResultSet.next()) {
+				id= Integer.parseInt(mResultSet.getString("id"));
+			}
+			closeConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return id;
 	}
 
 	/* insert user in database */
@@ -105,13 +123,15 @@ public class UserDAO extends DbManager {
 		}
 	}
 
+	
+	
 	public void addNewInsertion(final int id_user, final String name, final Date insertion_date,
 			final Date expiration_date, final int amount, final Sales_type sales_type, final float price,
 			final String description) {
 		Insertion insertion = new Insertion(id_user, name, insertion_date, expiration_date, amount, sales_type, price,
 				description);
 
-		String query = "INSERT INTO inserzione (id_user, name, insertion_date, expiration_date, amount, sales_type, price, description) VALUES (?,?,?,?,?,?,?,?);";
+		String query = "INSERT INTO insertion (id_user, name, insertion_date, expiration_date, amount, sales_type, price, description) VALUES (?,?,?,?,?,?,?,?);";
 		try {
 			final Connection mConnection = createConnection();
 			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
@@ -191,6 +211,7 @@ public class UserDAO extends DbManager {
 		return insertion;
 
 	}
+	
 
 	public UserInformation getUserInfo(String username) {
 
@@ -219,13 +240,27 @@ public class UserDAO extends DbManager {
 		return userinfo;
 	}
 
-	public static void main(String[] args) {
-		UserDAO db = new UserDAO();
-		 db.addUser("ciccio", "cicc@hot.it", "porco");
-		 db.addUserInfo("ciccio", "francesco", "rossi", "via della pace 17",
-		 "333123465");
-		UserInformation info = db.getUserInfo("ciccio");
-		System.out.println(info.getName() + "   " + info.getId());
-		
+	
+	public static UserDAO getInstance()
+	{
+		if(instance==null)
+			instance=new UserDAO();
+		return instance;
 	}
+	private static UserDAO instance=null;
+	
+	
+	
+	
+//	public static void main(String[] args) {
+//		UserDAO db = new UserDAO();
+////		 db.addUser("ciccio", "cicc@hot.it", "porco");
+////		 db.addUserInfo("ciccio", "francesco", "rossi", "via della pace 17",
+////		 "333123465");
+////		UserInformation info = db.getUserInfo("ciccio");
+////		System.out.println(info.getName() + "   " + info.getId());
+//	db.addNewInsertion(1, "compueter", new Date(), new Date(2017, 3, 2), 30, Sales_type.COMPRAORA, 20, "sta ceppa sjsja kakka kdjlaksdjlakjsdlk lakjdl sld    kjkalksda ask sdkasdkasd adk akasdklks l laks dlfkaslf lskasdfkaiasld als   km lk sks ,s ls m ksl kmlksm lkmslcsòldm òmsm lsk m!!!!");
+//System.out.println(db.getIdByUsername("ciccio"));		
+//		
+//	}
 }

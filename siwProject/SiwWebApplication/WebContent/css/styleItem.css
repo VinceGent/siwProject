@@ -3,13 +3,14 @@
 .container {
 	height: 90%;
 	width: 90%;
-	padding-right: 15px;
+	padding-right: 4%;
 	padding-left: 15px;
 	margin-right: auto;
 	margin-left: auto;
 	padding-top: 15px;
 	padding-right: 15px;
 	padding-right: 15px;
+	margin-bottom: 2%;
 }
 
 li.etalage_small_thumbs {
@@ -281,18 +282,9 @@ div.etalage_description.rtl {
 }
 
 .single-para p {
-	font-size: 1em;
+	font-size: 1.5em;
 	color: #747272;
 	line-height: 1.8em;
-}
-
-.single-para h4 {
-	font-size: 1.1em;
-}
-
-.single-para p {
-	font-size: 0.9em;
-	padding: 0.3em 0 0;
 }
 
 label.add-to {
@@ -356,17 +348,23 @@ a.cart:hover {
 	height: 100%;
 }
 
-#div-description{
-position: relative;
-padding-top: 10%;
-width: 100%;
-height: 40%;
-padding-left: 50%;
-padding-bottom: 4%
+#div-description {
+	position: relative;
+	width: 100%;
+	height: 20%;
+	text-align: center;
 }
 
-#description-item{
-	width: 90%;
-	padding-left: 20%;
-	padding-bottom: 15%;
+#description-item {
+	width: 100%;
+	padding-left: 5%;
+	padding-bottom: 0%;
+	padding-right: 5%;
+}
+
+.button-list li a {
+	margin: 0 3% 0 3%;
+	float: left;
+	list-style: none;
+	display: inline;
 }
