@@ -19,9 +19,10 @@
 <script src="scripts/main.js"></script>
 <script src="scripts/registrationValidation.js"></script>
 <!-- Gem jQuery -->
-
+<script type="text/javascript" src="scripts/script.js"></script>
 </head>
 <body>
+
 	<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container-fluid">
 			<!-- Brand and toggle get grouped for better mobile display -->
@@ -33,8 +34,10 @@
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Brand</a>
+
+				<a class="navbar-brand" id="brand" onclick="goToItemSelected()">Brand</a>
 			</div>
+			
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse"

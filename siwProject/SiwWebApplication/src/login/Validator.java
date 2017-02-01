@@ -29,8 +29,7 @@ public class Validator extends HttpServlet {
 	 */
 	public Validator() {
 		super();
-		userDB = new UserDAO();
-	}
+		userDB = UserDAO.getInstance();	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
