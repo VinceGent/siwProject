@@ -22,7 +22,7 @@ public class AddUser extends HttpServlet {
      */
     public AddUser() {
         super();
-        userdb = new UserDAO();
+        userdb = UserDAO.getInstance();
     }
 
 	/**
