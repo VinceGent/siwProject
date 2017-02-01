@@ -25,7 +25,7 @@ public class UserDAO extends DbManager {
 	public User getUserByEmail(String email) {
 		User user = null;
 		final String query = "select * from users where users.email = ?;";
-		try {
+		try { 
 			final Connection mConnection = createConnection();
 			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
 			mPreparedStatement.setString(1, email);
