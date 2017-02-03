@@ -1,4 +1,4 @@
-package login;
+package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,43 +14,24 @@ import javax.servlet.http.HttpServletResponse;
 import dbconnection.UserDAO;
 import elements.User;
 
-/**
- * Servlet implementation class Validator
- */
 // @WebServlet("/Validator")
-@WebServlet(description = "login", urlPatterns = { "/Validator" })
-public class Validator extends HttpServlet {
+@WebServlet(description = "login", urlPatterns = { ServletValidatorFields.validator })
+public class ServletValidatorFields extends HttpServlet {
+	final static String validator="/Validator";
 	private static final long serialVersionUID = 1L;
 
 	UserDAO userDB;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public Validator() {
+	public ServletValidatorFields() {
 		super();
 		userDB = UserDAO.getInstance();	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		// response.getWriter().append("Served at:
-		// ").append(request.getContextPath());
-		System.out.println("called GET Validator servlet");
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// Username & Email Validator
-//		System.out.println("called POST Validator servlet");
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 
@@ -74,10 +55,10 @@ public class Validator extends HttpServlet {
 		// List queryresult = database.executeQuery("from User where username =
 		// '"+user+"'");
 		// System.out.println("query result is: " + queryresult.size());
-		System.out.println("validate user " + user);
+//		System.out.println("validate user " + user);
 		User u = userDB.getUserByUsername(user);
 		if (u != null) {
-			System.out.println("username: " + u.getUsername());
+//			System.out.println("username: " + u.getUsername());
 			return true;
 		}
 		return false;
@@ -86,7 +67,7 @@ public class Validator extends HttpServlet {
 	private boolean validateEmail(String email) {
 		User u = userDB.getUserByEmail(email);
 		if (u != null) {
-			System.out.println("username: " + u.getEmail());
+//			System.out.println("username: " + u.getEmail());
 			return true;
 		}
 		return false;
