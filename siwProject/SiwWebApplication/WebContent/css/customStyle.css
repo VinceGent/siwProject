@@ -10,3 +10,19 @@
 .navbar > a:hover {
 	background-color: #cccccc;
 }*/
+
+.form-valid {
+box-shadow: 0 0 5px #5cd053 !important;
+background: #fff url(../img/valid.png) no-repeat 98% center;
+border-color: #5cd053 !important;
+background-position: 98% 20%;
+background-size: 7% 93%;
+}
+
+.form-invalid {
+    box-shadow: 0 0 5px #ff1a1a !important;
+    background: #fff url(../img/invalid.png) no-repeat 98% center;
+    border-color: #ff1a1a !important;
+    background-position: 98% 20%;
+    background-size: 7% 93%;
+}
