@@ -1,14 +1,12 @@
-<%@page import="elements.Sales_type"%>
-<%@page import="elements.Insertion"%>
-<%@page import="com.sun.xml.internal.ws.policy.jaxws.SafePolicyReader"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ page import="java.io.*,java.util.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Item Page</title>
+<title>Insertion Page</title>
+
 <script type="text/javascript" src="scripts/jquery.js"></script>
 
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"
@@ -25,19 +23,31 @@
 <script src="scripts/main.js"></script>
 <script src="scripts/guiScript.js"></script>
 <script type="text/javascript" src="scripts/logicScript.js"></script>
-<script type="text/javascript" src="scripts/item.js"></script>
+<script type="text/javascript" src="scripts/checkNewInsertion.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" />
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
 <!-- Gem jQuery -->
 
 </head>
-<body >
-	
+<body>
+
+	<%@ include file="template/navbar.html"%>
+	<%@ include file="template/newInsertionTemplate.jsp"%>
+	<%@ include file="template/checkSession.jsp"%>
+	<%
+		if(!logged) {
+	%>
+	<script type="text/javascript">
+		goToHomePage();
+	</script>
+
+	<%
+		}
+	%>
 
 
-<%@ include file="template/navbar.html" %>
-<%@ include file="template/checkSession.jsp" %>
-<%@ include file="template/insertionTemplate.jsp" %>
-	
 
-			
 </body>
 </html>

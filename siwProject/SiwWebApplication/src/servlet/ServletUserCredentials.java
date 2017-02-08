@@ -32,7 +32,7 @@ public class ServletUserCredentials extends HttpServlet {
 	 */
 	public ServletUserCredentials() {
 		super();
-		userdb = UserDAO.getInstance();
+		userdb = new UserDAO();
 	}
 
 	/**

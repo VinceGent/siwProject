@@ -4,7 +4,7 @@
 //grafica
 function logUser(loginUsername)
 {
-	console.log("loggato");
+
 	logged();
 	var span=$('#user-dropdown > a > span');
 	$('#user-dropdown > a').text("");
@@ -18,11 +18,16 @@ function logUser(loginUsername)
 
 //grafica
 function buyNow() {
-	$('#auctionSale').addClass('hidden');
+	$('#auctionSale,.current-offer-div').addClass('hidden');
+	
+	
 }
 //grafica
-function auctionSale() {
+function auctionSale(priceInsertion) {
+	$('.quantity-div, .price-div').addClass('hidden');
 	$('#buyNow').addClass('hidden');
+	priceInsertion++;
+	$('#offer').attr("min",priceInsertion);
 
 }
 

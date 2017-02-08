@@ -2,6 +2,7 @@ var input;
 var inputMail;
 //eventi
 $(document).ready(function() {
+	console.log("eccomii");
 	$(".img-responsive").click(imageSelected);
 	// $("#brand").click(goToItemSelected);
 	$('#buyNow').click(buyItem);
@@ -13,7 +14,30 @@ $(document).ready(function() {
 	inputMail = $('#signup-email');
 	inputUsername.keyup(checkUsername);
 	inputMail.keyup(checkEmail);
+	$('#link-prova').click(linkProva);
+	$('#offer').keypress(isNumberKey);
+	
 });
+
+function linkProva()
+{
+
+	document.location.href ="insertionPage.jsp";
+}
+
+
+function isNumberKey(evt) {
+	var re = /(\d+,d+)|(\d*)/;
+	var charCode = (evt.which) ? evt.which : event.keyCode
+	if (charCode > 31 && (charCode != 44 && (charCode < 48 || charCode > 57)))
+		return false;
+	return true;
+}
+
+
+
+
+
 // logica
 function registration() {
 	var newEmail = $('#signup-email'), newUser = $('#signup-username'), newPassword = $('#signup-password'), form = $('#reg_form');
@@ -30,7 +54,7 @@ function registration() {
 			'password' : newPassword.val()
 		},
 		success : function(data, textStatus, jqXHR) {
-			logUser(newUser);
+			logUser(newUser.val());
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			console.log("ajax error");
@@ -40,7 +64,7 @@ function registration() {
 }
 // logica
 function checkUsername() {
-
+	
 	if (inputUsername.val() != "") {
 		$.ajax({
 			url : "Validator",
@@ -114,11 +138,70 @@ function buyItem() {
 }
 // logica
 function doOffer() {
+	
+var ok=true;
+var offer=$('#offer');
+	if(offer.val()<=price_insertion)
+		{
+		removeClass(offer, "form-valid");
+		addClass(offer, "form-invalid");
+		ok=false;
+		}
+	else
+	{
+		removeClass(offer, "form-invalid");
+		addClass(offer, "form-valid");	
+		}
+	if(ok)
+	{
+		
+		sendOffert(id_item,offer.val());
+	}
+	
+}
+
+
+function sendOffert(id_item,offer)
+{
+	
+console.log(id_item);
+console.log(price_insertion);
+
+$.ajax({
+	url : 'auctionSales',
+	method : 'post',
+	data : {
+		'id_item' : id_item,
+		'offer' :offer
+	},
+	success : function() {
+		
+		console.log("success");
+
+	},
+	error : function() {
+		console.log("error");
+	}
+
+	
+});
+
+}
+
+
+
+function addClass(element, value) {
+	element.addClass(value);
+}
+
+function removeClass(element, value) {
+	element.removeClass(value);
 
 }
 
 // logica
 function goToItemSelected() {
+		 
 	id_item = 1;
 	document.location.href = "item_Selected?id_item=" + id_item;
 }
