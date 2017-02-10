@@ -16,14 +16,12 @@ html * {
 
 body {
 	font-size: 100%;
-	font-family: "PT Sans", sans-serif;
-	color: #505260;
+	font-family: "PT Sans", sans-serif !important;
 	background-image: url("../img/greenBackground.jpg");
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-size: 100%;
-	/*  background-color: lightblue;
-  background-color: white;*/
+	padding-top: 70px !important;
 }
 
 a {

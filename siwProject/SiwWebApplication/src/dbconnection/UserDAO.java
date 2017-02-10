@@ -154,10 +154,50 @@ public class UserDAO extends DbManager {
 	}
 
 	
+	public void modifyUser(int id, String username, String email, String name, String surname){
 	
-	
-	
-	
+		final String query = "UPDATE users SET username=?, email=? WHERE id=?;";
+		final String query2 = "UPDATE user_info SET name=?, surname=? WHERE id_user=?";
+		try {
+			final Connection mConnection = createConnection();
+			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
+			mPreparedStatement.setString(1, username);
+			mPreparedStatement.setString(2, email);
+			mPreparedStatement.setInt(3, id);
+			mPreparedStatement.executeUpdate();
+			closeConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}
+		try {
+			final Connection mConnection = createConnection();
+			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query2);
+			mPreparedStatement.setString(1, name);
+			mPreparedStatement.setString(2, surname);
+			mPreparedStatement.setInt(3, id);
+			mPreparedStatement.executeUpdate();
+			closeConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+		}
+	}
+
+	public void setPassword(int id_user, String password) {
+		final String query = "UPDATE users SET password=? WHERE id=?;";
+		try {
+			final Connection mConnection = createConnection();
+			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
+			mPreparedStatement.setString(1, password);
+			mPreparedStatement.setInt(2, id_user);
+			mPreparedStatement.executeUpdate();
+			closeConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}
+	}
 	
 //	public static void main(String[] args) {
 //		UserDAO db = new UserDAO();

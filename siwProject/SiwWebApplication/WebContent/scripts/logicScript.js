@@ -67,7 +67,7 @@ function checkUsername() {
 	
 	if (inputUsername.val() != "") {
 		$.ajax({
-			url : "Validator",
+			url : "validateUsername",
 			method : "post",
 			data : {
 				'newUser' : inputUsername.val()
@@ -92,7 +92,7 @@ function checkEmail() {
 	if (inputMail.val() != "") {
 		if (emailRegex(inputMail.val())) {
 			$.ajax({
-				url : "Validator",
+				url : "validateEmail",
 				method : "post",
 				data : {
 					'newEmail' : inputMail.val()
@@ -248,8 +248,11 @@ function validation() {
 			var obj = $.parseJSON(data);
 			if (obj["state"] == "ok") {
 				logUser(loginUsername.val());
-			} else
+				$('#error-custom').addClass('hidden');
+			} else{
 				notLogged();
+				$('#error-custom').toggleClass('hidden');
+			}
 
 		},
 		error : function() {
