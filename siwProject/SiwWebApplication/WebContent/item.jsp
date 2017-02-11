@@ -10,6 +10,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Item Page</title>
 <script type="text/javascript" src="scripts/jquery.js"></script>
+<script type="text/javascript" src="scripts/jquery.mlens-1.6.min.js"></script>
+<script type="text/javascript" src="scripts/zoomItemScript.js"></script>
 
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"
 	type="text/css" />

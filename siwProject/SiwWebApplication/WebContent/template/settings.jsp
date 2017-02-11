@@ -9,7 +9,7 @@
 			<label class="col-md-4 control-label" for="username-field">Username</label>
 			<div class="col-md-6">
 				<input id="username-field" name="textinput" type="text"
-					placeholder="placeholder" class="form-control input-md" required="">
+					placeholder="placeholder" class="form-control input-md"  >
 			</div>
 		</div>
 		<!-- Text input email-->
@@ -34,9 +34,57 @@
 			<label class="col-md-4 control-label" for="surname-field">Surname</label>
 			<div class="col-md-6">
 				<input id="surname-field" name="surname-field" type="text"
-					placeholder="surname" class="form-control input-md" required="">
+					placeholder="surname" class="form-control input-md"  >
 			</div>
 		</div>
+		
+			<div class="form-group">
+			<label class="col-md-4 control-label" for="address-field">Address</label>
+			<div class="col-md-6">
+				<input id="address-field" name="surname-field" type="text"
+					placeholder="address" class="form-control input-md"  >
+			</div>
+		</div>
+		
+			<div class="form-group">
+			<label class="col-md-4 control-label" for="telephone-field">Telephone</label>
+			<div class="col-md-6">
+				<input id="telephone-field" name="telephone-field" type="text"
+					placeholder="telephone" class="form-control input-md"  >
+			</div>
+		</div>
+		
+			<div class="form-group">
+			<label class="col-md-4 control-label" for="city-field">City</label>
+			<div class="col-md-6">
+				<input id="city-field" name="city-field" type="text"
+					placeholder="city" class="form-control input-md"  >
+			</div>
+		</div>
+		
+			<div class="form-group">
+			<label class="col-md-4 control-label" for="province-field">Province</label>
+			<div class="col-md-6">
+				<input id="province-field" name="province-field" type="text"
+					placeholder="province" class="form-control input-md"  >
+			</div>
+		</div>
+		
+			<div class="form-group">
+			<label class="col-md-4 control-label" for="postal_code-field">Postal code</label>
+			<div class="col-md-6">
+				<input id="postal_code-field" name="postal_code-field" type="text"
+					placeholder="postal_code" class="form-control input-md"  >
+			</div>
+		</div>
+			<div class="form-group">
+			<label class="col-md-4 control-label" for="country-field">Country</label>
+			<div class="col-md-6">
+				<input id="country-field" name="country-field" type="text"
+					placeholder="country" class="form-control input-md"  >
+			</div>
+		</div>
+		
 		<div class="form-group">
 			<div class="col-md-4">
 				<button type="button" class="btn btn-info" style="float: right;"

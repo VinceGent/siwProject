@@ -9,24 +9,24 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.google.gson.JsonObject;
-
 import dbconnection.InsertionDAO;
-import dbconnection.UserDAO;
+import dbconnection.TradingManagerDAO;
 import elements.AuctionOffer;
 import elements.Insertion;
 
 @WebServlet(description = "item", urlPatterns = { ServletItemRequest.item_selected, ServletItemRequest.buy_now,
-		ServletItemRequest.auction_sales, ServletItemRequest.update_item })
+		ServletItemRequest.auction_sales, ServletItemRequest.update_item, ServletItemRequest.buyNowInformation })
 public class ServletItemRequest extends HttpServlet {
 	final static String item_selected = "/item_Selected";
 	final static String buy_now = "/buyNow";
 	final static String auction_sales = "/auctionSales";
 	final static String update_item = "/update_item";
+	final static String buyNowInformation = "/buyNowInformation";
 
 	public ServletItemRequest() {
-		db = new InsertionDAO();
+		insertionDao = new InsertionDAO();
+		tradingManagerDAO=new TradingManagerDAO();
 
 	}
 
@@ -43,6 +43,8 @@ public class ServletItemRequest extends HttpServlet {
 		case update_item:
 			getOffer(req, resp);
 			break;
+		case buyNowInformation:
+			getBuyNowInformation(req, resp);
 		default:
 
 			break;
@@ -63,17 +65,35 @@ public class ServletItemRequest extends HttpServlet {
 
 	private void doOffer(HttpServletRequest req, HttpServletResponse resp) {
 		// aggiornare l'offerta massima sul database per l'asta scelta
-//		System.out.println(req.getParameter("id_item"));
-//		System.out.println(req.getParameter("offer"));
-//		System.out.println(req.getSession().getAttribute("user_id"));
-		
-		db.insertOffer(req.getParameter("id_item"),req.getSession().getAttribute("user_id").toString(),req.getParameter("offer"));
+		// System.out.println(req.getParameter("id_item"));
+		// System.out.println(req.getParameter("offer"));
+		// System.out.println(req.getSession().getAttribute("user_id"));
+		if (req.getSession().getAttribute("login").toString().equals("logged"))
+			tradingManagerDAO.insertOffer(req.getParameter("id_item"), req.getSession().getAttribute("user_id").toString(),
+					req.getParameter("offer"));
 	}
 
 	private void buyItem(HttpServletRequest req, HttpServletResponse resp) {
+
 		System.out.println(req.getParameter("id"));
+		if (req.getSession().getAttribute("login").toString().equals("logged"))
+			tradingManagerDAO.buyItem(Integer.parseInt(req.getParameter("id")),
+					Integer.parseInt(req.getSession().getAttribute("user_id").toString()));
 		// vai a jsp di schermata completamento pagamento
 
+	}
+
+	private void getBuyNowInformation(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		int id_item = -1;
+		id_item = Integer.parseInt(req.getParameter("id_item"));
+		JsonObject obj = new JsonObject();
+		if (id_item != -1) {
+			Insertion insertion = insertionDao.getInsertionById(id_item);
+			if (insertion != null) {
+				obj.addProperty("quantity", String.valueOf(insertion.getAmount()));
+			}
+		}
+		resp.getWriter().write(obj.toString());
 	}
 
 	private void getOffer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -81,7 +101,7 @@ public class ServletItemRequest extends HttpServlet {
 		id_item = Integer.parseInt(req.getParameter("id_item"));
 		if (id_item != -1) {
 			System.out.println("getoffer");
-			ArrayList<AuctionOffer> offers = db.getOfferByIdItem(id_item);
+			ArrayList<AuctionOffer> offers = tradingManagerDAO.getOfferByIdItem(id_item);
 			JsonObject obj = new JsonObject();
 			if (offers.isEmpty())
 				return;
@@ -95,19 +115,14 @@ public class ServletItemRequest extends HttpServlet {
 			obj.addProperty("id_user", max.getId_user());
 			obj.addProperty("id_item", max.getId_item());
 			obj.addProperty("offer", max.getOffer());
-//			System.out.println("sessione attuale utente : " +req.getSession().getAttribute("user_id").toString());
-			System.out.println("offerta massima è di utente: " + max.getId_user());
-			if(req.getSession().getAttribute("user_id")!=null&&req.getSession().getAttribute("user_id").toString().equals(Integer.toString(max.getId_user())))
-			{
-				System.out.println("HAI VINTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+			if (req.getSession().getAttribute("user_id") != null
+					&& req.getSession().getAttribute("user_id").toString().equals(Integer.toString(max.getId_user()))) {
 				obj.addProperty("yourOffer", "true");
-			}
-			else{
+
+			} else {
 				obj.addProperty("yourOffer", "false");
-				
-				
+
 			}
-			System.out.println(obj.toString());
 			resp.getWriter().write(obj.toString());
 
 		} else {
@@ -122,7 +137,7 @@ public class ServletItemRequest extends HttpServlet {
 		id_item = Integer.parseInt(req.getParameter("id_item"));
 		if (id_item != -1) {
 
-			Insertion insertion = db.getInsertionById(id_item);
+			Insertion insertion = insertionDao.getInsertionById(id_item);
 			req.setAttribute("insertion", insertion);
 			RequestDispatcher dispatcher = req.getRequestDispatcher("item.jsp");
 			dispatcher.forward(req, resp);
@@ -134,6 +149,7 @@ public class ServletItemRequest extends HttpServlet {
 	}
 
 	private static final long serialVersionUID = 1L;
-	private InsertionDAO db;
+	private InsertionDAO insertionDao;
+	private TradingManagerDAO tradingManagerDAO;
 
 }

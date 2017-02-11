@@ -54,38 +54,40 @@ function notLogged() {
 
 }
 
-function inputUsernameRemoveClass() {
-	inputUsername.removeClass("form-valid");
-	inputUsername.removeClass("form-invalid");
+
+function removeClass(field) {
+	field.removeClass("form-valid");
+	field.removeClass("form-invalid");
 }
 function validationFormUsername(value) {
-	if (value == "OK") {
-		inputUsername.addClass("form-valid");
-		inputUsername.removeClass("form-invalid");
+	if (value == "NO") {
+		successField(inputUsername);
 	} else {
-		inputUsername.addClass("form-invalid");
-		inputUsername.removeClass("form-valid");
+		failedField(inputUsername);
 	}
 }
 
 function validationFormMail(value) {
-	if (value == "OK") {
-		inputMail.addClass("form-valid");
-		inputMail.removeClass("form-invalid");
+	if (value == "NO") {
+		successField(inputMail);
 	} else {
-		inputMail.addClass("form-invalid");
-		inputMail.removeClass("form-valid");
+		failedField(inputMail);
 	}
 }
 
-function inputMailRemoveClass() {
-	inputMail.removeClass("form-valid");
-	inputMail.removeClass("form-invalid");
-}
 
 function imageSelected() {
 	var c = $(this).attr("src");
 	$("#image-selected").attr("src", c);
+	 zoomify();
+}
+function failedField(field) {
+	field.removeClass("form-valid");
+	field.addClass("form-invalid");
+}
+function successField(field) {
+	field.removeClass("form-invalid");
+	field.addClass("form-valid");
 }
 
 function zoom() {

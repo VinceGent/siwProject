@@ -5,8 +5,8 @@
 <div class="container">
 	<div class="col-md-5 single-top">
 		<ul id="list_single_image">
-			<li><img id="image-selected" alt="" src="images/si1.jpg"
-				data-zoom-image="images/si1.jpg"></li>
+			<li style="width: 54%; margin-left: 44px;"><img id="image-selected"
+					src="images/si1.jpg" ></li>
 		</ul>
 	</div>
 	<%
@@ -136,7 +136,7 @@
 				<ul class="button-list">
 					<li><a id="buyNow" class="cart ">Compra subito</a></li>
 					<li><a id="auctionSale" class="cart ">piazza offerta</a></li>
-					<li id="best-offer"><h4>Sei il miglior offerente!!</h4><li>
+					<li id="best-offer" class="hidden"><h4>Sei il miglior offerente!!</h4><li>
 				</ul>
 			</div>
 		</div>

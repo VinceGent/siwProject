@@ -21,7 +21,8 @@ import elements.UserInformation;
  * Servlet implementation class AddUser
  */
 @WebServlet(description = "login", urlPatterns = { ServletUserCredentials.addUser, ServletUserCredentials.loginUser,
-		ServletUserCredentials.logoutUser, ServletUserCredentials.userinfo, ServletUserCredentials.modifyUser, ServletUserCredentials.modifyPassword })
+		ServletUserCredentials.logoutUser, ServletUserCredentials.userinfo, ServletUserCredentials.modifyUser,
+		ServletUserCredentials.modifyPassword })
 // @WebServlet("/AddUser")
 public class ServletUserCredentials extends HttpServlet {
 	static final long serialVersionUID = 1L;
@@ -77,7 +78,7 @@ public class ServletUserCredentials extends HttpServlet {
 			modifyUser(request, response);
 			break;
 		case modifyPassword:
-			modifyPassword(request,response);
+			modifyPassword(request, response);
 			break;
 		}
 
@@ -85,30 +86,42 @@ public class ServletUserCredentials extends HttpServlet {
 
 	private void modifyPassword(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("modify password method");
-		System.out.println("la nuova password è " + request.getParameter("newPassword"));
-		System.out.println("id utente è " + request.getSession().getAttribute("user_id"));
-		
-		userdb.setPassword(Integer.parseInt(request.getSession().getAttribute("user_id").toString()), request.getParameter("newPassword"));
+		System.out.println("la nuova password ï¿½ " + request.getParameter("newPassword"));
+		System.out.println("id utente ï¿½ " + request.getSession().getAttribute("user_id"));
+
+		userdb.setPassword(Integer.parseInt(request.getSession().getAttribute("user_id").toString()),
+				request.getParameter("newPassword"));
 	}
 
 	private void modifyUser(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("chiamata servlet modifica");
 		userdb.modifyUser(Integer.parseInt(request.getSession().getAttribute("user_id").toString()),
 				request.getParameter("username"), request.getParameter("email"), request.getParameter("name"),
-				request.getParameter("surname"));
+				request.getParameter("surname"), request.getParameter("address"),
+				Integer.parseInt(request.getParameter("telephone")), request.getParameter("city"),
+				request.getParameter("province"), Integer.parseInt(request.getParameter("postal_code")),
+				request.getParameter("country"));
 		updateSessionInfo(request.getSession(), request.getParameter("username"), request.getParameter("email"));
 	}
 
 	private void userinfo(HttpServletRequest request, HttpServletResponse response) {
-		User user = userdb.getUserByUsername((String) request.getSession().getAttribute("username"));
+		User user = userdb.getUserByUsername(request.getSession().getAttribute("username").toString());
+
 		UserInformation info = userdb.getUserInfo(user.getUsername());
 		JsonObject obj = new JsonObject();
+		if (info != null) {
 
-		obj.addProperty("username", user.getUsername());
-		obj.addProperty("name", info.getName());
-		obj.addProperty("surname", info.getSurname());
-		obj.addProperty("email", user.getEmail());
-
+			obj.addProperty("username", user.getUsername());
+			obj.addProperty("name", info.getName());
+			obj.addProperty("surname", info.getSurname());
+			obj.addProperty("email", user.getEmail());
+			obj.addProperty("address", info.getAddress());
+			obj.addProperty("telephone", info.getTelephone());
+			obj.addProperty("city", info.getCity());
+			obj.addProperty("province", info.getProvince());
+			obj.addProperty("postal_code", info.getPostal_code());
+			obj.addProperty("country", info.getCountry());
+		}
 		try {
 			response.getWriter().write(obj.toString());
 		} catch (IOException e) {

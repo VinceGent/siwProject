@@ -13,6 +13,7 @@ $(document).ready(function() {
 	amount = $('#amount');
 	description = $('#description');
 	sellerType = $('#seller_type');
+	sellerType.change(selectSellerType);
 	sendInsertion = $('#send_insertion');
 	price.keypress(isNumberKey);
 	amount.keypress(isNumberKey);
@@ -38,6 +39,23 @@ $(document).ready(function() {
 //
 //           
 // });
+
+
+
+
+
+function selectSellerType()
+{
+	console.log(sellerType.find(':selected').val());
+//	if(sellerType.find(':selected').val()=="asta")
+	$('#row-quantity').toggleClass("hidden");	
+	if($('#row-quantity').hasClass("hidden"))
+	amount.val(0);
+	else
+		amount.val("");
+	
+}
+
 
 function isNumberKey(evt) {
 	var re = /(\d+,d+)|(\d*)/;

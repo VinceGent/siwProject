@@ -1,5 +1,5 @@
 <%@page import="elements.UserInformation"%>
-<% UserInformation info = (UserInformation)request.getSession().getAttribute("userinfo"); %>
+<% UserInformation info = (UserInformation)request.getSession().getAttribute("userinfo"); if(info==null) info=new UserInformation();%>
 <div class="box-title-main row col-md-12">
 	<h2 style="text-align: center;">Informazioni Account</h2>
 </div>

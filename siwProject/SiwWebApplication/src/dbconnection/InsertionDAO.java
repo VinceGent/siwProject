@@ -5,12 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import elements.AuctionOffer;
 import elements.Insertion;
+import elements.OrderState;
 import elements.Sales_type;
 
 public class InsertionDAO extends DbManager {
@@ -51,13 +53,14 @@ public class InsertionDAO extends DbManager {
 		List<Insertion> insertions = new LinkedList<Insertion>();
 		Insertion insertion = null;
 
-		final String query = "select * from insertion where name = ?;";
+		final String query = "select * from insertion;";
 		try {
 			final Connection mConnection = createConnection();
 			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
-			mPreparedStatement.setString(1, name);
 			final ResultSet mResultSet = mPreparedStatement.executeQuery();
 			while (mResultSet.next()) {
+				if (!mResultSet.getString("name").contains(name))
+					continue;
 				insertion = new Insertion(Integer.parseInt(mResultSet.getString("id_user")),
 						Integer.parseInt(mResultSet.getString("id_item")), mResultSet.getString("name"),
 						new Date(mResultSet.getDate("insertion_date").getTime()),
@@ -105,47 +108,6 @@ public class InsertionDAO extends DbManager {
 
 	}
 
-	public ArrayList<AuctionOffer> getOfferByIdItem(int id_item) {
-		AuctionOffer offer = null;
-		ArrayList<AuctionOffer> offers = new ArrayList<AuctionOffer>();
-		final String query = "select * from auction_offer where id_insertion= ?;";
-		try {
-			final Connection mConnection = createConnection();
-			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
-			mPreparedStatement.setString(1, Integer.toString(id_item));
-			final ResultSet mResultSet = mPreparedStatement.executeQuery();
-			while (mResultSet.next()) {
-				offer = new AuctionOffer(Integer.parseInt(mResultSet.getString("id_user")),
-						Integer.parseInt(mResultSet.getString("id_insertion")),
-						Float.parseFloat(mResultSet.getString("offer")),mResultSet.getInt("id_offer"));
-				offers.add(offer);
-
-			}
-			closeConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return offers;
-	}
-
-	public void insertOffer(String id_item, String id_user, String offer) {
-		
-		AuctionOffer auctionOffer = new AuctionOffer(Integer.parseInt(id_user), Integer.parseInt(id_item),
-				Float.parseFloat(offer));
-
-		String query = "INSERT INTO auction_offer (id_user, id_insertion, offer) VALUES (?,?,?);";
-		try {
-			final Connection mConnection = createConnection();
-			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
-			mPreparedStatement.setString(1, Integer.toString(auctionOffer.getId_user()));
-			mPreparedStatement.setInt(2, auctionOffer.getId_item());
-			mPreparedStatement.setFloat(3, auctionOffer.getOffer());
-			mPreparedStatement.execute();
-			closeConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-	}
+	
 
 }
