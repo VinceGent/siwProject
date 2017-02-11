@@ -18,7 +18,7 @@
 <script src="scripts/testjq.js"></script>
 <script src="scripts/main.js"></script>
 <!-- Gem jQuery -->
-<script src="scripts/guiScript.js"></script>
+<script type="text/javascript" src="scripts/guiScript.js"></script>
 <script type="text/javascript" src="scripts/logicScript.js"></script>
 </head>
 <body>

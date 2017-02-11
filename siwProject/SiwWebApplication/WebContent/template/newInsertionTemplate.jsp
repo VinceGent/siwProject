@@ -29,7 +29,7 @@
 				placeholder="Inserisci prezzo"></input>
 		</div>
 	</div>
-	<div class="row">
+	<div class="row" id="row-quantity">
 		<div class="col-md-2">
 			<label>Quantità:</label>
 		</div>
