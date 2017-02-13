@@ -11,11 +11,14 @@ $(document).ready(function() {
 	$('#logout').click(notLogged);
 	$('#input-login').click(validation);
 	$('#signup-createUser').click(registration);
+	$('#signup-postalcode').keypress(isNumericValue);
+	$('#signup-telephone').keypress(isNumericValue);
+
 	inputUsername = $('#signup-username');
 	inputMail = $('#signup-email');
 	inputUsername.keyup(checkUsername);
 	inputMail.keyup(checkEmail);
-	$('#link-prova').click(linkProva);
+	$('#createInsertion').click(createInsertion);
 	$('#offer').keypress(isNumberKey);
 	buttonSearch = $('#search-button');
 	inputSearch = $('#search-input');
@@ -30,13 +33,20 @@ function searchInsertion() {
 	document.location.href = "searchInsertion?name=" + inputSearch.val();
 }
 
-function linkProva() {
+function isNumericValue(evt) {
+
+	var charCode = (evt.which) ? evt.which : event.keyCode
+	if ((charCode < 48 || charCode > 57))
+		return false;
+	return true;
+}
+function createInsertion() {
 
 	document.location.href = "insertionPage.jsp";
 }
 
 function isNumberKey(evt) {
-	var re = /(\d+,d+)|(\d*)/;
+
 	var charCode = (evt.which) ? evt.which : event.keyCode
 	if (charCode > 31 && (charCode != 44 && (charCode < 48 || charCode > 57)))
 		return false;
@@ -81,7 +91,7 @@ function checkNewInfo() {
 		check = false;
 	} else
 		successField($('#signup-name'));
-	
+
 	if ($('#signup-surname').val() == "") {
 		failedField($('#signup-surname'));
 		check = false;
@@ -117,7 +127,7 @@ function checkNewInfo() {
 		check = false;
 	} else
 		successField($('#signup-country'));
-	
+
 	return check;
 }
 // logica
@@ -177,20 +187,53 @@ function emailRegex(email) {
 
 // logica
 function buyItem() {
+	if (amount <= 0) {
+		return;
+	}
+	console.log("pora miseria");
+	var value = false;
 	$.ajax({
-		url : "buyNow",
+		url : "addToCart",
 		method : "post",
+		async : false,
 		data : {
-			'id' : id_item
+			'id_item' : id_item
 		},
 		success : function(data) {
-			buyNowInformation();
+			var obj = $.parseJSON(data);
+
+			if (obj["state"] == "OK") { // vai al pagamento
+				value = true;
+			} else {
+
+				// gli diciamo di fare il login
+			}
 		},
 		error : function() {
 
 		}
 
 	});
+
+	if (value) {
+		document.location.href = "payment?id_item="+id_item;
+	}
+
+	//	
+	// $.ajax({
+	// url : "buyNow",
+	// method : "post",
+	// data : {
+	// 'id' : id_item
+	// },
+	// success : function(data) {
+	// buyNowInformation();
+	// },
+	// error : function() {
+	//
+	// }
+	//
+	// });
 
 }
 // logica

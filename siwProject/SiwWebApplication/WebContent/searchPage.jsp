@@ -24,7 +24,7 @@
 <link href="css/heroic-features.css" rel="stylesheet" type="text/css" />
 <script src="scripts/modernizr.js"></script>
 <!-- Modernizr -->
-<script src="scripts/testjq.js"></script>
+
 <script src="scripts/main.js"></script>
 
 </head>

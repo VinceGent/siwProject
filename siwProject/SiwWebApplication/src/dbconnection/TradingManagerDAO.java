@@ -56,9 +56,31 @@ public class TradingManagerDAO extends DbManager {
 
 	}
 
+	public void addToCart(int id_item,int id_user)
+	{
+		
+		final String query2 = "INSERT INTO orders(id_user,id_insertion,order_state,order_date) VALUES(?,?,?,?)";
+		try {
+			final Connection mConnection = createConnection();
+			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query2);
+			mPreparedStatement.setInt(1, id_user);
+			mPreparedStatement.setInt(2, id_item);
+			mPreparedStatement.setString(3, OrderState.nonpagato.toString());
+			mPreparedStatement.setDate(4, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+			mPreparedStatement.execute();
+			closeConnection();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public void buyItem(int id_item, int id_user) {
 		InsertionDAO insertionDao = new InsertionDAO();
 		Insertion insertion = insertionDao.getInsertionById(id_item);
+		if(insertion.getAmount()<1)
+			return;
 		final String query = "UPDATE insertion SET amount=? WHERE id_item=?;";
 		try {
 			final Connection mConnection = createConnection();
@@ -71,19 +93,7 @@ public class TradingManagerDAO extends DbManager {
 			e.printStackTrace();
 		}
 
-		final String query2 = "INSERT INTO orders(id_user,id_insertion,order_state,order_date) VALUES(?,?,?,?)";
-		try {
-			final Connection mConnection = createConnection();
-			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query2);
-			mPreparedStatement.setInt(1, id_user);
-			mPreparedStatement.setInt(2, id_item);
-			mPreparedStatement.setString(3, OrderState.nonpagato.toString());
-			mPreparedStatement.setDate(4, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
-			mPreparedStatement.execute();
-			closeConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+
 	}
 
 }

@@ -111,22 +111,21 @@ body {
 }
 
 /* Profile Content */
-.profile-content {
+.profile-content{
 	padding: 20px;
 	background: #fff;
 	min-height: 460px;
 	/* font-size: 2em; */
 }
 
-.profile-content #overview-div h4 {
+.profile-content #overview-div h4{
 	font-size: 1.5em;
-}
+} 
 
-.profile-content #overview-div label {
+.profile-content #overview-div label{
 	font-weight: 700;
 	color: #5b9bd1;
 }
-
 .main-title {
 	text-align: center;
 	border-bottom: 1px solid #e5e5e5;
@@ -138,7 +137,7 @@ body {
 	border-bottom: 1px;
 }
 
-.box-title-main>h2 {
+.box-title-main > h2{
 	border-bottom: 1px solid #e5e5e5;
 	margin: 0 0 12px;
 	padding-bottom: 7px;
@@ -156,7 +155,8 @@ h3 h4 h5 h6 {
 	font-size: 20px;
 	line-height: 1.42857143;
 }*/
-.minibox-title {
+
+.minibox-title{
 	font-weight: 50px;
 }
 
@@ -170,6 +170,7 @@ h3 h4 h5 h6 {
 	float: left;
 	margin-top: 9px;
 }*/
+
 .box-title a:HOVER {
 	color: #47bfcf;
 	text-decoration: none;
@@ -178,11 +179,6 @@ h3 h4 h5 h6 {
 .box-left {
 	border-right: 1px solid #e5e5e5;
 	font-size: 12px;
-}
-
-.box-center h4 {
-	border-right: 1px solid #e5e5e5;
-	text-align: center;
 }
 
 .box-right {
@@ -223,7 +219,7 @@ th, td {
 	border: 5px solid;
 	border-color: #31b0d5;
 	/*background-color: #68c9e666;*/
-	background-color: rgba(49, 176, 213, 0.78);
+	background-color : rgba(49, 176, 213, 0.78);
 	border-radius: 15px;
 }
 
@@ -239,14 +235,15 @@ th, td {
 	border-bottom: 10px solid transparent;
 }
 
-.sidebar-container {
+.sidebar-container{
 	border-radius: 20px;
 }
 
-.settings-container {
+.settings-container{
 	border-radius: 20px;
 }
 
-.box>div {
+.box > div{
+	
 	line-height: 1.42857143;
 }

@@ -18,7 +18,7 @@ $(document).ready(function() {
 	price.keypress(isNumberKey);
 	amount.keypress(isNumberKey);
 	sendInsertion.click(checkFields);
-	expirationDate=$('#date');
+	expirationDate = $('#date');
 	$('#datePicker').datepicker({
 		format : 'dd/mm/yyyy',
 		autoclose : true,
@@ -40,22 +40,16 @@ $(document).ready(function() {
 //           
 // });
 
-
-
-
-
-function selectSellerType()
-{
+function selectSellerType() {
 	console.log(sellerType.find(':selected').val());
-//	if(sellerType.find(':selected').val()=="asta")
-	$('#row-quantity').toggleClass("hidden");	
-	if($('#row-quantity').hasClass("hidden"))
-	amount.val(0);
+	// if(sellerType.find(':selected').val()=="asta")
+	$('#row-quantity').toggleClass("hidden");
+	if ($('#row-quantity').hasClass("hidden"))
+		amount.val(0);
 	else
 		amount.val("");
-	
-}
 
+}
 
 function isNumberKey(evt) {
 	var re = /(\d+,d+)|(\d*)/;
@@ -72,56 +66,43 @@ function checkFields() {
 	var str = /(\w+ *)/;
 
 	if (str.test(title.val())) {
-		addClass(title, "form-valid");
-		removeClass(title, "form-invalid")
+		successField(title);
 	} else {
-		addClass(title, "form-invalid");
-		removeClass(title, "form-valid");
+		failedField(title);
 		ok = false;
 	}
 	if (str.test(description.val())) {
-		addClass(description, "form-valid");
-		removeClass(description, "form-invalid")
+		successField(title);
 	} else {
-		addClass(description, "form-invalid");
-		removeClass(description, "form-valid");
+		failedField(title);
 		ok = false;
 	}
 	var number = /^\d+(\.\d+)?$/;
 	if (number.test(price.val())) {
-		addClass(price, "form-valid");
-		removeClass(price, "form-invalid")
+		successField(title);
 	} else {
-		removeClass(price, "form-valid");
-		addClass(price, "form-invalid");
+		failedField(title);
 		ok = false;
 	}
 	console.log(amount.val());
 	number = /^\d+$/;
 	if (number.test(amount.val())) {
-		addClass(amount, "form-valid");
-		removeClass(amount, "form-invalid")
-
+		successField(title);
 	} else {
-		removeClass(amount, "form-valid");
-		addClass(amount, "form-invalid");
+		failedField(title);
 		ok = false;
 
 	}
 	console.log()
-	if(!expirationDate.val()=="")
-	{
-		addClass(expirationDate, "form-valid");
-		removeClass(expirationDate, "form-invalid")
+	if (!expirationDate.val() == "") {
+		successField(title);
 
 	} else {
-		removeClass(expirationDate, "form-valid");
-		addClass(expirationDate, "form-invalid");
+		failedField(title);
 		ok = false;
 
 	}
 
-		
 	console.log(expirationDate.val());
 	if (ok) {
 		addNewInsertion();
@@ -142,9 +123,7 @@ function addNewInsertion() {
 			'description' : description.val(),
 			'seller_type' : sellerType.find(":selected").val(),
 			'amount' : amount.val(),
-			'expiration_date':expirationDate.val()
-			
-			
+			'expiration_date' : expirationDate.val()
 
 		},
 		success : function(data, textStatus, jqXHR) {

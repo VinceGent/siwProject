@@ -121,7 +121,7 @@
 				<h4 class="col-md-2">Offri:</h4>
 				<div class="col-md-7 ">
 					<input style="padding-top: 2%" id="offer" type="number"
-						name="quantity" STEP="0.01" min="0" placeholder="Inserisci prezzo"></input>
+						name="quantity" STEP="0.01" min="0" placeholder="Inserisci offerta"></input>
 				</div>
 			</div>
 
@@ -168,6 +168,12 @@
 		</p>
 	</div>
 </div>
+<script type="text/javascript">
+	var id_item ="<%=insertion.getId_item()%>";
+	var price_insertion="<%=insertion.getPrice()%>";
+	var sales_type="<%=insertion.getSales_type()%>";
+	var amount="<%=insertion.getAmount()%>";
+</script>
 
 <%
 	if (insertion.getSales_type().equals(Sales_type.compraora)) {
@@ -185,9 +191,3 @@ var priceInsertion="<%=insertion.getPrice()%>";
 <%
 	}
 %>
-
-<script type="text/javascript">
-	var id_item ="<%=insertion.getId_item()%>";
-	var price_insertion="<%=insertion.getPrice()%>";
-	var sales_type="<%=insertion.getSales_type()%>";
-</script>
