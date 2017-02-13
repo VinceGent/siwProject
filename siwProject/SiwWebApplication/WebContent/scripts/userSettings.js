@@ -22,7 +22,8 @@ $(document).ready(function() {
 	province = $('#province-field');
 	postal_code = $('#postal_code-field');
 	country = $('#country-field');
-
+	telephone.keypress(isNumericValue);
+	postal_code.keypress(isNumericValue);
 	setValue();
 	oldPassword = $('#old-password-field');
 	newPassword = $('#new-password-field');

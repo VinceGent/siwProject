@@ -31,8 +31,8 @@
 				<button id="search-button" type="button" class="btn btn-default">Search</button>
 			</form>
 			<ul id="signlog" class="nav navbar-nav navbar-right">
-				<li><a class="cd-signin" id="login" href="#">Login</a></li>
-				<li><a class="cd-signup" id="signup" href="#">Sign Up</a></li>
+				<li><a class="cd-signin hidden" id="login" href="#">Login</a></li>
+				<li><a class="cd-signup hidden" id="signup" href="#">Sign Up</a></li>
 
 				<!-- Shopping Cart menu -->
 				<li class="dropdown" id="shopping-button"><a href="#"
@@ -70,7 +70,7 @@
 						<li role="separator" class="divider"></li>
 						<li><a href="#">Clear List</a></li>
 						<li role="separator" class="divider"></li>
-						<li><a href="#">One more separated link</a></li>
+						<li><a id="createInsertion">Crea un inserzione</a></li>
 						<li role="separator" class="divider"></li>
 						<li id="logout"><a href="#">logout</a></li>
 					</ul></li>
@@ -177,7 +177,7 @@
 				</p>
 				<p class="fieldset">
 					<input class="full-width has-padding has-border" id="signup-postalcode" type="text"
-						placeholder="Postal Code">
+						placeholder="Postal Code" maxlength="5">
 				</p>	
 				<p class="fieldset">
 					<input class="full-width has-padding has-border" id="signup-country" type="text"
@@ -185,7 +185,7 @@
 				</p>
 				<p class="fieldset">
 					<input class="full-width has-padding has-border" id="signup-telephone" type="text"
-						placeholder="Telephone">
+						placeholder="Telephone" maxlength="10">
 				</p>	
 
 				<p class="fieldset">

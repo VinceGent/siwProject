@@ -50,7 +50,7 @@
 			<label class="col-md-4 control-label" for="telephone-field">Telephone</label>
 			<div class="col-md-6">
 				<input id="telephone-field" name="telephone-field" type="text"
-					placeholder="telephone" class="form-control input-md"  >
+					placeholder="telephone" class="form-control input-md" maxlength="10" >
 			</div>
 		</div>
 		
@@ -74,7 +74,7 @@
 			<label class="col-md-4 control-label" for="postal_code-field">Postal code</label>
 			<div class="col-md-6">
 				<input id="postal_code-field" name="postal_code-field" type="text"
-					placeholder="postal_code" class="form-control input-md"  >
+					placeholder="postal_code" class="form-control input-md" maxlength="5" >
 			</div>
 		</div>
 			<div class="form-group">

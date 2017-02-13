@@ -16,17 +16,21 @@ import elements.AuctionOffer;
 import elements.Insertion;
 
 @WebServlet(description = "item", urlPatterns = { ServletItemRequest.item_selected, ServletItemRequest.buy_now,
-		ServletItemRequest.auction_sales, ServletItemRequest.update_item, ServletItemRequest.buyNowInformation })
+		ServletItemRequest.auction_sales, ServletItemRequest.update_item, ServletItemRequest.buyNowInformation,
+		ServletItemRequest.addToCart, ServletItemRequest.payment, ServletItemRequest.payItem })
 public class ServletItemRequest extends HttpServlet {
 	final static String item_selected = "/item_Selected";
 	final static String buy_now = "/buyNow";
 	final static String auction_sales = "/auctionSales";
 	final static String update_item = "/update_item";
 	final static String buyNowInformation = "/buyNowInformation";
+	final static String addToCart = "/addToCart";
+	final static String payment = "/payment";
+	final static String payItem = "/payItem";
 
 	public ServletItemRequest() {
 		insertionDao = new InsertionDAO();
-		tradingManagerDAO=new TradingManagerDAO();
+		tradingManagerDAO = new TradingManagerDAO();
 
 	}
 
@@ -45,11 +49,45 @@ public class ServletItemRequest extends HttpServlet {
 			break;
 		case buyNowInformation:
 			getBuyNowInformation(req, resp);
-		default:
-
 			break;
+		case addToCart:
+			addToCart(req, resp);
+			break;
+		case payItem:
+			payItem(req, resp);
+			break;
+
 		}
 
+	}
+
+	private void payment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		System.out.println("paymenttttttttttttttttttttt");
+		RequestDispatcher dispatcher = req.getRequestDispatcher("PaymentPage.jsp");
+		Insertion insertion = insertionDao.getInsertionById(Integer.parseInt(req.getParameter("id_item")));
+		req.getSession().setAttribute("insertion", insertion);
+		dispatcher.forward(req, resp);
+
+	}
+
+	private void payItem(HttpServletRequest req, HttpServletResponse resp) {
+
+		tradingManagerDAO.buyItem(Integer.parseInt(req.getParameter("id_item")),
+				Integer.parseInt(req.getSession().getAttribute("user_id").toString()));
+	}
+
+	private void addToCart(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+		// System.out.println(req.getSession().getAttribute("user_id"));
+		JsonObject jsonObject = new JsonObject();
+		if (req.getSession().getAttribute("login").toString().equals("logged")) {
+			tradingManagerDAO.addToCart(Integer.parseInt(req.getParameter("id_item")),
+					Integer.parseInt(req.getSession().getAttribute("user_id").toString()));
+			jsonObject.addProperty("state", "OK");
+		} else {
+			jsonObject.addProperty("state", "NO");
+		}
+		resp.getWriter().write(jsonObject.toString());
 	}
 
 	@Override
@@ -58,6 +96,9 @@ public class ServletItemRequest extends HttpServlet {
 		switch (path) {
 		case item_selected:
 			getInsertion(req, resp);
+			break;
+		case payment:
+			payment(req, resp);
 			break;
 		}
 
@@ -69,8 +110,8 @@ public class ServletItemRequest extends HttpServlet {
 		// System.out.println(req.getParameter("offer"));
 		// System.out.println(req.getSession().getAttribute("user_id"));
 		if (req.getSession().getAttribute("login").toString().equals("logged"))
-			tradingManagerDAO.insertOffer(req.getParameter("id_item"), req.getSession().getAttribute("user_id").toString(),
-					req.getParameter("offer"));
+			tradingManagerDAO.insertOffer(req.getParameter("id_item"),
+					req.getSession().getAttribute("user_id").toString(), req.getParameter("offer"));
 	}
 
 	private void buyItem(HttpServletRequest req, HttpServletResponse resp) {
