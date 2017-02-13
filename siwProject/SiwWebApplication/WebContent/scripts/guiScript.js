@@ -60,6 +60,7 @@ function removeClass(field) {
 	field.removeClass("form-invalid");
 }
 function validationFormUsername(value) {
+	console.log("validationnnnnnnnnnnnnnnn");
 	if (value == "NO") {
 		successField(inputUsername);
 	} else {
