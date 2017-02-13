@@ -24,8 +24,12 @@ $(document).ready(function() {
 	inputSearch = $('#search-input');
 	buttonSearch.click(searchInsertion);
 	$('.go-to-item').click(goToItemSelected);
-
+	$('#gotoWishlist').click(wishlist);
 });
+
+function wishlist() {
+	document.location.href = "loadWishlist";
+}
 
 function searchInsertion() {
 	if (inputSearch.val() == "")
