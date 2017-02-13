@@ -293,7 +293,6 @@ xsigin/signup popup
 
 .cd-form .fieldset:first-child {
 	margin-top: 0;
-	margin-left : 5px;
 }
 
 .cd-form .fieldset:last-child {
@@ -472,7 +471,6 @@ xsigin/signup popup
 	.cd-form .fieldset:last-child {
 		margin-bottom: 0;
 	}
-	
 	.cd-form input.has-padding {
 		padding: 16px 20px 16px 50px;
 	}

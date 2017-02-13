@@ -98,7 +98,7 @@ public class ServletUserCredentials extends HttpServlet {
 		userdb.modifyUser(Integer.parseInt(request.getSession().getAttribute("user_id").toString()),
 				request.getParameter("username"), request.getParameter("email"), request.getParameter("name"),
 				request.getParameter("surname"), request.getParameter("address"),
-				request.getParameter("telephone"), request.getParameter("city"),
+				Integer.parseInt(request.getParameter("telephone")), request.getParameter("city"),
 				request.getParameter("province"), Integer.parseInt(request.getParameter("postal_code")),
 				request.getParameter("country"));
 		updateSessionInfo(request.getSession(), request.getParameter("username"), request.getParameter("email"));
@@ -153,13 +153,13 @@ public class ServletUserCredentials extends HttpServlet {
 		// request.getSession().setMaxInactiveInterval(300000000);
 		request.getSession().setAttribute("login", "logged");
 		request.getSession().setAttribute("user_id", user.getId());
+
 		updateSessionInfo(request.getSession(), user.getUsername(), user.getEmail());
-		
+
 	}
 
 	private void addUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		userdb.addUser(request.getParameter("user"), request.getParameter("email"), request.getParameter("password"));
-		userdb.addUserInfo(request.getParameter("user"), request.getParameter("name"), request.getParameter("surname"), request.getParameter("address"), request.getParameter("telephone"), request.getParameter("city"), request.getParameter("province"), Integer.parseInt(request.getParameter("postalcode").toString()), request.getParameter("country"));
 		setLoginAttribute(request, userdb.getUserByEmail(request.getParameter("email")));
 		response.getWriter().write("OK");
 
