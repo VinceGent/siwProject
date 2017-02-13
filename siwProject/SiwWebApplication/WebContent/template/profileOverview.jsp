@@ -1,5 +1,7 @@
 <%@page import="elements.UserInformation"%>
-<% UserInformation info = (UserInformation)request.getSession().getAttribute("userinfo"); if(info==null) info=new UserInformation();%>
+<%
+	UserInformation info = (UserInformation) request.getSession().getAttribute("userinfo");
+%>
 <div class="box-title-main row col-md-12">
 	<h2 style="text-align: center;">Informazioni Account</h2>
 </div>
@@ -12,9 +14,16 @@
 			</div>
 		</div>
 		<div class="text-container">
-			<label>Username </label> <span id="display-username"><% out.print(request.getSession().getAttribute("username"));	%></span> <br>
-			<label>Nome Completo</label><span id="display-fullname"> <% out.print(info.getName() + " " + info.getSurname()); %></span> <br> <label>Email </label> <span id="display-email">
-			<% out.print(request.getSession().getAttribute("email")); %>
+			<label>Username </label> <span id="display-username"> <%
+ 	out.print(request.getSession().getAttribute("username"));
+ %>
+			</span> <br> <label>Nome Completo</label><span id="display-fullname">
+				<%
+					out.print(info.getName() + " " + info.getSurname());
+				%>
+			</span> <br> <label>Email </label> <span id="display-email"> <%
+ 	out.print(request.getSession().getAttribute("email"));
+ %>
 			</span> <br>
 		</div>
 
@@ -37,38 +46,30 @@
 	<!-- <a class="col-md-2" style="float: left;" href="#">gestisci</a> -->
 </div>
 <div class="box row">
-	<div id="billing-address" class="col-md-6 box-left">
+	<div id="billing-address" class="col-md-12 box-center">
 		<div class="minibox-title">
 			<div class="row">
-				<h4 class="col-md-9">Indirizzo Fatturazione</h4>
+				<h4 class="col-md-12 prova">Indirizzo Fatturazione</h4>
 			</div>
 		</div>
-		<div  class="user-info-container">
-			<span id="address-name"> Vincenzo Gentile </span> <br> <span
-				id="address-street"> via Louis braille 7 </span><br> <span
-				id="address-city">Rende, Cosenza, 87036</span><br> <span
-				id="address-country">Italia</span> <br> <span
-				id="address-telephone">3393350401</span> <br> <a
-				href="https://www.consoleplanet.it/customer/address/edit/id/62840/">Modifica
-				indirizzo</a>
+		<div class="user-info-container" style="font-size: 12px;">
+			<span id="address-name"><label>Nome completo </label> <%
+ 	out.print(info.getName() + " " + info.getSurname());
+ %> </span> <br> <span id="address-street"><label>Indirizzo
+			</label> <%
+ 	out.print(info.getAddress());
+ %> </span><br> <span id="address-city"><label>Città </label> <%
+ 	out.print(info.getCity() + ", " + info.getProvince() + ", " + info.getPostal_code());
+ %> </span><br> <span id="address-country"><label>Nazione </label> <%
+ 	out.print(info.getCountry());
+ %> </span> <br> <span id="address-telephone"><label>N°
+					telefono </label> <%
+ 	out.print(info.getTelephone());
+ %></span>
 		</div>
 
 	</div>
-	<div id="shipping-address" class="col-md-6 box-right">
-		<div class="minibox-title row">
-			<h4 class="col-md-9">Indirizzo Spedizione Predefinito</h4>
-			<a>modifica</a>
-		</div>
-		<div class="user-info-container">
-			<span id="address-name"> Vincenzo Gentile </span> <br> <span
-				id="address-street"> via Louis braille 7 </span><br> <span
-				id="address-city">Rende, Cosenza, 87036</span><br> <span
-				id="address-country">Italia</span> <br> <span
-				id="address-telephone">3393350401</span> <br> <a
-				href="https://www.consoleplanet.it/customer/address/edit/id/62840/">Modifica
-				indirizzo</a>
-		</div>
-	</div>
+
 </div>
 
 <!-- end second set box -->

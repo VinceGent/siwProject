@@ -104,7 +104,7 @@ public class UserDAO extends DbManager {
 	}
 
 	public void addUserInfo(final String username, final String name, final String surname, final String address,
-			final int telephone, String city, String province, int postal_code, String country) {
+			final String telephone, String city, String province, int postal_code, String country) {
 		if (getUserByUsername(username) != null) {
 			User user = getUserByUsername(username);
 			String query = "INSERT INTO user_info (id_user, name, surname, address, telephone,city,province,postal_code,country) VALUES (?,?,?,?,?,?,?,?,?);";
@@ -116,7 +116,7 @@ public class UserDAO extends DbManager {
 				mPreparedStatement.setString(2, name);
 				mPreparedStatement.setString(3, surname);
 				mPreparedStatement.setString(4, address);
-				mPreparedStatement.setInt(5, telephone);
+				mPreparedStatement.setString(5, telephone);
 				mPreparedStatement.setString(6, city);
 				mPreparedStatement.setString(7, province);
 				mPreparedStatement.setInt(8, postal_code);
@@ -158,7 +158,7 @@ public class UserDAO extends DbManager {
 		return userinfo;
 	}
 
-	public void modifyUser(int id, String username, String email, String name, String surname,String address,int telephone,String city, String province,int postal_code,String country) {
+	public void modifyUser(int id, String username, String email, String name, String surname,String address,String telephone,String city, String province,int postal_code,String country) {
 
 		final String query = "UPDATE users SET username=?, email=? WHERE id=?;";
 		final String query2 = "UPDATE user_info SET name=?, surname=?, address=?, telephone=?, city=?, province=?, postal_code=?, country=? WHERE id_user=?";
@@ -180,7 +180,7 @@ public class UserDAO extends DbManager {
 			mPreparedStatement.setString(1, name);
 			mPreparedStatement.setString(2, surname);
 			mPreparedStatement.setString(3, address);
-			mPreparedStatement.setInt(4, telephone);
+			mPreparedStatement.setString(4, telephone);
 			mPreparedStatement.setString(5, city);
 			mPreparedStatement.setString(6, province);
 			mPreparedStatement.setInt(7, postal_code);
@@ -210,12 +210,10 @@ public class UserDAO extends DbManager {
 	}
 
 	 public static void main(String[] args) {
-	 UserDAO db = new UserDAO();
 	// db.addUser("ciccio", "cicc@hot.it", "porco");
 	// db.addUserInfo("ciccio", "francesco", "rossi", "via della pace 17",
 	// "333123465");
 	// UserInformation info = db.getUserInfo("ciccio");
 	// System.out.println(info.getName() + " " + info.getId());
-	 db.addUserInfo("ciccio", "porco", "riolo"," porcile",666, "porcellinara", "crotone", 87000, "calabbbbria");
 	 }
 }

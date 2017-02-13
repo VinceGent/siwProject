@@ -24,7 +24,10 @@
 <script type="text/javascript" src="scripts/userSettings.js"></script>
 </head>
 <body>
-	<%@include file="template/navbar.html" %>
+<%
+	UserInformation info1 = (UserInformation) request.getSession().getAttribute("userinfo");
+%>
+	<%@include file="template/navbar.html"%>
 	<div class="container">
 		<div class="row profile">
 			<div class="col-md-3">
@@ -36,7 +39,11 @@
 					<!-- END SIDEBAR USERPIC -->
 					<!-- SIDEBAR USER TITLE -->
 					<div class="profile-usertitle">
-						<div class="profile-usertitle-name">Vincenzo Gentile</div>
+						<div class="profile-usertitle-name">
+							<%
+								out.print(info1.getName() + " " + info1.getSurname());
+							%>
+						</div>
 						<div class="profile-usertitle-job">Developer</div>
 					</div>
 					<!-- END SIDEBAR USER TITLE -->
@@ -52,7 +59,7 @@
 							<li id="overview-button" class="active"><a href="#"> <i
 									class="glyphicon glyphicon-home"></i> Overview
 							</a></li>
-							<li id="settings-button" ><a href="#"> <i
+							<li id="settings-button"><a href="#"> <i
 									class="glyphicon glyphicon-cog"></i> Account Settings
 							</a></li>
 							<li id="order-button"><a href="#"> <i
@@ -71,7 +78,7 @@
 			</div>
 			<div class="col-md-9 ">
 				<div class="profile-content settings-container">
-					<div id="overview-div" >
+					<div id="overview-div">
 						<%@include file="template/profileOverview.jsp"%>
 					</div>
 					<div id="settings-div" class="hidden">
@@ -88,6 +95,6 @@
 	</div>
 	<br>
 	<br>
-	<%@include file="template/checkSession.jsp" %>
+	<%@include file="template/checkSession.jsp"%>
 </body>
 </html>

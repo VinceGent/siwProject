@@ -25,9 +25,9 @@ $(document).ready(function() {
 });
 
 function searchInsertion() {
-	if(inputSearch.val()=="")
+	if (inputSearch.val() == "")
 		return;
-	document.location.href = "searchInsertion?name="+inputSearch.val();
+	document.location.href = "searchInsertion?name=" + inputSearch.val();
 }
 
 function linkProva() {
@@ -46,26 +46,83 @@ function isNumberKey(evt) {
 // logica
 function registration() {
 	var newEmail = $('#signup-email'), newUser = $('#signup-username'), newPassword = $('#signup-password'), form = $('#reg_form');
-	$.ajax({
-		url : "addUser",
-		method : "post",
-		data : {
-			'user' : newUser.val(),
-			'email' : newEmail.val(),
-			'password' : newPassword.val()
-		},
-		success : function(data, textStatus, jqXHR) {
-			logUser(newUser.val());
-		},
-		error : function(jqXHR, textStatus, errorThrown) {
-			console.log("ajax error");
-		}
+	if (checkNewInfo()) {
+		$.ajax({
+			url : "addUser",
+			method : "post",
+			data : {
+				'user' : newUser.val(),
+				'email' : newEmail.val(),
+				'password' : newPassword.val(),
+				'name' : $('#signup-name').val(),
+				'surname' : $('#signup-surname').val(),
+				'address' : $('#signup-address').val(),
+				'city' : $('#signup-city').val(),
+				'postalcode' : $('#signup-postalcode').val(),
+				'province' : $('#signup-province').val(),
+				'telephone' : $('#signup-telephone').val(),
+				'country' : $('#signup-country').val()
+			},
+			success : function(data, textStatus, jqXHR) {
+				logUser(newUser.val());
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log("ajax error");
+			}
 
-	});
+		});
+	}
+}
+
+function checkNewInfo() {
+	var check = true;
+	if ($('#signup-name').val() == "") {
+		failedField($('#signup-name'));
+		check = false;
+	} else
+		successField($('#signup-name'));
+	
+	if ($('#signup-surname').val() == "") {
+		failedField($('#signup-surname'));
+		check = false;
+	} else
+		successField($('#signup-surname'));
+	if ($('#signup-address').val() == "") {
+		failedField($('#signup-address'));
+		check = false;
+	} else
+		successField($('#signup-address'));
+	if ($('#signup-province').val() == "") {
+		failedField($('#signup-province'));
+		check = false;
+	} else
+		successField($('#signup-province'));
+	if ($('#signup-city').val() == "") {
+		failedField($('#signup-city'));
+		check = false;
+	} else
+		successField($('#signup-city'));
+	if ($('#signup-postalcode').val() == "") {
+		failedField($('#signup-postalcode'));
+		check = false;
+	} else
+		successField($('#signup-postalcode'));
+	if ($('#signup-telephone').val() == "") {
+		failedField($('#signup-telephone'));
+		check = false;
+	} else
+		successField($('#signup-telephone'));
+	if ($('#signup-country').val() == "") {
+		failedField($('#signup-country'));
+		check = false;
+	} else
+		successField($('#signup-country'));
+	
+	return check;
 }
 // logica
 function checkUsername() {
-
+	console.log("checkusername");
 	if (inputUsername.val() != "") {
 		$.ajax({
 			url : "validateUsername",
@@ -74,7 +131,8 @@ function checkUsername() {
 				'newUser' : inputUsername.val()
 			},
 			success : function(data, textStatus, jqXHR) {
-				validationFormUsername(data)
+				console.log(data);
+				validationFormUsername(data);
 
 			},
 			error : function() {
@@ -154,7 +212,6 @@ function doOffer() {
 
 function sendOffert(id_item, offer) {
 
-
 	$.ajax({
 		url : 'auctionSales',
 		method : 'post',
@@ -174,12 +231,9 @@ function sendOffert(id_item, offer) {
 
 }
 
-
-
 // logica
 function goToItemSelected() {
-	var id_item=$(this).attr('id');
-
+	var id_item = $(this).attr('id');
 
 	document.location.href = "item_Selected?id_item=" + id_item;
 }
