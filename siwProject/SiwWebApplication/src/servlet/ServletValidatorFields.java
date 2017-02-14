@@ -35,13 +35,6 @@ public class ServletValidatorFields extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		/*
-		 * if (request.getParameter("newUser") != null) { if
-		 * (!validateUser(request.getParameter("newUser"))) out.append("OK");
-		 * else out.append("NO"); } else { if
-		 * (!validateEmail(request.getParameter("newEmail"))) out.append("OK");
-		 * else out.append("NO"); }
-		 */
 		String path = request.getServletPath();
 		switch (path) {
 		case validateUsername:
@@ -54,15 +47,10 @@ public class ServletValidatorFields extends HttpServlet {
 			checkUserPassword(request, response);
 			break;
 		}
-
-		// doGet(request, response);
 	}
 
 	private void checkUserPassword(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("check user password");
-		User u = userDB.getUserByUsername(request.getSession().getAttribute("username").toString());
-		System.out.println("getpassword " + u.getPassword());
-		System.out.println("oldpassword " + request.getParameter("oldpass"));
+		User u = userDB.getUserByUsername(request.getAttribute("username").toString());
 		try {
 			if (u != null && u.getPassword().equals(request.getParameter("oldpass"))) {
 				response.getWriter().print("OK");
@@ -73,11 +61,10 @@ public class ServletValidatorFields extends HttpServlet {
 		}
 	}
 
-	private void validateUser(HttpServletRequest request, HttpServletResponse response) {
 
-		// List queryresult = database.executeQuery("from User where username =
-		// '"+user+"'");
-		// System.out.println("query result is: " + queryresult.size());
+	
+
+	private void validateUser(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			User u = userDB.getUserByUsername(request.getParameter("newUser"));
 			if (u != null) {
@@ -85,7 +72,6 @@ public class ServletValidatorFields extends HttpServlet {
 			} else
 				response.getWriter().print("NO");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

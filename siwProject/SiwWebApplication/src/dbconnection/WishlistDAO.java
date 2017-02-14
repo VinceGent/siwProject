@@ -54,7 +54,19 @@ public class WishlistDAO extends DbManager {
 			e.printStackTrace();
 		}
 	}
-
+	public void addWishlistItem(int user,int item){
+		String query = "INSERT INTO wishlist_item (id_user,id_insertion) VALUES(?,?)";
+		
+		try {
+		final Connection mConnection = createConnection();
+		final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
+			mPreparedStatement.setInt(1, user);
+			mPreparedStatement.setInt(2, item);
+			mPreparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
 
 

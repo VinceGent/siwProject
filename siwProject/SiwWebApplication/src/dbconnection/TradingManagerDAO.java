@@ -6,9 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import elements.AuctionOffer;
 import elements.Insertion;
+import elements.Order;
 import elements.OrderState;
 
 public class TradingManagerDAO extends DbManager {
@@ -36,16 +40,16 @@ public class TradingManagerDAO extends DbManager {
 		return offers;
 	}
 
-	public void insertOffer(String id_item, String id_user, String offer) {
+	public void insertOffer(int id_item, int user_id, String offer) {
 
-		AuctionOffer auctionOffer = new AuctionOffer(Integer.parseInt(id_user), Integer.parseInt(id_item),
+		AuctionOffer auctionOffer = new AuctionOffer(user_id, id_item,
 				Float.parseFloat(offer));
 
 		String query = "INSERT INTO auction_offer (id_user, id_insertion, offer) VALUES (?,?,?);";
 		try {
 			final Connection mConnection = createConnection();
 			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
-			mPreparedStatement.setString(1, Integer.toString(auctionOffer.getId_user()));
+			mPreparedStatement.setInt(1, auctionOffer.getId_user());
 			mPreparedStatement.setInt(2, auctionOffer.getId_item());
 			mPreparedStatement.setFloat(3, auctionOffer.getOffer());
 			mPreparedStatement.execute();
@@ -73,6 +77,29 @@ public class TradingManagerDAO extends DbManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+	}
+	public List<Order> getOrdersByIdUser(int id_user)
+	{
+		List<Order> orders=new LinkedList<Order>();
+		final String query2 = "SELECT * FROM orders(id_user,id_insertion,order_state,order_date) WHERE order.id_user=?";
+		try {
+			final Connection mConnection = createConnection();
+			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query2);
+			mPreparedStatement.setInt(1, id_user);
+			mPreparedStatement.execute();
+			final ResultSet mResultSet = mPreparedStatement.executeQuery();
+			while (mResultSet.next()) {
+			Order order=new Order(mResultSet.getDate("order_date"),OrderState.valueOf(mResultSet.getString("order_state")) ,Integer.parseInt( mResultSet.getString("id_insertion")), Integer.parseInt( mResultSet.getString("id_order")));
+			orders.add(order);
+			}
+			closeConnection();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return orders;
 		
 	}
 	

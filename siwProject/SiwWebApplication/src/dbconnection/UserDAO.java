@@ -104,7 +104,7 @@ public class UserDAO extends DbManager {
 	}
 
 	public void addUserInfo(final String username, final String name, final String surname, final String address,
-			final int telephone, String city, String province, int postal_code, String country) {
+			final String telephone, String city, String province, int postal_code, String country) {
 		if (getUserByUsername(username) != null) {
 			User user = getUserByUsername(username);
 			String query = "INSERT INTO user_info (id_user, name, surname, address, telephone,city,province,postal_code,country) VALUES (?,?,?,?,?,?,?,?,?);";
@@ -116,7 +116,7 @@ public class UserDAO extends DbManager {
 				mPreparedStatement.setString(2, name);
 				mPreparedStatement.setString(3, surname);
 				mPreparedStatement.setString(4, address);
-				mPreparedStatement.setInt(5, telephone);
+				mPreparedStatement.setString(5, telephone);
 				mPreparedStatement.setString(6, city);
 				mPreparedStatement.setString(7, province);
 				mPreparedStatement.setInt(8, postal_code);
@@ -216,6 +216,6 @@ public class UserDAO extends DbManager {
 	// "333123465");
 	// UserInformation info = db.getUserInfo("ciccio");
 	// System.out.println(info.getName() + " " + info.getId());
-	 db.addUserInfo("ciccio", "porco", "riolo"," porcile",666, "porcellinara", "crotone", 87000, "calabbbbria");
+//	 db.addUserInfo("ciccio", "porco", "riolo"," porcile",666, "porcellinara", "crotone", 87000, "calabbbbria");
 	 }
 }

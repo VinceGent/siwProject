@@ -24,7 +24,7 @@ import elements.UserInformation;
 		ServletUserCredentials.logoutUser, ServletUserCredentials.userinfo, ServletUserCredentials.modifyUser,
 		ServletUserCredentials.modifyPassword })
 // @WebServlet("/AddUser")
-public class ServletUserCredentials extends HttpServlet {
+public class ServletUserCredentials extends Servlet {
 	static final long serialVersionUID = 1L;
 	static final String addUser = "/addUser";
 	static final String loginUser = "/loginUser";
@@ -32,20 +32,11 @@ public class ServletUserCredentials extends HttpServlet {
 	static final String userinfo = "/userinfo";
 	static final String modifyUser = "/modifyUser";
 	static final String modifyPassword = "/modifyPassword";
-	private UserDAO userdb;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
 	public ServletUserCredentials() {
 		super();
-		userdb = new UserDAO();
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -57,10 +48,6 @@ public class ServletUserCredentials extends HttpServlet {
 		}
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String path = request.getServletPath();
@@ -85,19 +72,12 @@ public class ServletUserCredentials extends HttpServlet {
 	}
 
 	private void modifyPassword(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("modify password method");
-		System.out.println("la nuova password � " + request.getParameter("newPassword"));
-		System.out.println("id utente � " + request.getSession().getAttribute("user_id"));
-
-		userdb.setPassword(Integer.parseInt(request.getSession().getAttribute("user_id").toString()),
-				request.getParameter("newPassword"));
+		userDAO.setPassword(getUserId(request), request.getParameter("newPassword"));
 	}
 
 	private void modifyUser(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("chiamata servlet modifica");
-		userdb.modifyUser(Integer.parseInt(request.getSession().getAttribute("user_id").toString()),
-				request.getParameter("username"), request.getParameter("email"), request.getParameter("name"),
-				request.getParameter("surname"), request.getParameter("address"),
+		userDAO.modifyUser(getUserId(request), request.getParameter("username"), request.getParameter("email"),
+				request.getParameter("name"), request.getParameter("surname"), request.getParameter("address"),
 				Integer.parseInt(request.getParameter("telephone")), request.getParameter("city"),
 				request.getParameter("province"), Integer.parseInt(request.getParameter("postal_code")),
 				request.getParameter("country"));
@@ -105,12 +85,11 @@ public class ServletUserCredentials extends HttpServlet {
 	}
 
 	private void userinfo(HttpServletRequest request, HttpServletResponse response) {
-		User user = userdb.getUserByUsername(request.getSession().getAttribute("username").toString());
+		User user = userDAO.getUserByUsername(getUsername(request));
 
-		UserInformation info = userdb.getUserInfo(user.getUsername());
+		UserInformation info = userDAO.getUserInfo(user.getUsername());
 		JsonObject obj = new JsonObject();
 		if (info != null) {
-
 			obj.addProperty("username", user.getUsername());
 			obj.addProperty("name", info.getName());
 			obj.addProperty("surname", info.getSurname());
@@ -123,7 +102,7 @@ public class ServletUserCredentials extends HttpServlet {
 			obj.addProperty("country", info.getCountry());
 		}
 		try {
-			response.getWriter().write(obj.toString());
+			writeResponse(response, obj);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -131,36 +110,38 @@ public class ServletUserCredentials extends HttpServlet {
 
 	private void logoutUser(HttpServletRequest request, HttpServletResponse response) {
 		request.getSession().invalidate();
-		request.getSession().setAttribute("ss", "sss");
-
 	}
 
 	private void loginUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		User user = userdb.getUserByUsername(request.getParameter("username"));
+		User user = userDAO.getUserByUsername(request.getParameter("username"));
 		JsonObject obj = new JsonObject();
 		if (user != null && user.getPassword().equals(request.getParameter("password"))) {
-			obj.addProperty("state", "ok");
+			writeStateSuccess(obj);
 			setLoginAttribute(request, user);
 
 		} else {
-			obj.addProperty("state", "failed");
+			writeStateFailed(obj);
 		}
-		response.getWriter().write(obj.toString());
+		writeResponse(response, obj);
 	}
 
 	private void setLoginAttribute(HttpServletRequest request, User user) {
-		// request.getSession().setMaxInactiveInterval(300000000);
 		request.getSession().setAttribute("login", "logged");
 		request.getSession().setAttribute("user_id", user.getId());
-
 		updateSessionInfo(request.getSession(), user.getUsername(), user.getEmail());
 
 	}
 
 	private void addUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		userdb.addUser(request.getParameter("user"), request.getParameter("email"), request.getParameter("password"));
-		setLoginAttribute(request, userdb.getUserByEmail(request.getParameter("email")));
+		userDAO.addUser(request.getParameter("user"), request.getParameter("email"), request.getParameter("password"));
+		userDAO.addUserInfo(request.getParameter("user"), request.getParameter("name"), request.getParameter("surname"), request.getParameter("address"), request.getParameter("telephone"), request.getParameter("city"), request.getParameter("province"), Integer.parseInt(request.getParameter("postalcode").toString()), request.getParameter("country"));
+		
+		
+		
+		
+		
+		setLoginAttribute(request, userDAO.getUserByEmail(request.getParameter("email")));
 		response.getWriter().write("OK");
 
 	}
@@ -168,7 +149,7 @@ public class ServletUserCredentials extends HttpServlet {
 	private void updateSessionInfo(HttpSession session, String username, String email) {
 		session.setAttribute("username", username);
 		session.setAttribute("email", email);
-		session.setAttribute("userinfo", userdb.getUserInfo(username));
+		session.setAttribute("userinfo", userDAO.getUserInfo(username));
 	}
 
 }

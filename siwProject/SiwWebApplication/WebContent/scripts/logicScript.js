@@ -1,4 +1,3 @@
-var input;
 var inputMail;
 var inputSearch;
 var buttonSearch;
@@ -25,10 +24,105 @@ $(document).ready(function() {
 	buttonSearch.click(searchInsertion);
 	$('.go-to-item').click(goToItemSelected);
 	$('#gotoWishlist').click(wishlist);
+	$('#addToWishlist').click(addToWishlist);
+	$('#removeFromWishlist').click(removeFromWishlist);
+	$('.button-addToCart').click(addToCart);
 });
 
 function wishlist() {
 	document.location.href = "loadWishlist";
+}
+
+function addToCart()
+{
+	var id_item=$(this).attr('id');
+	$.ajax({
+		url : "addToCart",
+		method : "post",
+		data : {
+			'id_item' : id_item
+		},
+		success : function(data) {
+			var obj = $.parseJSON(data);
+			if (obj["state"] == "OK") { // 
+				window.alert("Oggetto aggiunto al carrello");
+			} else {
+				window.alert("Devi eseguire il login per aggiungere un oggetto al carrello");
+				// gli diciamo di fare il login
+			}
+		},
+		error : function() {
+
+		}
+
+	});
+
+
+
+}
+
+function addToWishlist() {
+	console.log("add to wishlist");
+	$.ajax({
+		url : "addWishlistItem",
+		method : "post",
+		data : {
+			'id_item' : id_item
+		},
+		success : function(data, textStatus, jqXHR) {
+			var obj = $.parseJSON(data);
+			console.log(obj["state"]);
+			if (obj["state"] == "OK") { // aggiunto alla wishlist
+				$('#addToWishlist').addClass("hidden");
+				$('#removeFromWishlist').removeClass("hidden");
+			} else {
+
+				// gli diciamo di fare il login
+			}
+
+		},
+		error : function() {
+			console.log("ajax error");
+		}
+	});
+
+}
+
+function inWishlist(value) {
+	console.log(value);
+	if (value) {
+		console.log($('#removeFromWishlist'));
+		$('#removeFromWishlist').removeClass("hidden");
+	} else {
+		$('#addToWishlist').removeClass("hidden");
+	}
+}
+
+function removeFromWishlist() {
+	console.log("remove");
+	$.ajax({
+		url : "removeWishlistItem",
+		method : "post",
+		data : {
+			'id_item' : id_item
+		},
+		success : function(data, textStatus, jqXHR) {
+			var obj = $.parseJSON(data);
+			console.log(obj["state"]);
+			if (obj["state"] == "OK") { // aggiunto alla wishlist
+				$('#removeFromWishlist').addClass("hidden");
+				$('#addToWishlist').removeClass("hidden");
+
+			} else {
+
+				// gli diciamo di fare il login
+			}
+
+		},
+		error : function() {
+			console.log("ajax error");
+		}
+	});
 }
 
 function searchInsertion() {
@@ -197,7 +291,7 @@ function buyItem() {
 	console.log("pora miseria");
 	var value = false;
 	$.ajax({
-		url : "addToCart",
+		url : "addToCartAndPay",
 		method : "post",
 		async : false,
 		data : {
@@ -220,7 +314,7 @@ function buyItem() {
 	});
 
 	if (value) {
-		document.location.href = "payment?id_item="+id_item;
+		document.location.href = "payment?id_item=" + id_item;
 	}
 
 	//	
@@ -297,6 +391,7 @@ function logoutUser() {
 		url : 'logoutUser',
 		method : 'get',
 		success : function() {
+				location.reload();
 			return true;
 
 		},
@@ -321,12 +416,14 @@ function validation() {
 		},
 		success : function(data) {
 			var obj = $.parseJSON(data);
-			if (obj["state"] == "ok") {
+			if (obj["state"] == "OK") {
 				logUser(loginUsername.val());
 				$('#error-custom').addClass('hidden');
+				location.reload();
 			} else {
 				notLogged();
 				$('#error-custom').removeClass('hidden');
+
 			}
 
 		},

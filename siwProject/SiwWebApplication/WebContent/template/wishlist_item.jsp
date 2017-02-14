@@ -1,3 +1,4 @@
+<%@page import="elements.Sales_type"%>
 <%@page import="elements.Insertion"%>
 <div id="products" class="row list-group">
 			<div class="item list-group-item col-xs-4 col-lg-4">
@@ -11,15 +12,17 @@
 							<div class="col-xs-12 col-md-6">
 								<p class="lead"><% out.print(((Insertion)request.getSession().getAttribute("insertion")).getPrice()+" &euro;");%></p>
 							</div>
+							<%if(!((Insertion)request.getSession().getAttribute("insertion")).getSales_type().equals(Sales_type.asta)) {%>
 							<div class="col-xs-12 col-md-2">
-								<a class="btn btn-success" href="#">Add
+								<a class="btn btn-success button-addToCart" id="<%out.print(((Insertion)request.getSession().getAttribute("insertion")).getId_item());%>">Add
 									to cart</a>
 							</div>
+							<%} %>
 							<div class="col-xs-12 col-md-2">
 								<a class="btn btn-info" href="item_Selected?id_item=<%out.print(((Insertion)request.getSession().getAttribute("insertion")).getId_item());%>">Go to Item</a>
 							</div>
 							<div class="col-xs-12 col-md-2">
-								<a id="removeButton_itm_<%out.print(((Insertion)request.getSession().getAttribute("insertion")).getId_item());%>" class="btn btn-danger rm-wishlist" data-href="removeItem?id_item=<%out.print(((Insertion)request.getSession().getAttribute("insertion")).getId_item());%>">Remove</a>
+								<a id="removeButton_itm_<%out.print(((Insertion)request.getSession().getAttribute("insertion")).getId_item());%>" class="btn btn-danger rm-wishlist" data-href="removeWishlistItem?id_item=<%out.print(((Insertion)request.getSession().getAttribute("insertion")).getId_item());%>">Remove</a>
 							</div>
 						</div>
 					</div>

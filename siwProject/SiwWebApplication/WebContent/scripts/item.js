@@ -40,6 +40,12 @@ function updateOffer() {
 	});
 
 }
+
+
+
+
+
+
 function buyNowInformation() {
 
 	$.ajax({

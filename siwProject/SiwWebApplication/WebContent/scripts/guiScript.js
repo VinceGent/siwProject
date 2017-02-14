@@ -30,10 +30,12 @@ function auctionSale(priceInsertion) {
 function logged() {
 	$('#login, #signup').addClass('hidden');
 	if ($('#wishlist-button,#shopping-button,#user-dropdown')
-			.hasClass('hidden'))
+			.hasClass('hidden')) {
 		$('#wishlist-button,#shopping-button,#user-dropdown').removeClass(
 				'hidden');
-
+	
+	}
+	
 }
 
 // grafica
@@ -43,12 +45,12 @@ function notLogged() {
 		if (logoutUser()) {
 			$('#login, #signup').removeClass('hidden');
 			var index = /index/;
-			var search=/searchInsertion/;
-			var item=/item_Selected/;
+			var search = /searchInsertion/;
+			var item = /item_Selected/;
 			var path = window.location.pathname;
-			if (!index.test(path)&&!search.test(path)&&!item.test(path)) {
+			if (!index.test(path) && !search.test(path) && !item.test(path)) {
 				goToHomePage();
-			}
+			} 
 		}
 	}
 

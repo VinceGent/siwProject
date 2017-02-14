@@ -5,8 +5,8 @@
 <div class="container">
 	<div class="col-md-5 single-top">
 		<ul id="list_single_image">
-			<li style="width: 54%; margin-left: 44px;"><img id="image-selected"
-					src="images/si1.jpg" ></li>
+			<li style="width: 54%; margin-left: 44px;"><img
+				id="image-selected" src="images/si1.jpg"></li>
 		</ul>
 	</div>
 	<%
@@ -121,26 +121,30 @@
 				<h4 class="col-md-2">Offri:</h4>
 				<div class="col-md-7 ">
 					<input style="padding-top: 2%" id="offer" type="number"
-						name="quantity" STEP="0.01" min="0" placeholder="Inserisci offerta"></input>
+						name="quantity" STEP="0.01" min="0"
+						placeholder="Inserisci offerta"></input>
 				</div>
 			</div>
-
-
-
-
-
-
-
 
 			<div class="row">
 				<ul class="button-list">
 					<li><a id="buyNow" class="cart ">Compra subito</a></li>
 					<li><a id="auctionSale" class="cart ">piazza offerta</a></li>
-					<li id="best-offer" class="hidden"><h4>Sei il miglior offerente!!</h4><li>
+					<li><a id="addToWishlist" class="cart hidden">Add to
+							wishlist</a></li>
+					<li><a id="removeFromWishlist" class="cart hidden">Remove
+							from wishlist</a></li>
+					<li id="best-offer" class="hidden"><h4>Sei il miglior
+							offerente!!</h4>
+					<li>
 				</ul>
 			</div>
 		</div>
 	</div>
+
+
+
+
 
 	<div id="div-etalage" class="col-md-6">
 		<ul id="etalage">
@@ -191,3 +195,27 @@ var priceInsertion="<%=insertion.getPrice()%>";
 <%
 	}
 %>
+
+<%
+	if (request.getSession().getAttribute("login") != null
+			&& request.getSession().getAttribute("login").equals("logged")
+			&& request.getSession().getAttribute("inWishlist") != null
+			&& request.getSession().getAttribute("inWishlist").toString().equals("true")) {
+%>
+<script type="text/javascript">
+	inWishlist(true);
+</script>
+<%
+	} else if(request.getSession().getAttribute("login") != null
+			&& request.getSession().getAttribute("login").equals("logged")){
+%>
+<script type="text/javascript">
+	inWishlist(false);
+</script>
+<%
+	}
+%>
+
+
+
+

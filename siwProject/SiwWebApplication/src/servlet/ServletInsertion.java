@@ -17,15 +17,13 @@ import elements.Sales_type;
 
 @WebServlet(description = "insertion", urlPatterns = { ServletInsertion.newInsertion,
 		ServletInsertion.searchInsertion })
-public class ServletInsertion extends HttpServlet {
+public class ServletInsertion extends Servlet {
 	public static final String newInsertion = "/newInsertion";
 	public static final String searchInsertion = "/searchInsertion";
 	private static final long serialVersionUID = 1L;
-	private InsertionDAO db;
 
 	public ServletInsertion() {
-
-		db = new InsertionDAO();
+		super();
 	}
 
 	@Override
@@ -40,15 +38,6 @@ public class ServletInsertion extends HttpServlet {
 
 	}
 
-	private void searchInsertion(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-
-		List<Insertion> insertions = db.getInsertionByName(req.getParameter("name"));
-		req.getSession().setAttribute("insertions", insertions);
-		RequestDispatcher dispatcher = req.getRequestDispatcher("searchPage.jsp");
-		dispatcher.forward(req, resp);
-	}
-
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = req.getServletPath();
@@ -57,6 +46,15 @@ public class ServletInsertion extends HttpServlet {
 			addNewInsertion(req, resp);
 			break;
 		}
+	}
+
+	private void searchInsertion(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+
+		List<Insertion> insertions = insertionDAO.getInsertionByName(req.getParameter("name"));
+		req.getSession().setAttribute("insertions", insertions);
+		RequestDispatcher dispatcher = req.getRequestDispatcher("searchPage.jsp");
+		dispatcher.forward(req, resp);
 	}
 
 	private void addNewInsertion(HttpServletRequest req, HttpServletResponse resp) {
@@ -69,7 +67,7 @@ public class ServletInsertion extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		db.addNewInsertion(Integer.parseInt(req.getSession(false).getAttribute("user_id").toString()),
+		insertionDAO.addNewInsertion(Integer.parseInt(req.getSession(false).getAttribute("user_id").toString()),
 				req.getParameter("title"), new java.util.Date(), date, Integer.valueOf(req.getParameter("amount")),
 				Sales_type.valueOf(req.getParameter("seller_type")), Float.valueOf(req.getParameter("price")),
 				req.getParameter("description"));

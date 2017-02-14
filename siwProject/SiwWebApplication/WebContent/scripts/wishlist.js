@@ -6,6 +6,7 @@ $(document).ready(function() {
 		console.log(reference);
 		$.ajax({
 			url: reference,
+			method:"post",
 			success:function(){
 				$(elem.target).closest("#products").remove();				
 			},

@@ -9,65 +9,79 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.JsonObject;
+
 import dbconnection.WishlistDAO;
 import elements.Insertion;
 
-@WebServlet(description = "wishlist", urlPatterns = { ServletWishlist.loadWishlist, ServletWishlist.removeItem })
-public class ServletWishlist extends HttpServlet {
+@WebServlet(description = "wishlist", urlPatterns = { ServletWishlist.loadWishlist, ServletWishlist.removeWishlistItem,
+		ServletWishlist.addWishlistItem })
+public class ServletWishlist extends Servlet {
 
 	private static final long serialVersionUID = 1L;
-
 	protected static final String loadWishlist = "/loadWishlist";
-	protected static final String removeItem = "/removeItem";
-
-	protected WishlistDAO dbWishlist;
+	protected static final String removeWishlistItem = "/removeWishlistItem";
+	protected static final String addWishlistItem = "/addWishlistItem";
 
 	public ServletWishlist() {
-		dbWishlist = new WishlistDAO();
+		super();
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-		System.out.println("wishlist doget " + req.getServletPath());
-
 		switch (req.getServletPath()) {
 		case loadWishlist:
 			loadWishlist(req, resp);
 			break;
-
-		case removeItem:
-			removeItem(req, resp);
-			break;
-
-		default:
-			break;
-		}
-	}
-
-	private void removeItem(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		System.out.println("remove wishlist item");
-		if (req.getSession().getAttribute("login").toString().equals("logged")) {
-			dbWishlist.removeWishlistItem(Integer.parseInt(req.getParameter("id_item").toString()),
-					Integer.parseInt(req.getSession().getAttribute("user_id").toString()));
-		}
-		// req.getRequestDispatcher("wishlist.jsp").forward(req, resp);
-	}
-
-	private void loadWishlist(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		System.out.println("called load wishlist");
-		if (req.getSession().getAttribute("login").toString().equals("logged")) {
-			List<Insertion> list = dbWishlist
-					.getWishlist(Integer.parseInt(req.getSession().getAttribute("user_id").toString()));
-			req.getSession().setAttribute("wishlist", list);
-			req.getRequestDispatcher("wishlist.jsp").forward(req, resp);
 		}
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// super.doPost(req, resp);
-		System.out.println("wishlist dopost");
+		switch (req.getServletPath()) {
+		case addWishlistItem:
+			addItem(req, resp);
+			break;
+		case removeWishlistItem:
+			removeItem(req, resp);
+			break;
+		}
 
 	}
+
+	private void addItem(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		JsonObject jsonObject = new JsonObject();
+		if (isLogged(req)) {
+			wishlistDAO.addWishlistItem(getUserId(req), getIdItem(req));
+			writeStateSuccess(jsonObject);
+			jsonObject.addProperty("inWishlist", true);
+		} else {
+			writeStateFailed(jsonObject);
+		}
+		resp.getWriter().write(jsonObject.toString());
+	}
+
+	protected void removeItem(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		System.out.println("rimuovoooooooooooooooooooo");
+		JsonObject jsonObject = new JsonObject();
+		if (isLogged(req)) {
+			wishlistDAO.removeWishlistItem(getIdItem(req), getUserId(req));
+			req.getSession().setAttribute("inWishlist", false);
+			writeStateSuccess(jsonObject);
+		} else {
+			writeStateSuccess(jsonObject);
+		}
+		writeResponse(resp,jsonObject);
+	}
+
+	
+
+	private void loadWishlist(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if (isLogged(req)) {
+			List<Insertion> list = wishlistDAO.getWishlist(getUserId(req));
+			req.getSession().setAttribute("wishlist", list);
+			req.getRequestDispatcher("wishlist.jsp").forward(req, resp);
+		}
+	}
+
 }

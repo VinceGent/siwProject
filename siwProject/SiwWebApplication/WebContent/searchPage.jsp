@@ -48,7 +48,6 @@
 			<%
 			
 				List<Insertion> insertions = (List<Insertion>) request.getSession().getAttribute("insertions");
-				
 				for (Insertion insertion : insertions) { // stabilire prima il risultato della ricerca
 					request.getSession().setAttribute("currentInsertion", insertion);
 			%>
