@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>My Web Site</title>
-
+ 
 <script type="text/javascript" src="scripts/jquery.js"></script>
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"
 	type="text/css" />
