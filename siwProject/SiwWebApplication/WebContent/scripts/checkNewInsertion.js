@@ -4,29 +4,41 @@ var title;
 var description;
 var sellerType;
 var sendInsertion;
-var amount;
-var expirationDate;
+var amount, amountDiv;
+var expirationDate, dateFormDiv;
+var ID_Insertion;
 $(document).ready(function() {
 	category = $('#category');
-	price = $('#price');
-	title = $('#title');
-	amount = $('#amount');
-	description = $('#description');
-	sellerType = $('#seller_type');
+//	price = $('#price');
+	price = $('#insertion-price');
+//	title = $('#title');
+	title = $('#insertion-title');
+//	amount = $('#amount');
+	amount = $('#insertion-quantity');
+	amountDiv = $('#amountDiv');
+//	description = $('#description');
+	description = $('#insertion-description');
+//	sellerType = $('#seller_type');
+	sellerType = $('#sale_type');
 	sellerType.change(selectSellerType);
 	sendInsertion = $('#send_insertion');
 	price.keypress(isNumberKey);
 	amount.keypress(isNumberKey);
 	sendInsertion.click(checkFields);
-	expirationDate = $('#date');
-	$('#datePicker').datepicker({
+//	expirationDate = $('#date');
+	expirationDate = $('#expiration-date');
+	dateFormDiv = $('#date-picker');
+	$('#date-picker').datepicker({
 		format : 'dd/mm/yyyy',
 		autoclose : true,
 		startDate : '+1d'
 	}).on('changeDate', function(e) {
 
 	});
-
+	
+	$('#next-button').click(goToImageUploader);
+	selectSellerType();
+	$('#js-upload-submit').click(unafunzione);
 });
 
 // $('#datePicker').datepicker({
@@ -39,16 +51,29 @@ $(document).ready(function() {
 //
 //           
 // });
+function unafunzione() {
+	
+}
 
 function selectSellerType() {
 	console.log(sellerType.find(':selected').val());
-	// if(sellerType.find(':selected').val()=="asta")
-	$('#row-quantity').toggleClass("hidden");
+	 if(sellerType.find(':selected').val()=="Auction"){
+		 dateFormDiv.removeClass('hidden');
+		 amountDiv.addClass('hidden');
+		 amount.val(0);
+		 expirationDate.val("");
+	 }else{
+		 dateFormDiv.addClass('hidden');
+		 amountDiv.removeClass('hidden');
+		 amount.val("");
+		 expirationDate.val("01/01/1970");
+	 }
+/*	$('#row-quantity').toggleClass("hidden");
 	if ($('#row-quantity').hasClass("hidden"))
 		amount.val(0);
 	else
 		amount.val("");
-
+*/
 }
 
 function isNumberKey(evt) {
@@ -72,62 +97,63 @@ function checkFields() {
 		ok = false;
 	}
 	if (str.test(description.val())) {
-		successField(title);
+		successField(description);
 	} else {
-		failedField(title);
+		failedField(description);
 		ok = false;
 	}
 	var number = /^\d+(\.\d+)?$/;
 	if (number.test(price.val())) {
-		successField(title);
+		successField(price);
 	} else {
-		failedField(title);
+		failedField(price);
 		ok = false;
 	}
-	console.log(amount.val());
 	number = /^\d+$/;
 	if (number.test(amount.val())) {
-		successField(title);
+		successField(amount);
 	} else {
-		failedField(title);
+		failedField(amount);
 		ok = false;
 
 	}
-	console.log()
+//	console.log()
 	if (!expirationDate.val() == "") {
-		successField(title);
+		successField(expirationDate);
 
 	} else {
-		failedField(title);
+		failedField(expirationDate);
 		ok = false;
 
 	}
-
-	console.log(expirationDate.val());
+	return ok;
+/*	console.log(expirationDate.val());
 	if (ok) {
 		addNewInsertion();
-	}
+	}*/
 
 }
+var tmp_id;
 function addNewInsertion() {
 
-	console.log($('#datePicker').datepicker("getDate"));
 	$.ajax({
 
 		url : "newInsertion",
 		method : "post",
+		async : false,
 		data : {
 			'category' : category.find(":selected").val(),
 			'title' : title.val(),
 			'price' : price.val(),
 			'description' : description.val(),
-			'seller_type' : sellerType.find(":selected").val(),
+			'seller_type' : sellerType.find(":selected").attr("id"),
 			'amount' : amount.val(),
 			'expiration_date' : expirationDate.val()
 
 		},
 		success : function(data, textStatus, jqXHR) {
-
+			console.log("dopo che inserisco ricevo ",data);
+			tmp_id = data;
 		},
 		error : function() {
 			console.log("ajax error");
@@ -135,4 +161,24 @@ function addNewInsertion() {
 
 	});
 
+}
+
+function goToImageUploader() {
+	console.log("title is ",title.val());
+	console.log("price is ",price.val());
+	console.log("amount is ",amount.val());
+	console.log("description is ",description.val());
+	console.log("date is ",expirationDate.val());
+	console.log("check fields is ",checkFields());
+	
+	if(checkFields()){
+		addNewInsertion();
+		console.log("tmp id dopo ajax ", tmp_id);
+		$('#input_id_insertion').attr("value" , tmp_id);
+		$('#insertion-form').addClass("hidden");
+		$('#upload-image').removeClass("hidden");
+	}else{
+		console.log("non inserisco");
+	}
+	
 }

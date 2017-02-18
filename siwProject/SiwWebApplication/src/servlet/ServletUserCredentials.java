@@ -2,7 +2,10 @@ package servlet;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +17,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import dbconnection.UserDAO;
+import elements.Order;
+import elements.OrderState;
 import elements.User;
 import elements.UserInformation;
 
@@ -22,7 +27,7 @@ import elements.UserInformation;
  */
 @WebServlet(description = "login", urlPatterns = { ServletUserCredentials.addUser, ServletUserCredentials.loginUser,
 		ServletUserCredentials.logoutUser, ServletUserCredentials.userinfo, ServletUserCredentials.modifyUser,
-		ServletUserCredentials.modifyPassword })
+		ServletUserCredentials.modifyPassword, ServletUserCredentials.userProfile })
 // @WebServlet("/AddUser")
 public class ServletUserCredentials extends Servlet {
 	static final long serialVersionUID = 1L;
@@ -32,6 +37,7 @@ public class ServletUserCredentials extends Servlet {
 	static final String userinfo = "/userinfo";
 	static final String modifyUser = "/modifyUser";
 	static final String modifyPassword = "/modifyPassword";
+	static final String userProfile = "/userProfile";
 
 	public ServletUserCredentials() {
 		super();
@@ -45,7 +51,18 @@ public class ServletUserCredentials extends Servlet {
 		case logoutUser:
 			logoutUser(request, response);
 			break;
+		case userProfile:
+			userProfile(request, response);
+			break;
 		}
+	}
+
+	private void userProfile(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		RequestDispatcher dispatcher = request.getRequestDispatcher("userProfile.jsp");
+		updateSessionInfo(request.getSession(), getUsername(request), userDAO.getMailByUserId(getUserId(request)),
+				request);
+		dispatcher.forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -81,7 +98,8 @@ public class ServletUserCredentials extends Servlet {
 				Integer.parseInt(request.getParameter("telephone")), request.getParameter("city"),
 				request.getParameter("province"), Integer.parseInt(request.getParameter("postal_code")),
 				request.getParameter("country"));
-		updateSessionInfo(request.getSession(), request.getParameter("username"), request.getParameter("email"));
+		updateSessionInfo(request.getSession(), request.getParameter("username"), request.getParameter("email"),
+				request);
 	}
 
 	private void userinfo(HttpServletRequest request, HttpServletResponse response) {
@@ -113,7 +131,6 @@ public class ServletUserCredentials extends Servlet {
 	}
 
 	private void loginUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
 		User user = userDAO.getUserByUsername(request.getParameter("username"));
 		JsonObject obj = new JsonObject();
 		if (user != null && user.getPassword().equals(request.getParameter("password"))) {
@@ -129,27 +146,40 @@ public class ServletUserCredentials extends Servlet {
 	private void setLoginAttribute(HttpServletRequest request, User user) {
 		request.getSession().setAttribute("login", "logged");
 		request.getSession().setAttribute("user_id", user.getId());
-		updateSessionInfo(request.getSession(), user.getUsername(), user.getEmail());
+		updateSessionInfo(request.getSession(), user.getUsername(), user.getEmail(), request);
 
 	}
 
 	private void addUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		userDAO.addUser(request.getParameter("user"), request.getParameter("email"), request.getParameter("password"));
-		userDAO.addUserInfo(request.getParameter("user"), request.getParameter("name"), request.getParameter("surname"), request.getParameter("address"), request.getParameter("telephone"), request.getParameter("city"), request.getParameter("province"), Integer.parseInt(request.getParameter("postalcode").toString()), request.getParameter("country"));
-		
-		
-		
-		
-		
+		userDAO.addUserInfo(request.getParameter("user"), request.getParameter("name"), request.getParameter("surname"),
+				request.getParameter("address"), request.getParameter("telephone"), request.getParameter("city"),
+				request.getParameter("province"), Integer.parseInt(request.getParameter("postalcode").toString()),
+				request.getParameter("country"));
+
 		setLoginAttribute(request, userDAO.getUserByEmail(request.getParameter("email")));
 		response.getWriter().write("OK");
 
 	}
 
-	private void updateSessionInfo(HttpSession session, String username, String email) {
+	private void updateSessionInfo(HttpSession session, String username, String email, HttpServletRequest req) {
 		session.setAttribute("username", username);
 		session.setAttribute("email", email);
 		session.setAttribute("userinfo", userDAO.getUserInfo(username));
+		session.setAttribute("ordersCompleted", getOrdersCompletedByIdUser(getUserId(req)));
+
+	}
+
+	public List<String> getOrdersCompletedByIdUser(int id_user) {
+		List<String> ordersName = new LinkedList<String>();
+		List<Order> orders = tradingManagerDAO.getOrdersByIdUser(id_user);
+		for (Order order : orders) {
+			if (order.getState() == OrderState.pagato) {
+				ordersName.add(insertionDAO.getInsertionById(order.getId_insertion()).getName());
+
+			}
+		}
+		return ordersName;
 	}
 
 }

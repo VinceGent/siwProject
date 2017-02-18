@@ -1,15 +1,18 @@
+var mainNav;
+var formModal;
 jQuery(document)
 		.ready(
 				function($) {
 
-					var formModal = $('.cd-user-modal'), formLogin = formModal
+					 formModal = $('.cd-user-modal'), formLogin = formModal
 							.find('#cd-login'), formSignup = formModal
 							.find('#cd-signup'), formForgotPassword = formModal
 							.find('#cd-reset-password'), formModalTab = $('.cd-switcher'), tabLogin = formModalTab
 							.children('li').eq(0).children('a'), tabSignup = formModalTab
 							.children('li').eq(1).children('a'), forgotPasswordLink = formLogin
 							.find('.cd-form-bottom-message a'), backToLoginLink = formForgotPassword
-							.find('.cd-form-bottom-message a'), mainNav = $('#signlog');
+							.find('.cd-form-bottom-message a');
+					mainNav = $('#signlog');
 
 					// open modal
 					mainNav.on('click', function(event) {
@@ -74,15 +77,7 @@ jQuery(document)
 						login_selected();
 					});
 
-					function login_selected() {
-						mainNav.children('ul').removeClass('is-visible');
-						formModal.addClass('is-visible');
-						formLogin.addClass('is-selected');
-						formSignup.removeClass('is-selected');
-						formForgotPassword.removeClass('is-selected');
-						tabLogin.addClass('selected');
-						tabSignup.removeClass('selected');
-					}
+
 
 					function closeForm(event) {
 						if ($(event.target).is(formModal)
@@ -154,6 +149,16 @@ jQuery(document)
 					}
 
 				});
+
+function login_selected() {
+	mainNav.children('ul').removeClass('is-visible');
+	formModal.addClass('is-visible');
+	formLogin.addClass('is-selected');
+	formSignup.removeClass('is-selected');
+	formForgotPassword.removeClass('is-selected');
+	tabLogin.addClass('selected');
+	tabSignup.removeClass('selected');
+}
 
 // credits
 // http://css-tricks.com/snippets/jquery/move-cursor-to-end-of-textarea-or-input/

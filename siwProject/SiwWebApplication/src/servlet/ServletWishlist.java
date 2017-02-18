@@ -14,7 +14,7 @@ import com.google.gson.JsonObject;
 import dbconnection.WishlistDAO;
 import elements.Insertion;
 
-@WebServlet(description = "wishlist", urlPatterns = { ServletWishlist.loadWishlist, ServletWishlist.removeWishlistItem,
+@WebServlet(description = "wishlist", urlPatterns = { ServletWishlist.loadWishlist, ServletWishlist.removeWishlistItem,ServletWishlist.isWishlistItem,
 		ServletWishlist.addWishlistItem })
 public class ServletWishlist extends Servlet {
 
@@ -22,7 +22,7 @@ public class ServletWishlist extends Servlet {
 	protected static final String loadWishlist = "/loadWishlist";
 	protected static final String removeWishlistItem = "/removeWishlistItem";
 	protected static final String addWishlistItem = "/addWishlistItem";
-
+	protected static final String isWishlistItem = "/isWishlistItem";
 	public ServletWishlist() {
 		super();
 	}
@@ -33,7 +33,21 @@ public class ServletWishlist extends Servlet {
 		case loadWishlist:
 			loadWishlist(req, resp);
 			break;
+		case isWishlistItem:
+			isWishlistItem(req,resp);
+			break;
 		}
+	}
+
+	private void isWishlistItem(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		System.out.println("is wishlist funzione");
+		if(!isLogged(req))
+			return;
+		if(wishlistDAO.isWishlistItem(getIdItem(req), getUserId(req)))
+			resp.getWriter().write("true");
+		else
+			resp.getWriter().write("false");
+		
 	}
 
 	@Override

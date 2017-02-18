@@ -1,8 +1,11 @@
 package elements;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Order {
+public class Order implements Serializable {
+
+	private static final long serialVersionUID = -2709426825987549837L;
 
 	public Order(Date orderdate, OrderState state, int id_insertion, int id_user, int id_order) {
 		this.orderdate = orderdate;

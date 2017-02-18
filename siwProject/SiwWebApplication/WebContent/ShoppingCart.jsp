@@ -1,3 +1,9 @@
+<%@page import="elements.OrderState"%>
+<%@page import="elements.Insertion"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="elements.Order"%>
+<%@page import="java.util.ListResourceBundle"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -22,14 +28,15 @@
 <script type="text/javascript" src="scripts/logicScript.js"></script>
 
 
-<title>Insert title here</title>
+<title>Your cart</title>
 </head>
 <body>
 	<%@ include file="template/navbar.html"%>
 
 	<div class="container">
 		<div class="row">
-			<div class="col-md-10 col-md-offset-1" style="background-color: white;">
+			<div class="col-md-10 col-md-offset-1"
+				style="background-color: white;">
 				<table class="table table-hover">
 					<thead>
 						<tr>
@@ -39,16 +46,31 @@
 						</tr>
 					</thead>
 					<tbody>
-
+						<%
+							HashMap<Order, Insertion> orders = (HashMap<Order, Insertion>) request.getSession().getAttribute("orders");
+							int total = 0;
+							for (Order order : orders.keySet()) {
+								if (order.getState().equals(OrderState.pagato))
+									continue;
+								request.getSession().setAttribute("currentOrder", order);
+						%>
 
 						<%@ include file="template/ShoppingCartItem.jsp"%>
+						<%
+							if (orders.get(order).getAmount() > 0) {
+									total += orders.get(order).getPrice();
+								}
+							}
+						%>
 
 						<tr>
 							<td class="col-md-8 text-center"> </td>
-				
 							<td class="col-md-1 text-center"><h3>Total</h3></td>
 							<td class="col-md-1 text-center"><h3>
-									<strong>$31.53</strong>
+									<strong> &euro;  <%
+ 	out.print(total);
+ %>   
+									</strong>
 								</h3></td>
 						</tr>
 						<tr>
@@ -60,10 +82,13 @@
 								</button>
 							</td>
 							<td class="col-md-1 text-center"> </td>
-						
+
 							<td class="col-md-1 text-center">
-								<button type="button" class="btn btn-success">
-									Checkout <span class="glyphicon glyphicon-play"></span>
+								<button id="pay-all-button" type="button"
+									class="btn btn-success"
+									<%if (total == 0)
+				out.print("disabled");%>>
+									Pay all <span class="glyphicon glyphicon-play"></span>
 								</button>
 							</td>
 						</tr>

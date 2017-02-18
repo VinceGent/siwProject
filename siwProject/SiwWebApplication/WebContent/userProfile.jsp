@@ -1,3 +1,4 @@
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -84,7 +85,9 @@
 					<div id="settings-div" class="hidden">
 						<%@include file="template/settings.jsp"%>
 					</div>
-					<div id="order-div" class="hidden"></div>
+					<div id="order-div" class="hidden">
+					<%@include file="template/ordersPage.jsp"%>
+					</div>
 					<div id="messages" class="hidden"></div>
 					<!-- overview content end -->
 				</div>

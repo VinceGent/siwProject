@@ -1,6 +1,10 @@
 package elements;
 
-public class UserInformation {
+import java.io.Serializable;
+
+public class UserInformation implements Serializable {
+	
+	private static final long serialVersionUID = -3780917362906196512L;
 	private int id;
 	private String name, surname, address, telephone;
 	private String city;

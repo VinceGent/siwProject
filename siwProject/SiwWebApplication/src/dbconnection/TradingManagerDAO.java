@@ -33,7 +33,7 @@ public class TradingManagerDAO extends DbManager {
 				offers.add(offer);
 
 			}
-			closeConnection();
+			closeConnection(mConnection);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -42,8 +42,7 @@ public class TradingManagerDAO extends DbManager {
 
 	public void insertOffer(int id_item, int user_id, String offer) {
 
-		AuctionOffer auctionOffer = new AuctionOffer(user_id, id_item,
-				Float.parseFloat(offer));
+		AuctionOffer auctionOffer = new AuctionOffer(user_id, id_item, Float.parseFloat(offer));
 
 		String query = "INSERT INTO auction_offer (id_user, id_insertion, offer) VALUES (?,?,?);";
 		try {
@@ -53,16 +52,15 @@ public class TradingManagerDAO extends DbManager {
 			mPreparedStatement.setInt(2, auctionOffer.getId_item());
 			mPreparedStatement.setFloat(3, auctionOffer.getOffer());
 			mPreparedStatement.execute();
-			closeConnection();
+			closeConnection(mConnection);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	public void addToCart(int id_item,int id_user)
-	{
-		
+	public void addToCart(int id_item, int id_user) {
+
 		final String query2 = "INSERT INTO orders(id_user,id_insertion,order_state,order_date) VALUES(?,?,?,?)";
 		try {
 			final Connection mConnection = createConnection();
@@ -72,41 +70,42 @@ public class TradingManagerDAO extends DbManager {
 			mPreparedStatement.setString(3, OrderState.nonpagato.toString());
 			mPreparedStatement.setDate(4, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
 			mPreparedStatement.execute();
-			closeConnection();
-			
+			closeConnection(mConnection);
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	public List<Order> getOrdersByIdUser(int id_user)
-	{
-		List<Order> orders=new LinkedList<Order>();
-		final String query2 = "SELECT * FROM orders(id_user,id_insertion,order_state,order_date) WHERE order.id_user=?";
+
+	public List<Order> getOrdersByIdUser(int id_user) {
+		List<Order> orders = new LinkedList<Order>();
+		final String query = "select * from orders where id_user=?";
 		try {
 			final Connection mConnection = createConnection();
-			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query2);
+			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
 			mPreparedStatement.setInt(1, id_user);
-			mPreparedStatement.execute();
 			final ResultSet mResultSet = mPreparedStatement.executeQuery();
 			while (mResultSet.next()) {
-			Order order=new Order(mResultSet.getDate("order_date"),OrderState.valueOf(mResultSet.getString("order_state")) ,Integer.parseInt( mResultSet.getString("id_insertion")), Integer.parseInt( mResultSet.getString("id_order")));
-			orders.add(order);
+				Order order = new Order(mResultSet.getDate("order_date"),
+						OrderState.valueOf(mResultSet.getString("order_state")),
+						Integer.parseInt(mResultSet.getString("id_insertion")), id_user, mResultSet.getInt("id_order"));
+				orders.add(order);
 			}
-			closeConnection();
-			
+			closeConnection(mConnection);
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return orders;
-		
+
 	}
-	
+
 	public void buyItem(int id_item, int id_user) {
 		InsertionDAO insertionDao = new InsertionDAO();
 		Insertion insertion = insertionDao.getInsertionById(id_item);
-		if(insertion.getAmount()<1)
+		if (insertion.getAmount() < 1)
 			return;
 		final String query = "UPDATE insertion SET amount=? WHERE id_item=?;";
 		try {
@@ -115,12 +114,55 @@ public class TradingManagerDAO extends DbManager {
 			mPreparedStatement.setInt(1, insertion.getAmount() - 1);
 			mPreparedStatement.setInt(2, id_item);
 			mPreparedStatement.executeUpdate();
-			closeConnection();
+			closeConnection(mConnection);
+			setOrderStateCompleted(insertion.getId_item(), id_user);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void removeOrder(int id_order) {
+		String query = "delete from  orders where id_order=?;";
+		try {
+			final Connection mConnection = createConnection();
+			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
+			mPreparedStatement.setInt(1, id_order);
+			mPreparedStatement.executeUpdate();
+			closeConnection(mConnection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 	}
+
+	private void setOrderStateCompleted(int id_item, int id_user) {
+		String query = "update orders set order_state = ? where id_insertion = ? and id_user=? and order_state='nonpagato' order by id_order limit 1;";
+		try {
+			final Connection mConnection = createConnection();
+			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
+			mPreparedStatement.setString(1, OrderState.pagato.toString());
+			mPreparedStatement.setInt(2, id_item);
+			mPreparedStatement.setInt(3, id_user);
+			mPreparedStatement.executeUpdate();
+
+			closeConnection(mConnection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void buyAllCart(int id_user) {
+		List<Order> orders = getOrdersByIdUser(id_user);
+		for (Order order : orders) {
+			if(order.getState()==OrderState.nonpagato)
+			buyItem(order.getId_insertion(), id_user);
+		}
+		
+	}
+
+	
+
 
 }

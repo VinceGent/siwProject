@@ -6,21 +6,27 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
-<script type="text/javascript"
-	src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script type="text/javascript" src="scripts/jquery.mlens-1.6.min.js"></script>
-
+<script type="text/javascript" src="scripts/jquery.js"></script>
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"
 	type="text/css" />
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="scripts/scriptPayment.js"></script>
 <link href="css/stylePayment.css" rel="stylesheet" type="text/css" />
 
+<script type="text/javascript" src="scripts/guiScript.js"></script>
+<script type="text/javascript" src="scripts/logicScript.js"></script>
 <!-- If you're using Stripe for payments -->
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 </head>
 <body>
-<%Insertion insertion=(Insertion)request.getSession().getAttribute("insertion"); %>
+	<%
+		Insertion insertion = (Insertion) request.getSession().getAttribute("insertion");
+		float total = 0;
+		if (insertion == null) {
+			total = Float.parseFloat(request.getSession().getAttribute("total").toString());
+		} else
+			total = insertion.getPrice();
+	%>
 	<div class="container">
 		<div id="Checkout" class="inline">
 			<h1>Pay Invoice</h1>
@@ -32,7 +38,9 @@
 				<div class="form-group">
 					<label for="PaymentAmount">Payment amount</label>
 					<div class="amount-placeholder">
-						<span>$</span> <span><%out.print(insertion.getPrice()); %></span>
+						<span></span> 
+						<span> <%out.print(total);%>   &euro;
+						</span> 
 					</div>
 				</div>
 				<div class="form-group">
@@ -70,10 +78,12 @@
 							class="fa fa-question-circle"></i></a>
 					</div>
 				</div>
-				<button id="PayButton"
-					class="btn btn-block btn-success submit-button" type="submit">
+				<button
+					id="<%out.print(request.getSession().getAttribute("id_item").toString());%>"
+					class="btn btn-block btn-success submit-button payButton"
+					type="button">
 					<span class="submit-button-lock"></span> <span class="align-middle">Pay
-						$500.00</span>
+					</span>
 				</button>
 			</form>
 		</div>

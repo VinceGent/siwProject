@@ -56,11 +56,12 @@ abstract class DbManager {
 		}
 	}
 
-	protected void closeConnection() {
+	protected void closeConnection(Connection mConnection) {
 		try {
-			DriverManager.getConnection(dbUrl, dbUsername, dbPassword).close();
+			mConnection.close();
+//			DriverManager.getConnection(dbUrl, dbUsername, dbPassword).close();
 		} catch (final SQLException e) {
-			throw new RuntimeException("Cannot create the connection", e);
+			throw new RuntimeException("Cannot close the connection", e);
 		}
 	}
 	

@@ -34,7 +34,7 @@ public class UserDAO extends DbManager {
 				user = new User(Integer.parseInt(mResultSet.getString("id")), mResultSet.getString("username"),
 						mResultSet.getString("email"), mResultSet.getString("password"));
 			}
-			closeConnection();
+			closeConnection(mConnection);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -54,7 +54,7 @@ public class UserDAO extends DbManager {
 				user = new User(Integer.parseInt(mResultSet.getString("id")), mResultSet.getString("username"),
 						mResultSet.getString("email"), mResultSet.getString("password"));
 			}
-			closeConnection();
+			closeConnection(mConnection);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -73,7 +73,7 @@ public class UserDAO extends DbManager {
 			while (mResultSet.next()) {
 				id = Integer.parseInt(mResultSet.getString("id"));
 			}
-			closeConnection();
+			closeConnection(mConnection);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -92,7 +92,7 @@ public class UserDAO extends DbManager {
 				mPreparedStatement.setString(2, email);
 				mPreparedStatement.setString(3, password);
 				mPreparedStatement.execute();
-				closeConnection();
+				closeConnection(mConnection);
 			} catch (SQLException e) {
 				// e.printStackTrace();
 
@@ -122,7 +122,7 @@ public class UserDAO extends DbManager {
 				mPreparedStatement.setInt(8, postal_code);
 				mPreparedStatement.setString(9, country);
 				mPreparedStatement.execute();
-				closeConnection();
+				closeConnection(mConnection);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -148,7 +148,7 @@ public class UserDAO extends DbManager {
 							mResultSet.getString("country"));
 				}
 
-				closeConnection();
+				closeConnection(mConnection);
 			} catch (SQLException e) {
 				e.printStackTrace();
 
@@ -169,7 +169,7 @@ public class UserDAO extends DbManager {
 			mPreparedStatement.setString(2, email);
 			mPreparedStatement.setInt(3, id);
 			mPreparedStatement.executeUpdate();
-			closeConnection();
+			closeConnection(mConnection);
 		} catch (SQLException e) {
 			e.printStackTrace();
 
@@ -187,7 +187,7 @@ public class UserDAO extends DbManager {
 			mPreparedStatement.setString(8, country);
 			mPreparedStatement.setInt(9, id);
 			mPreparedStatement.executeUpdate();
-			closeConnection();
+			closeConnection(mConnection);
 		} catch (SQLException e) {
 			e.printStackTrace();
 
@@ -202,7 +202,7 @@ public class UserDAO extends DbManager {
 			mPreparedStatement.setString(1, password);
 			mPreparedStatement.setInt(2, id_user);
 			mPreparedStatement.executeUpdate();
-			closeConnection();
+			closeConnection(mConnection);
 		} catch (SQLException e) {
 			e.printStackTrace();
 
@@ -218,4 +218,23 @@ public class UserDAO extends DbManager {
 	// System.out.println(info.getName() + " " + info.getId());
 //	 db.addUserInfo("ciccio", "porco", "riolo"," porcile",666, "porcellinara", "crotone", 87000, "calabbbbria");
 	 }
+
+	public String getMailByUserId(int id_user) {
+		String email="";
+		final String query = "select email from users where id=?;";
+		try {
+			final Connection mConnection = createConnection();
+			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
+			mPreparedStatement.setInt(1, id_user);
+			final ResultSet mResultSet = mPreparedStatement.executeQuery();
+			if(mResultSet.next())
+			email=mResultSet.getString("email");
+			closeConnection(mConnection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return email;
+		
+	}
 }

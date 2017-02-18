@@ -47,7 +47,7 @@ body {
   clear: both;
 }
 
-#PayButton {
+.payButton {
   outline: 0!important;
   height: 42px;
   font-size: 16px;
@@ -55,15 +55,15 @@ body {
   border: none;
 }
 
-#PayButton:hover {
+.payButton:hover {
   background-color: #6DCECB!important;
 }
 
-#PayButton:active {
+.payButton:active {
   background-color: #4FBCB9!important;
 }
 
-#PayButton:disabled {
+.payButton:disabled {
   background: rgba(84, 199, 195, .5)!important;
   color: #FFF!important;
 }

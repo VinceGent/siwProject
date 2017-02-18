@@ -5,8 +5,8 @@ var buttonSearch;
 $(document).ready(function() {
 	$(".img-responsive").click(imageSelected);
 	// $("#brand").click(goToItemSelected);
-	$('#buyNow').click(buyItem);
-	$('#auctionSale').click(doOffer);
+	$('.add-to-cart').click(buyItem);
+	$('.offer-button').click(doOffer);
 	$('#logout').click(notLogged);
 	$('#input-login').click(validation);
 	$('#signup-createUser').click(registration);
@@ -24,18 +24,92 @@ $(document).ready(function() {
 	buttonSearch.click(searchInsertion);
 	$('.go-to-item').click(goToItemSelected);
 	$('#gotoWishlist').click(wishlist);
-	$('#addToWishlist').click(addToWishlist);
-	$('#removeFromWishlist').click(removeFromWishlist);
+	$('.add-to-wishlist').click(addToWishlist);
+	$('.remove-from-wishlist').click(removeFromWishlist);
 	$('.button-addToCart').click(addToCart);
+	$('#go-to-shopping-cart').click(goToShoppingCart);
+	$('.payButton').click(payItem);
+	$('.remove-button-shoppingCart').click(removeShoppingCart);
+	$('#pay-all-button').click(paymentPage);
 });
 
+function payAllCart() {
+
+	$.ajax({
+		url : "payAllCart",
+		method : "get",
+		success : function(data, textStatus, jqXHR) {
+
+		},
+		error : function() {
+			console.log("ajax error");
+		}
+	});
+}
+
+function removeShoppingCart() {
+	var id_order = $(this).attr('id');
+	$.ajax({
+		url : "removeFromCart",
+		method : "post",
+		data : {
+			'id_order' : id_order
+		},
+		success : function(data, textStatus, jqXHR) {
+			location.reload();
+
+		},
+		error : function() {
+			console.log("ajax error");
+		}
+	});
+}
+function paymentPage() {
+	document.location.href = "payment?id_item=" + 0;
+}
+function payItem() {
+
+	var item = $(this).attr('id');
+	var success = false;
+console.log("payItem value        "+item);
+	if (item == "pay-all-button")
+		item = 0;
+	$.ajax({
+		url : "payItem",
+		async : false,
+		method : "post",
+		data : {
+			'id_item' : item
+		},
+		success : function(data, textStatus, jqXHR) {
+			success = true;
+		},
+		error : function() {
+			console.log("ajax error");
+		}
+	});
+	if (item == 0) {
+		payAllCart();
+		goToShoppingCart();
+		window.alert("Tutti gli oggetti nel carrello sono stati pagati");
+		return;
+	}
+
+	if (success) {
+		window.alert("oggetto acquistato");
+		document.location.href = "item_Selected?id_item=" + item;
+
+	}
+
+}
+function goToShoppingCart() {
+	document.location.href = "shoppingCartPage";
+}
 function wishlist() {
 	document.location.href = "loadWishlist";
 }
-
-function addToCart()
-{
-	var id_item=$(this).attr('id');
+function addToCart() {
+	var id_item = $(this).attr('id');
 	$.ajax({
 		url : "addToCart",
 		method : "post",
@@ -47,8 +121,9 @@ function addToCart()
 			if (obj["state"] == "OK") { // 
 				window.alert("Oggetto aggiunto al carrello");
 			} else {
-				window.alert("Devi eseguire il login per aggiungere un oggetto al carrello");
-				// gli diciamo di fare il login
+				// window.alert("Devi eseguire il login per aggiungere un
+				// oggetto al carrello");
+				login_selected();
 			}
 		},
 		error : function() {
@@ -56,8 +131,6 @@ function addToCart()
 		}
 
 	});
-
-
 
 }
 
@@ -73,11 +146,11 @@ function addToWishlist() {
 			var obj = $.parseJSON(data);
 			console.log(obj["state"]);
 			if (obj["state"] == "OK") { // aggiunto alla wishlist
-				$('#addToWishlist').addClass("hidden");
-				$('#removeFromWishlist').removeClass("hidden");
+				$('.add-to-wishlist').addClass("hidden");
+				$('.remove-from-wishlist').removeClass("hidden");
 			} else {
 
-				// gli diciamo di fare il login
+				login_selected();
 			}
 
 		},
@@ -110,12 +183,12 @@ function removeFromWishlist() {
 			var obj = $.parseJSON(data);
 			console.log(obj["state"]);
 			if (obj["state"] == "OK") { // aggiunto alla wishlist
-				$('#removeFromWishlist').addClass("hidden");
-				$('#addToWishlist').removeClass("hidden");
+				$('.remove-from-wishlist').addClass("hidden");
+				$('.add-to-wishlist').removeClass("hidden");
 
 			} else {
 
-				// gli diciamo di fare il login
+				login_selected();
 			}
 
 		},
@@ -288,7 +361,6 @@ function buyItem() {
 	if (amount <= 0) {
 		return;
 	}
-	console.log("pora miseria");
 	var value = false;
 	$.ajax({
 		url : "addToCartAndPay",
@@ -304,7 +376,7 @@ function buyItem() {
 				value = true;
 			} else {
 
-				// gli diciamo di fare il login
+				login_selected();
 			}
 		},
 		error : function() {
@@ -336,7 +408,13 @@ function buyItem() {
 }
 // logica
 function doOffer() {
-
+if(!loggato)
+	{
+	
+	login_selected();
+	 $('#offer').val("");
+	return;
+	}
 	var ok = true;
 	var offer = $('#offer');
 	if (offer.val() <= price_insertion) {
@@ -391,7 +469,7 @@ function logoutUser() {
 		url : 'logoutUser',
 		method : 'get',
 		success : function() {
-				location.reload();
+			location.reload();
 			return true;
 
 		},

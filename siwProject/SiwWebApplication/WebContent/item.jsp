@@ -11,7 +11,13 @@
 <title>Item Page</title>
 <script type="text/javascript" src="scripts/jquery.js"></script>
 <script type="text/javascript" src="scripts/jquery.mlens-1.6.min.js"></script>
-<script type="text/javascript" src="scripts/zoomItemScript.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link
+  href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+  rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700"
+  rel="stylesheet">
+
 
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"
 	type="text/css" />
@@ -36,8 +42,8 @@
 
 
 <%@ include file="template/navbar.html" %>
+<%@ include file="template/insertionTemplate2.jsp" %>
 <%@ include file="template/checkSession.jsp" %>
-<%@ include file="template/insertionTemplate.jsp" %>
 	
 
 			

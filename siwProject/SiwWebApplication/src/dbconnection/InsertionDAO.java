@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.mysql.jdbc.Statement;
+
 import elements.AuctionOffer;
 import elements.Insertion;
 import elements.OrderState;
@@ -21,32 +23,39 @@ public class InsertionDAO extends DbManager {
 		super();
 	}
 
-	public void addNewInsertion(final int id_user, final String name, final Date insertion_date,
-			final Date expiration_date, final int amount, final Sales_type sales_type, final float price,
-			final String description) {
-		Insertion insertion = new Insertion(id_user, name, insertion_date, expiration_date, amount, sales_type, price,
-				description);
+	public int addNewInsertion(final int id_user, final String name, final Date insertion_date,
+		      final Date expiration_date, final int amount, final Sales_type sales_type, final float price,
+		      final String description) {
+		    Insertion insertion = new Insertion(id_user, name, insertion_date, expiration_date, amount, sales_type, price,
+		        description);
 
-		String query = "INSERT INTO insertion (id_user, name, insertion_date, expiration_date, amount, sales_type, price, description) VALUES (?,?,?,?,?,?,?,?);";
-		try {
-			final Connection mConnection = createConnection();
-			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
-			mPreparedStatement.setString(1, Integer.toString(insertion.getId_user()));
-			mPreparedStatement.setString(2, name);
-			Long sec = insertion_date.getTime();
-			mPreparedStatement.setDate(3, new java.sql.Date(sec));
-			sec = expiration_date.getTime();
-			mPreparedStatement.setDate(4, new java.sql.Date(sec));
-			mPreparedStatement.setString(5, Integer.toString(amount));
-			mPreparedStatement.setString(6, sales_type.name());
-			mPreparedStatement.setString(7, Float.toString(price));
-			mPreparedStatement.setString(8, description);
-			mPreparedStatement.execute();
-			closeConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+		    String query = "INSERT INTO insertion (id_user, name, insertion_date, expiration_date, amount, sales_type, price, description) VALUES (?,?,?,?,?,?,?,?);";
+		    try {
+		      final Connection mConnection = createConnection();
+		      final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+		      mPreparedStatement.setString(1, Integer.toString(insertion.getId_user()));
+		      mPreparedStatement.setString(2, name);
+		      Long sec = insertion_date.getTime();
+		      mPreparedStatement.setDate(3, new java.sql.Date(sec));
+		      sec = expiration_date.getTime();
+		      mPreparedStatement.setDate(4, new java.sql.Date(sec));
+		      mPreparedStatement.setString(5, Integer.toString(amount));
+		      mPreparedStatement.setString(6, sales_type.name());
+		      mPreparedStatement.setString(7, Float.toString(price));
+		      mPreparedStatement.setString(8, description);
+		      mPreparedStatement.executeUpdate();
+		      
+		      ResultSet result = mPreparedStatement.getGeneratedKeys();
+		      if(result.next()){
+		        System.out.println("last insert id" + result.getInt(1));
+		        return result.getInt(1);
+		      }
+		      closeConnection(mConnection);
+		    } catch (SQLException e) {
+		      e.printStackTrace();
+		    }
+		    return -1;
+		  }
 
 	public List<Insertion> getInsertionByName(final String name) {
 
@@ -70,7 +79,7 @@ public class InsertionDAO extends DbManager {
 						Float.parseFloat(mResultSet.getString("price")), mResultSet.getString("description"));
 				insertions.add(insertion);
 			}
-			closeConnection();
+			closeConnection(mConnection);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -99,7 +108,7 @@ public class InsertionDAO extends DbManager {
 						Float.parseFloat(mResultSet.getString("price")), mResultSet.getString("description"));
 
 			}
-			closeConnection();
+			closeConnection(mConnection);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

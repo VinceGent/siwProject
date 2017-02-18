@@ -34,12 +34,33 @@ public class WishlistDAO extends DbManager {
 				Insertion i = dbInsertion.getInsertionById(Integer.parseInt(mResultSet.getString("id_insertion").toString()));
 				insertions.add(i);
 			}
-			closeConnection();
+			closeConnection(mConnection);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return insertions;
 	}
+	
+
+			public boolean isWishlistItem(int id, int user) {
+			    String query = "select count(*) from wishlist_item where id_user=? and id_insertion=?;";
+			    try {
+			      final Connection mConnection = createConnection();
+			      final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
+			      mPreparedStatement.setInt(1, user);
+			      mPreparedStatement.setInt(2, id);
+			      final ResultSet mResultSet = mPreparedStatement.executeQuery();
+			      if (mResultSet.next()) {
+			        System.out.println(mResultSet.getString("count(*)"));
+			        if (Integer.parseInt(mResultSet.getString("count(*)")) > 0)
+			          return true;
+			      }
+			      closeConnection(mConnection);
+			    } catch (SQLException e) {
+			      e.printStackTrace();
+			    }
+			    return false;
+			  }
 	
 	public void removeWishlistItem(int item, int user){
 		String query = "delete from wishlist_item where id_insertion=? and id_user=?";
@@ -50,6 +71,7 @@ public class WishlistDAO extends DbManager {
 			mPreparedStatement.setInt(1, item);
 			mPreparedStatement.setInt(2, user);
 			mPreparedStatement.executeUpdate();
+			closeConnection(mConnection);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -63,6 +85,7 @@ public class WishlistDAO extends DbManager {
 			mPreparedStatement.setInt(1, user);
 			mPreparedStatement.setInt(2, item);
 			mPreparedStatement.executeUpdate();
+			closeConnection(mConnection);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -1,7 +1,11 @@
 package elements;
 
-public class AuctionOffer {
+import java.io.Serializable;
 
+public class AuctionOffer implements Serializable {
+
+
+	private static final long serialVersionUID = -2719683914157292501L;
 	public AuctionOffer(int id_user, int id_item, float offer) {
 		this.id_user = id_user;
 		this.id_item = id_item;

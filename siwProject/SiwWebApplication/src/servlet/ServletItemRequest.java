@@ -1,7 +1,9 @@
 package servlet;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -16,11 +18,14 @@ import dbconnection.TradingManagerDAO;
 import dbconnection.WishlistDAO;
 import elements.AuctionOffer;
 import elements.Insertion;
+import elements.Order;
+import elements.OrderState;
+import elements.Sales_type;
 
 @WebServlet(description = "item", urlPatterns = { ServletItemRequest.item_selected, ServletItemRequest.buy_now,
 		ServletItemRequest.auction_sales, ServletItemRequest.update_item, ServletItemRequest.buyNowInformation,
 		ServletItemRequest.addToCartAndPay, ServletItemRequest.payment, ServletItemRequest.payItem,
-		ServletItemRequest.addToCart })
+		ServletItemRequest.addToCart, ServletItemRequest.payAllCart })
 public class ServletItemRequest extends Servlet {
 
 	private static final long serialVersionUID = 1L;
@@ -33,6 +38,7 @@ public class ServletItemRequest extends Servlet {
 	final static String addToCart = "/addToCart";
 	final static String payment = "/payment";
 	final static String payItem = "/payItem";
+	final static String payAllCart = "/payAllCart";
 
 	public ServletItemRequest() {
 		super();
@@ -83,8 +89,22 @@ public class ServletItemRequest extends Servlet {
 		case addToCart:
 			addToCart(req, resp);
 			break;
+		case payAllCart:
+			payAllCart(req, resp);
+			break;
 		}
 
+	}
+
+	private void payAllCart(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		JsonObject jsonObject = new JsonObject();
+		if (!isLogged(req))
+			writeStateFailed(jsonObject);
+		else {
+			tradingManagerDAO.buyAllCart(getUserId(req));
+			writeStateSuccess(jsonObject);
+		}
+		writeResponse(resp, jsonObject);
 	}
 
 	private void addToCart(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -101,16 +121,51 @@ public class ServletItemRequest extends Servlet {
 
 	private void payment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		RequestDispatcher dispatcher = req.getRequestDispatcher("PaymentPage.jsp");
-		Insertion insertion = insertionDAO.getInsertionById(getIdItem(req));
-		req.getSession().setAttribute("insertion", insertion);
-		dispatcher.forward(req, resp);
+		if (getIdItem(req) != 0) {
+			Insertion insertion = insertionDAO.getInsertionById(getIdItem(req));
+			req.getSession().setAttribute("insertion", insertion);
+		} else {
+			float total = 0;
+			List<Order> orders = tradingManagerDAO.getOrdersByIdUser(getUserId(req));
+			for (Order order : orders) {
+				if(order.getState()==OrderState.pagato)
+					continue;
+				Insertion insertion = insertionDAO.getInsertionById(order.getId_insertion());
+				if (insertion.getAmount() > 0 && insertion.getSales_type() == Sales_type.compraora)
+					total += insertion.getPrice();
+				else if (insertion.getAmount() > 0 && insertion.getSales_type() == Sales_type.asta) {
+					total += getMaxOffertPrice(insertion);
 
+				}
+			}
+			req.getSession().setAttribute("total", total);
+		}
+		req.getSession().setAttribute("id_item", getIdItem(req));
+		dispatcher.forward(req, resp);
 	}
 
-	private void payItem(HttpServletRequest req, HttpServletResponse resp) {
+	private float getMaxOffertPrice(Insertion insertion) {
+		ArrayList<AuctionOffer> offers = tradingManagerDAO.getOfferByIdItem(insertion.getId_item());
+		float max = offers.get(0).getOffer();
+		for (AuctionOffer auctionOffer : offers) {
+			if (auctionOffer.getOffer() > max)
+				max = auctionOffer.getOffer();
+		}
+		return max;
+	}
 
-		tradingManagerDAO.buyItem(Integer.parseInt(req.getParameter("id_item")),
-				Integer.parseInt(req.getSession().getAttribute("user_id").toString()));
+	private void payItem(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		JsonObject jsonObject = new JsonObject();
+		if (isLogged(req)) {
+			if (getIdItem(req) != 0) {
+				tradingManagerDAO.buyItem(getIdItem(req), getUserId(req));
+			}
+			writeStateSuccess(jsonObject);
+
+		} else {
+			writeStateFailed(jsonObject);
+		}
+		writeResponse(resp, jsonObject);
 	}
 
 	private void addToCartAndPay(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -185,26 +240,39 @@ public class ServletItemRequest extends Servlet {
 	}
 
 	private void getInsertion(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		int id_item = -1;
-		id_item = Integer.parseInt(req.getParameter("id_item"));
-		if (id_item != -1) {
+	    int id_item = -1;
+	    id_item = Integer.parseInt(req.getParameter("id_item"));
+	    if (id_item != -1) {
 
-			Insertion insertion = insertionDAO.getInsertionById(id_item);
-			req.setAttribute("insertion", insertion);
-			if (isLogged(req)) {
-				List<Insertion> list = wishlistDAO.getWishlist(getUserId(req));
-				for (Insertion insertion2 : list) {
-					if (insertion2.getId_item() == id_item)
-						req.getSession().setAttribute("inWishlist", true);
-				}
-			}
-			RequestDispatcher dispatcher = req.getRequestDispatcher("item.jsp");
-			dispatcher.forward(req, resp);
-		} else {
+	      Insertion insertion = insertionDAO.getInsertionById(id_item);
+	      req.setAttribute("insertion", insertion);
+	      List<String>images=new LinkedList<String>();
+	    
+	      
+	      
+	      
+	      
+	      File folder = new File(ServletUpload.uploadPathFolder+"insertion_"+id_item+"/");
+	      File[] listOfFiles = folder.listFiles();
+	      if(listOfFiles!=null)
+	          for (int i = 0; i < listOfFiles.length; i++) {
+	            if (listOfFiles[i].isFile()) {
+	              
+	              System.out.println("File " + listOfFiles[i].getName());
+	              images.add(listOfFiles[i].getName());
+	            } else if (listOfFiles[i].isDirectory()) {
+	              System.out.println("Directory " + listOfFiles[i].getName());
+	            }
+	          }
+	          
+	      req.getSession().setAttribute("images", images);
+	      RequestDispatcher dispatcher = req.getRequestDispatcher("item.jsp");
+	      dispatcher.forward(req, resp);
+	    } else {
 
-			// go to error jsp page
-		}
+	      // go to error jsp page
+	    }
 
-	}
+	  }
 
 }
