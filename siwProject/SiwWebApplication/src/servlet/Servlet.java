@@ -13,6 +13,7 @@ import dbconnection.InsertionDAO;
 import dbconnection.TradingManagerDAO;
 import dbconnection.UserDAO;
 import dbconnection.WishlistDAO;
+import elements.Resource;
 
 public class Servlet extends HttpServlet {
 
@@ -21,6 +22,7 @@ public class Servlet extends HttpServlet {
 	protected TradingManagerDAO tradingManagerDAO;
 	protected WishlistDAO wishlistDAO;
 	protected UserDAO userDAO;
+	protected Resource resource;
 
 	public Servlet() {
 		wishlistDAO = new WishlistDAO();
@@ -28,6 +30,7 @@ public class Servlet extends HttpServlet {
 		tradingManagerDAO = new TradingManagerDAO();
 		wishlistDAO = new WishlistDAO();
 		userDAO = new UserDAO();
+		resource=new Resource();
 
 	}
 

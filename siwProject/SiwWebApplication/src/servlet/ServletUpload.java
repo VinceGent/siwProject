@@ -25,8 +25,8 @@ public class ServletUpload extends Servlet {
 	private static final long serialVersionUID = 1L;
 
 	private static final String DATA_DIRECTORY = "data";
-	private static final int MAX_MEMORY_SIZE = 1024 * 1024 * 2;
-	private static final int MAX_REQUEST_SIZE = 1024 * 1024;
+	private static final int MAX_MEMORY_SIZE = 1024 * 1024 * 8;
+	private static final int MAX_REQUEST_SIZE = 1024 * 1024 * 2;
 	public static final String uploadPathFolder = System.getProperty("user.home") + "/Siw/images/";
 	private int id_insertion;
 
@@ -78,16 +78,16 @@ public class ServletUpload extends Servlet {
 			Iterator iter = items.iterator();
 			while (iter.hasNext()) {
 				FileItem item = (FileItem) iter.next();
-				System.out.println("item get name " + item.getContentType());
+//				System.out.println("item get name " + item.getContentType());
 				if (!item.isFormField()) {
 					String fileName = new File(item.getName()).getName();
 
 					if (!fileName.equals("")) {
 
-						System.out.println("filename " + fileName);
+//						System.out.println("filename " + fileName);
 						String filePath = uploadPathFolder + "/insertion_" + id_insertion + "/" + fileName;
-						System.out.println("filepath " + filePath);
-						System.out.println("upload folder " + uploadFolder);
+//						System.out.println("filepath " + filePath);
+//						System.out.println("upload folder " + uploadFolder);
 						new File(uploadPathFolder + "/insertion_" + id_insertion + "/").mkdirs();
 						File uploadedFile = new File(filePath);
 
@@ -120,7 +120,6 @@ public class ServletUpload extends Servlet {
 		}
 		req.getSession().setAttribute("id_item", id_insertion);
 		getServletContext().getRequestDispatcher("/uploadSuccess.jsp").forward(req, resp);
-		System.err.println("ecccccccccccooooooooooooooooooooooooooooooooooooooooooooooooooo");
 	}
 
 }

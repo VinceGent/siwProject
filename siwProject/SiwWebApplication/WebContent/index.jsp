@@ -23,7 +23,7 @@
 <body>
 
 	
-	<%@ include file="template/navbar.html" %>
+	<%@ include file="template/navbar.jsp"%>
 
 	<%@include file="template/exampleListInsertion.html" %>
 	

@@ -28,7 +28,7 @@
 <%
 	UserInformation info1 = (UserInformation) request.getSession().getAttribute("userinfo");
 %>
-	<%@include file="template/navbar.html"%>
+	<%@include file="template/navbar.jsp"%>
 	<div class="container">
 		<div class="row profile">
 			<div class="col-md-3">

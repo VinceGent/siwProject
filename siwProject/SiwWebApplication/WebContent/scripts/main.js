@@ -32,10 +32,20 @@ jQuery(document)
 
 					// close modal when clicking the esc keyboard button
 					$(document).keyup(function(event) {
+					
 						if (event.which == '27') {
 							formModal.removeClass('is-visible');
 						}
+						
 					});
+					$(document).keypress(function(event) {
+						
+						if (event.which == '13') {
+							event.preventDefault();
+						}
+					});
+					
+					
 
 					// switch from a tab to another
 					formModalTab.on('click', function(event) {
@@ -164,6 +174,7 @@ function login_selected() {
 // http://css-tricks.com/snippets/jquery/move-cursor-to-end-of-textarea-or-input/
 jQuery.fn.putCursorAtEnd = function() {
 	return this.each(function() {
+		
 		// If this function exists...
 		if (this.setSelectionRange) {
 			// ... then use it (Doesn't work in IE)

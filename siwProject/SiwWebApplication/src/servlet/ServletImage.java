@@ -27,7 +27,7 @@ public class ServletImage extends Servlet {
 	            // set to binary type if MIME mapping not found
 	            mimeType = "application/octet-stream";
 	        }
-	        System.out.println("MIME type: " + mimeType);
+//	        System.out.println("MIME type: " + mimeType);
 	         
 	        // modifies response
 	        resp.setContentType(mimeType);

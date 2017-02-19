@@ -25,7 +25,7 @@
 
 </head>
 <body>
-	<%@include file="template/navbar.html"%>
+	<%@include file="template/navbar.jsp"%>
 
 	<div class="container wishlist-container">
 		<div class="row">

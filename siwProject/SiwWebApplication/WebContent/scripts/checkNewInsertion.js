@@ -35,10 +35,10 @@ $(document).ready(function() {
 	}).on('changeDate', function(e) {
 
 	});
-	
+	$('#js-upload-files').change(testFiles);
 	$('#next-button').click(goToImageUploader);
 	selectSellerType();
-	$('#js-upload-submit').click(unafunzione);
+	//$('#js-upload-submit').click(unafunzione);
 });
 
 // $('#datePicker').datepicker({
@@ -51,8 +51,14 @@ $(document).ready(function() {
 //
 //           
 // });
-function unafunzione() {
+function testFiles(files) {
+	console.log("test files funct");
+	console.log($(this).prop("files"));
 	
+	if($(this).prop("files").length > 2){
+		alert("non puoi caricare piu di 2 files");
+		$(this).val("");
+	}
 }
 
 function selectSellerType() {

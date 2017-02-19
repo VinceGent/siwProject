@@ -33,7 +33,10 @@
 						Category</label>
 					<div class="cols-sm-10">
 						<div class="form-group">
-							<%@ include file="category.html"%>
+							<select id="category" class="selectpicker show-tick"
+								data-style="btn-info" data-width="50%">
+								<%@ include file="category.html"%>
+							</select>
 						</div>
 					</div>
 				</div>
@@ -75,11 +78,13 @@
 				</div>
 
 				<div id="date-picker" class="date form-group hidden">
-				<label for="date" class="cols-sm-2 control-label">Insert Expiration Date</label>
+					<label for="date" class="cols-sm-2 control-label">Insert
+						Expiration Date</label>
 					<div class="input-group input-append date" id="datePicker">
 						<span class="input-group-addon add-on"><i
-							class="fa fa-calendar fa"></i></span>
-						<input id="expiration-date" type="text" class="form-control" name="date" placeholder="Select Expiration date" />
+							class="fa fa-calendar fa"></i></span> <input id="expiration-date"
+							type="text" class="form-control" name="date"
+							placeholder="Select Expiration date" />
 					</div>
 
 				</div>
@@ -98,19 +103,23 @@
 	<div id="upload-image" class="row main hidden">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<strong>Upload Files</strong> <small>Bootstrap files upload</small>
+				<strong>Upload Images</strong> <small>for your Insertion</small>
 			</div>
 			<div class="panel-body">
 
 				<!-- Standar Form -->
-				<h4>Select files from your computer</h4>
+				<h4>Select images from your computer</h4>
 				<form method="post" enctype="multipart/form-data"
-					id="js-upload-form" action="ServletUpload">
+					id="js-upload-form" action="ServletUpload"> <!--   -->
 					<div class="form-inline">
 						<div class="form-group">
-							<input id="input_id_insertion" type="number" class="hidden" name="nome">
-							<input type="file" name="files[]" id="js-upload-files" multiple>
+							<input id="input_id_insertion" type="number" class="hidden"
+								name="nome"> <input type="file" name="files[]"
+								id="js-upload-files" multiple>
 						</div>
+						
+						<p style="margin:5px 0;">Insert max 5 images</p>
+						
 						<button type="submit" class="btn btn-sm btn-primary"
 							id="js-upload-submit">Upload files</button>
 					</div>
@@ -123,14 +132,14 @@
             </div>
           </div> 
 -->
-				<!-- Upload Finished -->
+				<!-- Upload Finished 
 				<div class="js-upload-finished">
 					<h3>Processed files</h3>
 					<div id="processed-files" class="list-group">
-						<!-- <a href="#" class="list-group-item list-group-item-success"><span class="badge alert-success pull-right">Success</span>image-01.jpg</a>
-              <a href="#" class="list-group-item list-group-item-success"><span class="badge alert-success pull-right">Success</span>image-02.jpg</a>  -->
+						<a href="#" class="list-group-item list-group-item-success"><span class="badge alert-success pull-right">Success</span>image-01.jpg</a>
+              <a href="#" class="list-group-item list-group-item-success"><span class="badge alert-success pull-right">Success</span>image-02.jpg</a> 
 					</div>
-				</div>
+				</div> -->
 			</div>
 		</div>
 		<script type="text/javascript">
@@ -142,14 +151,14 @@
 
 				var dropZone = document.getElementById('drop-zone');
 				var uploadForm = document.getElementById('js-upload-form');
-
+				
 				var startUpload = function(files) {
 					console.log(files)
 
 					for (var i = 0; i < files.length; i++) {
-
+						
 					}
-
+				
 				}
 
 				/*    uploadForm.addEventListener('submit', function(e) {

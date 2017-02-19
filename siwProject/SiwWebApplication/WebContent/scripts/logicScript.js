@@ -24,6 +24,8 @@ $(document).ready(function() {
 	buttonSearch.click(searchInsertion);
 	$('.go-to-item').click(goToItemSelected);
 	$('#gotoWishlist').click(wishlist);
+	$('#clearWishlist').click(clearWishlist);
+
 	$('.add-to-wishlist').click(addToWishlist);
 	$('.remove-from-wishlist').click(removeFromWishlist);
 	$('.button-addToCart').click(addToCart);
@@ -31,8 +33,29 @@ $(document).ready(function() {
 	$('.payButton').click(payItem);
 	$('.remove-button-shoppingCart').click(removeShoppingCart);
 	$('#pay-all-button').click(paymentPage);
+	$('#pagination li').click(nextPage);
 });
 
+function nextPage() {
+	var url = location.href.replace('&new=true', '');
+	var clicked = $('#pagination').find('.active');
+	$('#pagination').find(".active").removeClass('active');
+	if ($(this).find('a').text() != "Previous"
+			&& $(this).find('a').text() != "Next")
+		$(this).addClass('active');
+	console.log($(this).find('a').text());
+	var exp = /&currentPage=\d/;
+	url = url.replace(exp, "");
+	// console.log(url.match(exp));
+	// if(exp.test(url))
+	{
+	}
+
+	url += "&currentPage=" + $(this).find('a').text();
+
+	location.href = url;
+
+}
 function payAllCart() {
 
 	$.ajax({
@@ -71,7 +94,7 @@ function payItem() {
 
 	var item = $(this).attr('id');
 	var success = false;
-console.log("payItem value        "+item);
+	console.log("payItem value        " + item);
 	if (item == "pay-all-button")
 		item = 0;
 	$.ajax({
@@ -108,6 +131,24 @@ function goToShoppingCart() {
 function wishlist() {
 	document.location.href = "loadWishlist";
 }
+
+function clearWishlist() {
+	$.ajax({
+		url : "clearWishlist",
+		method : "get",
+		success : function(data) {
+			console.log("clear success");
+		},
+		error : function() {
+
+		}
+
+	});
+	location.reload();
+	window.alert("Pulizia Wishlist effettuata");
+
+}
+
 function addToCart() {
 	var id_item = $(this).attr('id');
 	$.ajax({
@@ -201,7 +242,10 @@ function removeFromWishlist() {
 function searchInsertion() {
 	if (inputSearch.val() == "")
 		return;
-	document.location.href = "searchInsertion?name=" + inputSearch.val();
+	document.location.href = "searchInsertion?name=" + inputSearch.val()
+			+ "&category=" + $('#categoryNavbar').find(':selected').val()
+			+ "&new=true";
+	inputSearch.val("");
 }
 
 function isNumericValue(evt) {
@@ -359,6 +403,7 @@ function emailRegex(email) {
 // logica
 function buyItem() {
 	if (amount <= 0) {
+		window.alert("Oggetto esaurito");
 		return;
 	}
 	var value = false;
@@ -408,12 +453,11 @@ function buyItem() {
 }
 // logica
 function doOffer() {
-if(!loggato)
-	{
-	
-	login_selected();
-	 $('#offer').val("");
-	return;
+	if (!loggato) {
+
+		login_selected();
+		$('#offer').val("");
+		return;
 	}
 	var ok = true;
 	var offer = $('#offer');

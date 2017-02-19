@@ -15,7 +15,7 @@ import dbconnection.WishlistDAO;
 import elements.Insertion;
 
 @WebServlet(description = "wishlist", urlPatterns = { ServletWishlist.loadWishlist, ServletWishlist.removeWishlistItem,ServletWishlist.isWishlistItem,
-		ServletWishlist.addWishlistItem })
+		ServletWishlist.addWishlistItem ,ServletWishlist.clearWishlist})
 public class ServletWishlist extends Servlet {
 
 	private static final long serialVersionUID = 1L;
@@ -23,6 +23,7 @@ public class ServletWishlist extends Servlet {
 	protected static final String removeWishlistItem = "/removeWishlistItem";
 	protected static final String addWishlistItem = "/addWishlistItem";
 	protected static final String isWishlistItem = "/isWishlistItem";
+	protected static final String clearWishlist = "/clearWishlist";
 	public ServletWishlist() {
 		super();
 	}
@@ -36,11 +37,21 @@ public class ServletWishlist extends Servlet {
 		case isWishlistItem:
 			isWishlistItem(req,resp);
 			break;
+		case clearWishlist:
+			clearWishlist(req,resp);
+			break;
 		}
 	}
 
+	private void clearWishlist(HttpServletRequest req, HttpServletResponse resp) {
+		if(!isLogged(req))
+			return;
+		wishlistDAO.clearWishlist(getUserId(req));
+		
+	}
+
 	private void isWishlistItem(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		System.out.println("is wishlist funzione");
+//		System.out.println("is wishlist funzione");
 		if(!isLogged(req))
 			return;
 		if(wishlistDAO.isWishlistItem(getIdItem(req), getUserId(req)))
@@ -76,7 +87,7 @@ public class ServletWishlist extends Servlet {
 	}
 
 	protected void removeItem(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		System.out.println("rimuovoooooooooooooooooooo");
+//		System.out.println("rimuovoooooooooooooooooooo");
 		JsonObject jsonObject = new JsonObject();
 		if (isLogged(req)) {
 			wishlistDAO.removeWishlistItem(getIdItem(req), getUserId(req));

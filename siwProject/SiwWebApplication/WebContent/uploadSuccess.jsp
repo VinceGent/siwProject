@@ -12,6 +12,8 @@
 	type="text/css" />
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="scripts/insertionCreated.js"></script>
+<link href="css/style.css" rel="stylesheet"
+	type="text/css" />
 </head>
 <body>
 
@@ -21,11 +23,15 @@
 	<div class="container">
 
 		<div class="row">
-			<div class="col-md-2"></div>
-			<div class="col-md-8" style="text-align: center;">
-				<img src="images/ok.png"  height="50%" width="50%" >
+			
+			<div class="col-md-7" style="text-align:center">
+				<img src="images/ok.png" height="50%" width="50%">
 			</div>
-			<div class="col-md-2"></div>
+			<div class="col-md-5" style="margin-top: 20px">
+<h1 style="text-align:center">Congratulations!</h1>
+<h3>You have successfully created your insertion </h3><p id="id_time">Wait <span>5</span> seconds to redirecting... or <a onclick="goToNewInsertion()">go to your insertion</a></p>
+
+</div>
 		</div>
 	</div>
 
@@ -37,10 +43,11 @@
 
 
 
-	<script type="text/javascript">
-var newInsertion_id="<%=request.getSession().getAttribute("id_item").toString()%>";
-	</script>
 
+
+<script type="text/javascript">
+ var newInsertion_id="<%=request.getSession().getAttribute("id_item").toString()%>";
+	</script>
 
 </body>
 </html>

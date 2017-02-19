@@ -1,3 +1,4 @@
+<%@page import="java.util.HashMap"%>
 <%@page import="elements.Insertion"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -29,14 +30,40 @@
 
 </head>
 <body>
-
-	<%@ include file="/template/navbar.html"%>
+	<%
+	HashMap<Insertion, List<String>> insertions = (HashMap<Insertion, List<String>>) request.getSession()
+	.getAttribute("insertions");
+	int limit=6;
+	int current=0;
+	int limitMin=0;
+	int limitMax=0;
+	int currentPage=1;
+	int size=insertions.size();
+		String category = request.getSession().getAttribute("searchedCategory").toString();
+	if(request.getSession().getAttribute("loaded")==null)
+	{		
+	request.getSession().setAttribute("loaded", "true");
+	limitMin=current*limit;
+	limitMax=limit-1;
+	}
+	else{
+		 currentPage=Integer.parseInt(request.getSession().getAttribute("currentPage").toString());
+		limitMin=(currentPage-1)*limit;
+		limitMax=limitMin+limit-1;
+		
+	}
+	%>
+	<%@ include file="/template/navbar.jsp"%>
 
 	<div class="container">
 		<!-- <input id="clickMe" type="button" value="clickme"
 			onclick="provaAdd();" /> -->
 		<div class="well well-sm">
-			<strong>Category Title</strong>
+			<strong style="font-size: 1.3em;">Risultati trovati in: </strong><strong>
+				<%
+					out.print(category);
+				%>
+			</strong>
 			<div class="btn-group">
 				<a href="#" id="list" class="btn btn-default btn-sm"><span
 					class="glyphicon glyphicon-th-list"> </span>List</a> <a href="#"
@@ -44,20 +71,45 @@
 					class="glyphicon glyphicon-th"></span>Grid</a>
 			</div>
 		</div>
-		<div id="products" class="row list-group prova">
+		
+		<div id="products" class="row list-group">
 			<%
 			
-				List<Insertion> insertions = (List<Insertion>) request.getSession().getAttribute("insertions");
-				for (Insertion insertion : insertions) { // stabilire prima il risultato della ricerca
+			int i=0;
+				for (Insertion insertion : insertions.keySet()) { // stabilire prima il risultato della ricerca
 					request.getSession().setAttribute("currentInsertion", insertion);
+					request.getSession().setAttribute("currentImages", insertions.get(insertion));
+					if(i>=limitMin&&i<=limitMax)
+					{
 			%>
+		
 			<%@ include file="template/searchItem.jsp"%>
-			<%
+			<%}
+			i++;
 				}
+				request.getSession().setAttribute("limitMin", limitMin);
+
+			
 			%>
 
 		</div>
+		<nav aria-label="Page navigation">
+  <ul class="pagination" id="pagination">
+
+    <% int pages=size/limit;
+    if(size%limit!=0)
+    	pages++;
+    
+    for(int j=1;j<=pages;j++){ 
+    	{
+    %>
+    
+    <li <%if(j==currentPage) out.print("class=\"active\""); %>><a><%out.print(j); %></a></li>
+     <%} }%>
+  </ul>
+</nav>
 	</div>
+	
 	<%@ include file="/template/checkSession.jsp"%>
 </body>
 </html>

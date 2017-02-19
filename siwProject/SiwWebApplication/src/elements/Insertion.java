@@ -15,9 +15,10 @@ public class Insertion implements Serializable{
 	private String description;
 	private int id_user;
 	private int id_item;
+	private String category;
 
 	public Insertion(int id_user, int id_item, String name, Date insertion_date, Date expiration_date, int amount,
-			Sales_type sales_type, float price, String description) {
+			Sales_type sales_type, float price, String description,String category) {
 		setId_item(id_item);
 		setId_user(id_user);
 		setName(name);
@@ -27,10 +28,11 @@ public class Insertion implements Serializable{
 		setSales_type(sales_type);
 		setPrice(price);
 		setDescription(description);
+		setCategory(category);
 	}
 
 	public Insertion(int id_user, String name, Date insertion_date, Date expiration_date, int amount,
-			Sales_type sales_type, float price, String description) {
+			Sales_type sales_type, float price, String description,String category) {
 		setId_user(id_user);
 		setName(name);
 		setInsertion_date(insertion_date);
@@ -39,6 +41,7 @@ public class Insertion implements Serializable{
 		setSales_type(sales_type);
 		setPrice(price);
 		setDescription(description);
+		setCategory(category);
 	}
 
 	public Insertion() {
@@ -114,5 +117,13 @@ public class Insertion implements Serializable{
 
 	public void setId_user(int id_user) {
 		this.id_user = id_user;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 }

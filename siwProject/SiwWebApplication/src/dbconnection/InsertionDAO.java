@@ -24,48 +24,59 @@ public class InsertionDAO extends DbManager {
 	}
 
 	public int addNewInsertion(final int id_user, final String name, final Date insertion_date,
-		      final Date expiration_date, final int amount, final Sales_type sales_type, final float price,
-		      final String description) {
-		    Insertion insertion = new Insertion(id_user, name, insertion_date, expiration_date, amount, sales_type, price,
-		        description);
+			final Date expiration_date, final int amount, final Sales_type sales_type, final float price,
+			final String description, final String category) {
+		Insertion insertion = new Insertion(id_user, name, insertion_date, expiration_date, amount, sales_type, price,
+				description, category);
 
-		    String query = "INSERT INTO insertion (id_user, name, insertion_date, expiration_date, amount, sales_type, price, description) VALUES (?,?,?,?,?,?,?,?);";
-		    try {
-		      final Connection mConnection = createConnection();
-		      final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-		      mPreparedStatement.setString(1, Integer.toString(insertion.getId_user()));
-		      mPreparedStatement.setString(2, name);
-		      Long sec = insertion_date.getTime();
-		      mPreparedStatement.setDate(3, new java.sql.Date(sec));
-		      sec = expiration_date.getTime();
-		      mPreparedStatement.setDate(4, new java.sql.Date(sec));
-		      mPreparedStatement.setString(5, Integer.toString(amount));
-		      mPreparedStatement.setString(6, sales_type.name());
-		      mPreparedStatement.setString(7, Float.toString(price));
-		      mPreparedStatement.setString(8, description);
-		      mPreparedStatement.executeUpdate();
-		      
-		      ResultSet result = mPreparedStatement.getGeneratedKeys();
-		      if(result.next()){
-		        System.out.println("last insert id" + result.getInt(1));
-		        return result.getInt(1);
-		      }
-		      closeConnection(mConnection);
-		    } catch (SQLException e) {
-		      e.printStackTrace();
-		    }
-		    return -1;
-		  }
+		String query = "INSERT INTO insertion (id_user, name, insertion_date, expiration_date, amount, sales_type, price, description,category) VALUES (?,?,?,?,?,?,?,?,?);";
+		try {
+			final Connection mConnection = createConnection();
+			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
+			mPreparedStatement.setString(1, Integer.toString(insertion.getId_user()));
+			mPreparedStatement.setString(2, name);
+			Long sec = insertion_date.getTime();
+			mPreparedStatement.setDate(3, new java.sql.Date(sec));
+			sec = expiration_date.getTime();
+			mPreparedStatement.setDate(4, new java.sql.Date(sec));
+			mPreparedStatement.setString(5, Integer.toString(amount));
+			mPreparedStatement.setString(6, sales_type.name());
+			mPreparedStatement.setString(7, Float.toString(price));
+			mPreparedStatement.setString(8, description);
+			mPreparedStatement.setString(9, category);
+			mPreparedStatement.executeUpdate();
 
-	public List<Insertion> getInsertionByName(final String name) {
+			ResultSet result = mPreparedStatement.getGeneratedKeys();
+			if (result.next()) {
+				System.out.println("last insert id" + result.getInt(1));
+				return result.getInt(1);
+			}
+			closeConnection(mConnection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
+	public List<Insertion> getInsertionByName(final String name, final String category) {
 
 		List<Insertion> insertions = new LinkedList<Insertion>();
 		Insertion insertion = null;
-
-		final String query = "select * from insertion;";
+		String query = null;
+		Boolean ok = false;
+		if(category.equals("Tutte le categorie")){
+			query="select * from insertion;";
+		}else{
+			query="select * from insertion where category=?;";
+			ok = true;
+		}
 		try {
 			final Connection mConnection = createConnection();
 			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
+			if(ok){
+				mPreparedStatement.setString(1, category);
+			}
 			final ResultSet mResultSet = mPreparedStatement.executeQuery();
 			while (mResultSet.next()) {
 				if (!mResultSet.getString("name").contains(name))
@@ -76,7 +87,8 @@ public class InsertionDAO extends DbManager {
 						new Date(mResultSet.getDate("expiration_date").getTime()),
 						Integer.parseInt(mResultSet.getString("amount")),
 						Sales_type.valueOf(mResultSet.getString("sales_type")),
-						Float.parseFloat(mResultSet.getString("price")), mResultSet.getString("description"));
+						Float.parseFloat(mResultSet.getString("price")), mResultSet.getString("description"),
+						mResultSet.getString("category"));
 				insertions.add(insertion);
 			}
 			closeConnection(mConnection);
@@ -105,7 +117,8 @@ public class InsertionDAO extends DbManager {
 						new Date(mResultSet.getDate("expiration_date").getTime()),
 						Integer.parseInt(mResultSet.getString("amount")),
 						Sales_type.valueOf(mResultSet.getString("sales_type")),
-						Float.parseFloat(mResultSet.getString("price")), mResultSet.getString("description"));
+						Float.parseFloat(mResultSet.getString("price")), mResultSet.getString("description"),
+						mResultSet.getString("category"));
 
 			}
 			closeConnection(mConnection);
@@ -116,7 +129,5 @@ public class InsertionDAO extends DbManager {
 		return insertion;
 
 	}
-
-	
 
 }

@@ -243,28 +243,9 @@ public class ServletItemRequest extends Servlet {
 	    int id_item = -1;
 	    id_item = Integer.parseInt(req.getParameter("id_item"));
 	    if (id_item != -1) {
-
 	      Insertion insertion = insertionDAO.getInsertionById(id_item);
 	      req.setAttribute("insertion", insertion);
-	      List<String>images=new LinkedList<String>();
-	    
-	      
-	      
-	      
-	      
-	      File folder = new File(ServletUpload.uploadPathFolder+"insertion_"+id_item+"/");
-	      File[] listOfFiles = folder.listFiles();
-	      if(listOfFiles!=null)
-	          for (int i = 0; i < listOfFiles.length; i++) {
-	            if (listOfFiles[i].isFile()) {
-	              
-	              System.out.println("File " + listOfFiles[i].getName());
-	              images.add(listOfFiles[i].getName());
-	            } else if (listOfFiles[i].isDirectory()) {
-	              System.out.println("Directory " + listOfFiles[i].getName());
-	            }
-	          }
-	          
+	      List<String>images=resource.getImageInsertion(id_item);  
 	      req.getSession().setAttribute("images", images);
 	      RequestDispatcher dispatcher = req.getRequestDispatcher("item.jsp");
 	      dispatcher.forward(req, resp);
@@ -274,5 +255,7 @@ public class ServletItemRequest extends Servlet {
 	    }
 
 	  }
+
+	
 
 }

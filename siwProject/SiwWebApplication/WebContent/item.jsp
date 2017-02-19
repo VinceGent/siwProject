@@ -41,7 +41,7 @@
 	
 
 
-<%@ include file="template/navbar.html" %>
+<%@ include file="template/navbar.jsp" %>
 <%@ include file="template/insertionTemplate2.jsp" %>
 <%@ include file="template/checkSession.jsp" %>
 	

@@ -1,4 +1,6 @@
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 <nav class="navbar navbar-inverse navbar-fixed-top">
 	<div class="container-fluid">
 		<!-- Brand and toggle get grouped for better mobile display -->
@@ -29,6 +31,12 @@
 						placeholder="Type to Search">
 				</div>
 				<button id="search-button" type="button" class="btn btn-default">Search</button>
+				<div class="dropdown form-group">
+				<select id="categoryNavbar" class="selectpicker show-tick" data-width="100%">
+					<option>Tutte le categorie</option>
+				<%@include file="category.html"%>
+				</select>
+			</div>
 			</form>
 			<ul id="signlog" class="nav navbar-nav navbar-right">
 				<li><a class="cd-signin" id="login" href="#">Login</a></li>
@@ -56,7 +64,7 @@
 					<ul class="dropdown-menu">
 						<li><a href="#" id="gotoWishlist">Show Your List</a></li>
 						<li role="separator" class="divider"></li>
-						<li><a href="#">Clear List</a></li>
+						<li><a id="" >Clear WishList</a></li>
 						<li role="separator" class="divider"></li>
 						<li><a href="#">One more separated link</a></li>
 					</ul></li>

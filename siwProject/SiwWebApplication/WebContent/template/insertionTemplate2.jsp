@@ -15,7 +15,7 @@
 							<% 
 							if(images.isEmpty()) {%>				
 							<div class="tab-pane active" id="pic-1">
-								<img id="image-selected" src="images/default.jpg" />
+								<img id="image-selected" src="images/default.jpg" style="min-height:34em" />
 							</div>
 							<%}
 							
