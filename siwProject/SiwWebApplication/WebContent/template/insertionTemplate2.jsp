@@ -178,7 +178,6 @@
 <script type="text/javascript">var loggato=false;</script>
 <%
 	}
-	System.out.println("skasdkjasjd     " + insertion.getExpiration_date());
 %>
 <script type="text/javascript">var sale_type="<%=insertion.getSales_type()%>"; 
 	var id_item ="<%=insertion.getId_item()%>";

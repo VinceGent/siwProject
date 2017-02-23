@@ -52,10 +52,7 @@ function closeFormSignup()
 function onSignIn(googleUser) {
 	profile = googleUser.getBasicProfile();
 	checkExistentUser(profile.getId());
-	// console.log('ID: ' + profile.getId());
-	// console.log('Name: ' + profile.getName());
-	// console.log('Image URL: ' + profile.getImageUrl());
-	// console.log('Email: ' + profile.getEmail());
+
 
 }
 function checkExistentUser(id_profile) {

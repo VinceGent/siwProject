@@ -116,7 +116,7 @@ public class ServletUserCredentials extends Servlet {
 	private void modifyUser(HttpServletRequest request, HttpServletResponse response) {
 		userDAO.modifyUser(getUserId(request), request.getParameter("username"), request.getParameter("email"),
 				request.getParameter("name"), request.getParameter("surname"), request.getParameter("address"),
-				Integer.parseInt(request.getParameter("telephone")), request.getParameter("city"),
+				request.getParameter("telephone"), request.getParameter("city"),
 				request.getParameter("province"), Integer.parseInt(request.getParameter("postal_code")),
 				request.getParameter("country"));
 		updateSessionInfo(request.getSession(), request.getParameter("username"), request.getParameter("email"),

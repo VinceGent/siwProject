@@ -155,7 +155,7 @@ public class UserDAO extends DbManager {
 	}
 
 	public void modifyUser(int id, String username, String email, String name, String surname, String address,
-			int telephone, String city, String province, int postal_code, String country) {
+			String telephone, String city, String province, int postal_code, String country) {
 
 		final String query = "UPDATE users SET username=?, email=? WHERE id=?;";
 		final String query2 = "UPDATE user_info SET name=?, surname=?, address=?, telephone=?, city=?, province=?, postal_code=?, country=? WHERE id_user=?";
@@ -177,7 +177,7 @@ public class UserDAO extends DbManager {
 			mPreparedStatement.setString(1, name);
 			mPreparedStatement.setString(2, surname);
 			mPreparedStatement.setString(3, address);
-			mPreparedStatement.setInt(4, telephone);
+			mPreparedStatement.setString(4, telephone);
 			mPreparedStatement.setString(5, city);
 			mPreparedStatement.setString(6, province);
 			mPreparedStatement.setInt(7, postal_code);

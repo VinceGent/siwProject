@@ -77,7 +77,6 @@ function makeTimer() {
 
 
 function loadPage(item, sale_type, loggato) {
-	console.log(sale_type, item);
 	switch (sale_type) {
 	case 'compraora':
 		compraora();
@@ -94,7 +93,6 @@ function loadPage(item, sale_type, loggato) {
 				'id_item' : item
 			},
 			success : function(data) {
-				console.log(data);
 				if (data == 'true') {
 					$('.remove-from-wishlist').removeClass('hidden');
 				} else
@@ -105,13 +103,11 @@ function loadPage(item, sale_type, loggato) {
 }
 
 function compraora() {
-	console.log("compra ora function");
 	$('.add-to-cart').removeClass('hidden');
 	$('#quantity').removeClass('hidden');
 }
 
 function asta() {
-	console.log("asta function");
 	$('.auction-offer').removeClass('hidden');
 
 	
@@ -128,7 +124,6 @@ function updateOffer() {
 		success : function(data) {
 			if (data.length == 0)
 				return;
-			console.log("update offerrrrrrrrrrrrrrrrr");
 			var obj = $.parseJSON(data);
 
 			$('#price > span').first().text(obj["offer"]);
@@ -138,11 +133,9 @@ function updateOffer() {
 			} else {
 				$('#best-offer').addClass("hidden");
 			}
-			console.log($('#quantity').val());
 			$('#quantity > span').first().text(obj["quantity"]);
 		},
 		error : function() {
-			console.log("errroreeeeeeeeeeeeeeeeee");
 		}
 
 	});
@@ -164,7 +157,6 @@ function buyNowInformation() {
 			$('#quantity > span').first().text(obj["quantity"]);
 		},
 		error : function() {
-			console.log("errroreeeeeeeeeeeeeeeeee");
 		}
 
 	});

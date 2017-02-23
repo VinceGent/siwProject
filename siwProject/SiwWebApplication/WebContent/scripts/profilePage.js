@@ -17,7 +17,6 @@ $(document).ready(function() {
 });
 
 function overviewClick(e) {
-	console.log("click on overview");
 	hideAll();
 	overviewDiv.toggleClass('hidden');
 	overview.addClass('active');
@@ -25,7 +24,6 @@ function overviewClick(e) {
 }
 
 function settingsClick(e) {
-	console.log("click on settings");
 	hideAll();
 	settings.addClass('active');
 	settingsDiv.toggleClass('hidden');
@@ -33,7 +31,6 @@ function settingsClick(e) {
 }
 
 function orderClick(e) {
-	console.log("click on order");
 	hideAll();
 	order.addClass('active');
 	orderDiv.toggleClass('hidden');

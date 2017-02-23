@@ -80,8 +80,6 @@
 					<ul class="dropdown-menu">
 						<li><a href="userProfile">Your Profile</a></li>
 						<li role="separator" class="divider"></li>
-						<li><a href="#">Clear List</a></li>
-						<li role="separator" class="divider"></li>
 						<li><a id="createInsertion">Crea un inserzione</a></li>
 						<li role="separator" class="divider"></li>
 						<li id="logout"><a href="#">logout</a></li>

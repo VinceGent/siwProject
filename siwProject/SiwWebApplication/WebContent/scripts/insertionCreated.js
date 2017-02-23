@@ -3,12 +3,10 @@ $(document).ready(function(){
 	window.setInterval(updateTime, 1000);
 	window.setInterval(goToNewInsertion, 5000);
 
-	console.log(newInsertion_id);
 
 });
 function updateTime()
 {
-	console.log(time);
 	if(time>0)
 		time--;
 	

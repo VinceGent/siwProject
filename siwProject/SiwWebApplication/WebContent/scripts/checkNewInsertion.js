@@ -52,8 +52,6 @@ $(document).ready(function() {
 //           
 // });
 function testFiles(files) {
-	console.log("test files funct");
-	console.log($(this).prop("files"));
 	
 	if($(this).prop("files").length > 5){
 		alert("non puoi caricare piu di 5 files");
@@ -91,8 +89,6 @@ function isNumberKey(evt) {
 
 function checkFields() {
 	var ok = true;
-	// console.log(category.find(":selected").val());
-	// console.log(title.val());
 	var str = /(\w+ *)/;
 
 	if (str.test(title.val())) {
@@ -122,7 +118,6 @@ function checkFields() {
 		ok = false;
 
 	}
-//	console.log()
 	if (!expirationDate.val() == "") {
 		successField(expirationDate);
 
@@ -132,10 +127,6 @@ function checkFields() {
 
 	}
 	return ok;
-/*	console.log(expirationDate.val());
-	if (ok) {
-		addNewInsertion();
-	}*/
 
 }
 var tmp_id;
@@ -157,11 +148,9 @@ function addNewInsertion() {
 
 		},
 		success : function(data, textStatus, jqXHR) {
-			console.log("dopo che inserisco ricevo ",data);
 			tmp_id = data;
 		},
 		error : function() {
-			console.log("ajax error");
 		}
 
 	});
@@ -169,21 +158,12 @@ function addNewInsertion() {
 }
 
 function goToImageUploader() {
-	console.log("title is ",title.val());
-	console.log("price is ",price.val());
-	console.log("amount is ",amount.val());
-	console.log("description is ",description.val());
-	console.log("date is ",expirationDate.val());
-	console.log("check fields is ",checkFields());
 	
 	if(checkFields()){
 		addNewInsertion();
-		console.log("tmp id dopo ajax ", tmp_id);
 		$('#input_id_insertion').attr("value" , tmp_id);
 		$('#insertion-form').addClass("hidden");
 		$('#upload-image').removeClass("hidden");
-	}else{
-		console.log("non inserisco");
 	}
 	
 }

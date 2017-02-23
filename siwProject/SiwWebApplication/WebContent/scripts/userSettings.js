@@ -50,7 +50,6 @@ function setValue() {
 			country.val(json["country"]);
 		},
 		error : function() {
-			console.log("ajax error setvalue");
 		}
 	});
 }
@@ -133,9 +132,6 @@ function checkFieldsEmpty() {
 
 
 function checkUsernameField() {
-	console.log("called check username field");
-	console.log(usernamefield.val() != ""
-			&& usernamefield.val() != init_username);
 	if (usernamefield.val() != "" && usernamefield.val() != init_username) {
 		$.ajax({
 			url : "validateUsername",
@@ -155,7 +151,6 @@ function checkUsernameField() {
 				}
 			},
 			error : function() {
-				console.log("ajax error");
 			}
 		});
 	} else {
@@ -184,7 +179,6 @@ function checkEmailField() {
 				}
 			},
 			error : function() {
-				console.log("ajax error");
 			}
 		});
 	} else {
@@ -194,9 +188,7 @@ function checkEmailField() {
 }
 
 function changePassword() {
-	// console.log("vecchia password " + oldPassword.val());
-	// console.log("nuova password " + newPassword.val());
-	// console.log("ripeti nuova password " + repeatNewPassword.val());
+
 
 	var check = false;
 	if (oldPassword.val() != "" && newPassword.val() != ""
@@ -209,17 +201,13 @@ function changePassword() {
 				"oldpass" : oldPassword.val()
 			},
 			success : function(data) {
-				console.log("data ", data);
 				if (data == "OK") {
-					console.log("modifico check con true");
 					check = true;
 				}
 			},
 			error : function() {
-				console.log("ajax getpassword error");
 			}
 		});
-		console.log("after check ", check);
 		if (check && newPassword.val() != oldPassword.val()
 				&& newPassword.val() == repeatNewPassword.val()) {
 			$.ajax({
@@ -230,7 +218,6 @@ function changePassword() {
 					"newPassword" : newPassword.val()
 				},
 				success : function() {
-					console.log("password changed");
 				}
 			});
 		}
@@ -238,10 +225,6 @@ function changePassword() {
 }
 function changeInfo() {
 
-	console.log("hai inserito username " + usernamefield.val());
-	console.log("hai inserito name " + namefield.val());
-	console.log("hai inserito surname " + surnamefield.val());
-	console.log("hai inserito email " + emailfield.val());
 
 	if (bool_username && bool_email && checkFieldsEmpty()) {
 		$.ajax({
@@ -260,11 +243,9 @@ function changeInfo() {
 				"country" : country.val()
 			},
 			success : function() {
-				console.log("success ajax modify");
-				document.location.href = "userProfile.jsp";
+				document.location.href = "userProfile";
 			},
 			error : function() {
-				console.log("error ajax modify");
 			}
 		});
 	}
