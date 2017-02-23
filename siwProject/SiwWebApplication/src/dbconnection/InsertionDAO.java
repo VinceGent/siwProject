@@ -60,7 +60,6 @@ public class InsertionDAO extends DbManager {
 
 			ResultSet result = mPreparedStatement.getGeneratedKeys();
 			if (result.next()) {
-				System.out.println("last insert id" + result.getInt(1));
 				return result.getInt(1);
 			}
 		} catch (SQLException e) {

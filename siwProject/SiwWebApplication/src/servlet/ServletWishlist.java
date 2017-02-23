@@ -52,7 +52,6 @@ public class ServletWishlist extends Servlet {
 	}
 
 	private void isWishlistItem(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-//		System.out.println("is wishlist funzione");
 		if(!isLogged(req))
 		{
 			badRequestPage(req, resp);
@@ -91,7 +90,6 @@ public class ServletWishlist extends Servlet {
 	}
 
 	protected void removeItem(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//		System.out.println("rimuovoooooooooooooooooooo");
 		JsonObject jsonObject = new JsonObject();
 		if (isLogged(req)) {
 			wishlistDAO.removeWishlistItem(getIdItem(req), getUserId(req));

@@ -50,7 +50,6 @@ public class WishlistDAO extends DbManager {
 			mPreparedStatement.setInt(2, id);
 			final ResultSet mResultSet = mPreparedStatement.executeQuery();
 			if (mResultSet.next()) {
-				System.out.println(mResultSet.getString("count(*)"));
 				if (Integer.parseInt(mResultSet.getString("count(*)")) > 0)
 					return true;
 			}

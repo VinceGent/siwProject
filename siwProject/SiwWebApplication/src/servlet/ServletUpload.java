@@ -42,12 +42,7 @@ public class ServletUpload extends Servlet {
 	@SuppressWarnings("rawtypes")
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		System.out.println("called do post servlet upload");
-		// getFilePath = getFilePath.getInstance();
-
-		// Check that we have a file upload request
 		boolean isMultipart = ServletFileUpload.isMultipartContent(req);
-
 		if (!isMultipart) {
 			return;
 		}
@@ -78,16 +73,12 @@ public class ServletUpload extends Servlet {
 			Iterator iter = items.iterator();
 			while (iter.hasNext()) {
 				FileItem item = (FileItem) iter.next();
-//				System.out.println("item get name " + item.getContentType());
 				if (!item.isFormField()) {
 					String fileName = new File(item.getName()).getName();
 
 					if (!fileName.equals("")) {
 
-//						System.out.println("filename " + fileName);
 						String filePath = uploadPathFolder + "/insertion_" + id_insertion + "/" + fileName;
-//						System.out.println("filepath " + filePath);
-//						System.out.println("upload folder " + uploadFolder);
 						new File(uploadPathFolder + "/insertion_" + id_insertion + "/").mkdirs();
 						File uploadedFile = new File(filePath);
 
@@ -101,15 +92,11 @@ public class ServletUpload extends Servlet {
 						// displays done.jsp page after upload finished
 						// getServletContext().getRequestDispatcher("/JSP/done.jsp").forward(req,
 						// resp);
-					} else {
-						// getServletContext().getRequestDispatcher("/JSP/notLoadImage.jsp").forward(req,
-						// resp);
-					}
+					} 
 				} else {
 					id_insertion = Integer.parseInt(item.getString());
 				}
-				// resp.getWriter().close();
-				// resp.getOutputStream().close();
+;
 
 			}
 

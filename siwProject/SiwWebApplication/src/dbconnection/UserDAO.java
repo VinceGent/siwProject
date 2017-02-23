@@ -94,11 +94,8 @@ public class UserDAO extends DbManager {
 				mPreparedStatement.execute();
 				closeConnection(mConnection);
 			} catch (SQLException e) {
-				// e.printStackTrace();
+				 e.printStackTrace();
 
-				if (e.getMessage().contains("username")) {
-					System.out.println(e.getMessage());
-				}
 			}
 		}
 	}
@@ -153,8 +150,7 @@ public class UserDAO extends DbManager {
 				e.printStackTrace();
 
 			}
-		} else
-			System.out.println("username non presente nel db");
+		} 
 		return userinfo;
 	}
 
@@ -210,16 +206,7 @@ public class UserDAO extends DbManager {
 		}
 	}
 
-	public static void main(String[] args) {
-		UserDAO db = new UserDAO();
-		// db.addUser("ciccio", "cicc@hot.it", "porco");
-		// db.addUserInfo("ciccio", "francesco", "rossi", "via della pace 17",
-		// "333123465");
-		// UserInformation info = db.getUserInfo("ciccio");
-		// System.out.println(info.getName() + " " + info.getId());
-		// db.addUserInfo("ciccio", "porco", "riolo"," porcile",666,
-		// "porcellinara", "crotone", 87000, "calabbbbria");
-	}
+	
 
 	public String getMailByUserId(int id_user) {
 		String email = "";

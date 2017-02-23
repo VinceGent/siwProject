@@ -46,7 +46,6 @@ public class TradingManagerDAO extends DbManager {
 	}
 
 	public void insertOffer(int id_item, int user_id, String offer) {
-		System.out.println(offer);
 		AuctionOffer auctionOffer = new AuctionOffer(user_id, id_item, Float.parseFloat(offer));
 
 		String query = "INSERT INTO auction_offer (id_user, id_insertion, offer) VALUES (?,?,?);";

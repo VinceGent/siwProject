@@ -48,11 +48,8 @@ public class ServletFeedback extends Servlet {
 					Integer.parseInt(req.getParameter("rating")));
 			writeStateSuccess(jsonObject);
 			jsonObject.addProperty("inFeedback", true);
-			System.out.println("if");
 		} else {
-			System.out.println("else");
 			writeStateFailed(jsonObject);
-			System.out.println(jsonObject.toString());
 		}
 			writeResponse(resp, jsonObject);
 	}

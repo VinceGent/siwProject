@@ -95,7 +95,6 @@ public class Servlet extends HttpServlet {
 	protected boolean missingParameter(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		if (req.getParameter("id_item") == null) {
-			System.out.println("missing parameter");
 			badRequestPage(req, resp);
 			return true;
 		}

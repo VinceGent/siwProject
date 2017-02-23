@@ -45,12 +45,10 @@ public class ServletInsertion extends Servlet {
 
 	private void getInsertionPage(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		System.out.println(isLogged(req));
 		if (!isLogged(req)) {
 			badRequestPage(req, resp);
 			return;
 		}
-		System.out.println("get insertion dio");
 		req.getRequestDispatcher("insertionPage.jsp").forward(req, resp);
 	}
 
@@ -80,9 +78,6 @@ public class ServletInsertion extends Servlet {
 		if (req.getParameter("currentPage") != null)
 			req.getSession().setAttribute("currentPage", req.getParameter("currentPage"));
 		if (req.getSession().getAttribute("loaded") == null) {
-			System.out.println("cercoooooo");
-			// req.getSession().setAttribute("", arg1);
-			// System.out.println("Categoria " + req.getParameter("category"));
 			List<Insertion> inser = insertionDAO.getInsertionByName(req.getParameter("name"),
 					req.getParameter("category"));
 			HashMap<Insertion, List<String>> insertions = new HashMap<Insertion, List<String>>();
@@ -96,8 +91,6 @@ public class ServletInsertion extends Servlet {
 		}
 		
 		RequestDispatcher dispatcher = req.getRequestDispatcher("searchPage.jsp");
-		if(dispatcher==null)
-			System.out.println("nullooooo");
 		dispatcher.forward(req, resp);
 	}
 

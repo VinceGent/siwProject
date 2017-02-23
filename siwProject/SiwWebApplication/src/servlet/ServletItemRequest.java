@@ -312,7 +312,7 @@ public class ServletItemRequest extends Servlet {
 		expirationDate.setMinutes(insertionDate.getMinutes() + 3);
 		expirationDate.setSeconds(insertionDate.getSeconds());
 		dao.addNewInsertion(1, "c", insertionDate, expirationDate, 10, Sales_type.asta, 1f, "aa", "Modellismo");
-		System.out.println("data inserimento   " + expirationDate.toInstant());
+//		System.out.println("data inserimento   " + expirationDate.toInstant());
 
 	}
 
