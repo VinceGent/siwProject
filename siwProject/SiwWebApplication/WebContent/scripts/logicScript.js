@@ -1,6 +1,8 @@
 var inputMail;
 var inputSearch;
 var buttonSearch;
+var profile=null;
+var registrato=false;
 // eventi
 $(document).ready(function() {
 	$(".img-responsive").click(imageSelected);
@@ -24,8 +26,7 @@ $(document).ready(function() {
 	buttonSearch.click(searchInsertion);
 	$('.go-to-item').click(goToItemSelected);
 	$('#gotoWishlist').click(wishlist);
-	$('#clearWishlist').click(clearWishlist);
-
+	$('#clear-wishlist').click(clearWishlist);
 	$('.add-to-wishlist').click(addToWishlist);
 	$('.remove-from-wishlist').click(removeFromWishlist);
 	$('.button-addToCart').click(addToCart);
@@ -34,8 +35,91 @@ $(document).ready(function() {
 	$('.remove-button-shoppingCart').click(removeShoppingCart);
 	$('#pay-all-button').click(paymentPage);
 	$('#pagination li').click(nextPage);
+	$("#provaFeedback").click(sendFeedback);
 });
 
+function closeFormSignup()
+{
+	
+	if(!registrato && profile!=null)
+		{
+		signOut();
+		location.reload();
+		}
+		
+}
+
+function onSignIn(googleUser) {
+	profile = googleUser.getBasicProfile();
+	checkExistentUser(profile.getId());
+	// console.log('ID: ' + profile.getId());
+	// console.log('Name: ' + profile.getName());
+	// console.log('Image URL: ' + profile.getImageUrl());
+	// console.log('Email: ' + profile.getEmail());
+
+}
+function checkExistentUser(id_profile) {
+	console.log("okokok");
+	$
+			.ajax({
+				url : "googleUserPresent",
+				method : "post",
+				data : {
+					'id_profile' : id_profile
+				},
+				success : function(data) {
+					var obj = $.parseJSON(data);
+					if (obj["state"] == "OK") {
+						logUser(obj["username"]);
+						console.log("okokok");
+					} else {
+						$('#signup-email').val(profile.getEmail());
+						var s = profile.getName().split(" ");
+						$('#signup-name').val(s[0]);
+						$('#signup-surname').val(s[1]);
+						signup_selected();
+						window
+								.alert("Inserire i campi mancanti per completare la registrazione");
+					}
+				},
+				error : function() {
+
+				}
+
+			});
+
+}
+
+function signOut() {
+	var auth2 = gapi.auth2.getAuthInstance();
+	auth2.signOut().then(function() {
+		console.log('User signed out.');
+	});
+}
+function sendFeedback() {
+	$.ajax({
+		url : "addFeedback",
+		method : "post",
+		data : {
+			'id_item' : id_item,
+			'description' : $(".description").val(),
+			'rating' : $(".ratingVal").val()
+		},
+		success : function(data) {
+			var obj = $.parseJSON(data);
+			if (obj["state"] == "OK") { // 
+				location.reload();
+				window.alert("Commento inserito");
+			} else {
+				login_selected();
+			}
+		},
+		error : function() {
+
+		}
+
+	});
+}
 function nextPage() {
 	var url = location.href.replace('&new=true', '');
 	var clicked = $('#pagination').find('.active');
@@ -61,6 +145,7 @@ function payAllCart() {
 	$.ajax({
 		url : "payAllCart",
 		method : "get",
+		async:false,
 		success : function(data, textStatus, jqXHR) {
 
 		},
@@ -256,8 +341,7 @@ function isNumericValue(evt) {
 	return true;
 }
 function createInsertion() {
-
-	document.location.href = "insertionPage.jsp";
+	document.location.href = "getInsertionPage";
 }
 
 function isNumberKey(evt) {
@@ -271,6 +355,9 @@ function isNumberKey(evt) {
 // logica
 function registration() {
 	var newEmail = $('#signup-email'), newUser = $('#signup-username'), newPassword = $('#signup-password'), form = $('#reg_form');
+	var id_google = null;
+	if (profile != null)
+		id_google = profile.getId();
 	if (checkNewInfo()) {
 		$.ajax({
 			url : "addUser",
@@ -286,10 +373,14 @@ function registration() {
 				'postalcode' : $('#signup-postalcode').val(),
 				'province' : $('#signup-province').val(),
 				'telephone' : $('#signup-telephone').val(),
-				'country' : $('#signup-country').val()
+				'country' : $('#signup-country').val(),
+				'id_google' : id_google
 			},
 			success : function(data, textStatus, jqXHR) {
 				logUser(newUser.val());
+				location.reload();
+				registrato=true;
+				profile=null;
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 				console.log("ajax error");
@@ -454,7 +545,6 @@ function buyItem() {
 // logica
 function doOffer() {
 	if (!loggato) {
-
 		login_selected();
 		$('#offer').val("");
 		return;
@@ -483,6 +573,7 @@ function sendOffert(id_item, offer) {
 			'offer' : offer
 		},
 		success : function() {
+			$('#offer').val("");
 			updateOffer();
 
 		},
@@ -503,26 +594,29 @@ function goToItemSelected() {
 
 // logica
 function goToHomePage() {
-	document.location.href = "index.jsp";
+	document.location.href = "home";
 
 }
 
 // logica
 function logoutUser() {
-	return $.ajax({
+	var ok = false;
+	$.ajax({
 		url : 'logoutUser',
 		method : 'get',
+		async : false,
 		success : function() {
+			signOut();
 			location.reload();
-			return true;
+			ok = true;
 
 		},
 		error : function() {
-			return false;
+			ok = false;
 		}
 
 	});
-
+	return ok;
 }
 
 // logica

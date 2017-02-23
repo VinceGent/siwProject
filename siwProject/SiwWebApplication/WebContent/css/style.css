@@ -13,15 +13,25 @@ html * {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-
+.navbar-brand {
+  padding: 0px;
+}
+.navbar-brand>img {
+  height: 100%;
+  padding: 2px;
+  width: auto;
+}
 body {
   font-size: 100%;
   font-family: "PT Sans", sans-serif !important;
   /*background-image: url("../img/greenBackground.jpg");*/
-  background-color : #5bbbd1;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: 100%;
+ background: rgb(135,224,253); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(135,224,253,1) 0%, rgba(83,203,241,1) 100%, rgba(5,171,224,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top,  rgba(135,224,253,1) 0%,rgba(83,203,241,1) 100%,rgba(5,171,224,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom,  rgba(135,224,253,1) 0%,rgba(83,203,241,1) 100%,rgba(5,171,224,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#87e0fd', endColorstr='#05abe0',GradientType=0 ); /* IE6-9 */
+background-attachment: fixed;
+background-size : 100%;
   padding-top: 70px !important;
 }
 

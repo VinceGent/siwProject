@@ -158,7 +158,8 @@ public class UserDAO extends DbManager {
 		return userinfo;
 	}
 
-	public void modifyUser(int id, String username, String email, String name, String surname,String address,int telephone,String city, String province,int postal_code,String country) {
+	public void modifyUser(int id, String username, String email, String name, String surname, String address,
+			int telephone, String city, String province, int postal_code, String country) {
 
 		final String query = "UPDATE users SET username=?, email=? WHERE id=?;";
 		final String query2 = "UPDATE user_info SET name=?, surname=?, address=?, telephone=?, city=?, province=?, postal_code=?, country=? WHERE id_user=?";
@@ -209,32 +210,114 @@ public class UserDAO extends DbManager {
 		}
 	}
 
-	 public static void main(String[] args) {
-	 UserDAO db = new UserDAO();
-	// db.addUser("ciccio", "cicc@hot.it", "porco");
-	// db.addUserInfo("ciccio", "francesco", "rossi", "via della pace 17",
-	// "333123465");
-	// UserInformation info = db.getUserInfo("ciccio");
-	// System.out.println(info.getName() + " " + info.getId());
-//	 db.addUserInfo("ciccio", "porco", "riolo"," porcile",666, "porcellinara", "crotone", 87000, "calabbbbria");
-	 }
+	public static void main(String[] args) {
+		UserDAO db = new UserDAO();
+		// db.addUser("ciccio", "cicc@hot.it", "porco");
+		// db.addUserInfo("ciccio", "francesco", "rossi", "via della pace 17",
+		// "333123465");
+		// UserInformation info = db.getUserInfo("ciccio");
+		// System.out.println(info.getName() + " " + info.getId());
+		// db.addUserInfo("ciccio", "porco", "riolo"," porcile",666,
+		// "porcellinara", "crotone", 87000, "calabbbbria");
+	}
 
 	public String getMailByUserId(int id_user) {
-		String email="";
+		String email = "";
 		final String query = "select email from users where id=?;";
 		try {
 			final Connection mConnection = createConnection();
 			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
 			mPreparedStatement.setInt(1, id_user);
 			final ResultSet mResultSet = mPreparedStatement.executeQuery();
-			if(mResultSet.next())
-			email=mResultSet.getString("email");
+			if (mResultSet.next())
+				email = mResultSet.getString("email");
 			closeConnection(mConnection);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
 		return email;
-		
+
 	}
+
+	public String getGoogleUserId(String id_user) {
+		String google_id = null;
+		final String query = "select * from google_user where id_google=?;";
+		try {
+			final Connection mConnection = createConnection();
+			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
+			mPreparedStatement.setString(1, id_user);
+			final ResultSet mResultSet = mPreparedStatement.executeQuery();
+
+			if (mResultSet.next())
+				google_id = mResultSet.getString("id_google");
+			closeConnection(mConnection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return google_id;
+
+	}
+
+	public void addUserGoogle(String id_google, int id_user) {
+
+		String query = "INSERT INTO google_user (id_google,id_user) VALUES (?,?);";
+		try {
+			final Connection mConnection = createConnection();
+			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
+			mPreparedStatement.setString(1, id_google);
+			mPreparedStatement.setInt(2, id_user);
+			mPreparedStatement.execute();
+			closeConnection(mConnection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public User getUserByGoogleId(String id_google) {
+		final String query = "select id_user from google_user where id_google=?;";
+		int id_user;
+		User user=null;
+		try {
+			final Connection mConnection = createConnection();
+			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
+			mPreparedStatement.setString(1, id_google);
+			final ResultSet mResultSet = mPreparedStatement.executeQuery();
+			if (mResultSet.next())
+			{
+				id_user = mResultSet.getInt("id_user");
+				user=getUserById(id_user);
+			}
+			closeConnection(mConnection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return user;
+	}
+
+	private User getUserById(int id_user) {
+
+		final String query = "select * from users where id=?;";
+		User user = null;
+		try {
+			final Connection mConnection = createConnection();
+			final PreparedStatement mPreparedStatement = mConnection.prepareStatement(query);
+			mPreparedStatement.setInt(1, id_user);
+			final ResultSet mResultSet = mPreparedStatement.executeQuery();
+			if (mResultSet.next()) {
+				user = new User(mResultSet.getInt("id"),mResultSet.getString("username"), mResultSet.getString("email"),
+						mResultSet.getString("password"));
+			}
+			closeConnection(mConnection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return user;
+
+	}
+
 }

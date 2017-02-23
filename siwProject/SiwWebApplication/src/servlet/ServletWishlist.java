@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -50,10 +51,13 @@ public class ServletWishlist extends Servlet {
 		
 	}
 
-	private void isWishlistItem(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	private void isWishlistItem(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 //		System.out.println("is wishlist funzione");
 		if(!isLogged(req))
+		{
+			badRequestPage(req, resp);
 			return;
+		}
 		if(wishlistDAO.isWishlistItem(getIdItem(req), getUserId(req)))
 			resp.getWriter().write("true");
 		else
@@ -104,9 +108,17 @@ public class ServletWishlist extends Servlet {
 	private void loadWishlist(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		if (isLogged(req)) {
 			List<Insertion> list = wishlistDAO.getWishlist(getUserId(req));
-			req.getSession().setAttribute("wishlist", list);
+			HashMap<Insertion, List<String>> insertions=new HashMap<Insertion,List<String>>();
+			for (Insertion insertion : list) {
+				List<String> images = resource.getImageInsertion(insertion.getId_item());
+				insertions.put(insertion, images);
+			}
+			
+			req.getSession().setAttribute("wishlist", insertions);
 			req.getRequestDispatcher("wishlist.jsp").forward(req, resp);
 		}
+		else
+			badRequestPage(req, resp);
 	}
 
 }

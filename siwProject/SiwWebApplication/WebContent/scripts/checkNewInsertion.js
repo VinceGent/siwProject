@@ -55,14 +55,13 @@ function testFiles(files) {
 	console.log("test files funct");
 	console.log($(this).prop("files"));
 	
-	if($(this).prop("files").length > 2){
-		alert("non puoi caricare piu di 2 files");
+	if($(this).prop("files").length > 5){
+		alert("non puoi caricare piu di 5 files");
 		$(this).val("");
 	}
 }
 
 function selectSellerType() {
-	console.log(sellerType.find(':selected').val());
 	 if(sellerType.find(':selected').val()=="Auction"){
 		 dateFormDiv.removeClass('hidden');
 		 amountDiv.addClass('hidden');

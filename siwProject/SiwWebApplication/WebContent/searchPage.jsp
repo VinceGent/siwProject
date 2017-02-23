@@ -64,12 +64,6 @@
 					out.print(category);
 				%>
 			</strong>
-			<div class="btn-group">
-				<a href="#" id="list" class="btn btn-default btn-sm"><span
-					class="glyphicon glyphicon-th-list"> </span>List</a> <a href="#"
-					id="grid" class="btn btn-default btn-sm"><span
-					class="glyphicon glyphicon-th"></span>Grid</a>
-			</div>
 		</div>
 		
 		<div id="products" class="row list-group">
@@ -93,7 +87,12 @@
 			%>
 
 		</div>
-		<nav aria-label="Page navigation">
+		<%if(size==0){ %>
+		<div class=" col-md-offset-4 container  thumbnail">
+		<p style="font-size: 2em; text-align: center;">La ricerca non ha prodotto risultati</p>
+		</div>
+		<%} %>
+		<nav aria-label="Page navigation" style="text-align:center;">
   <ul class="pagination" id="pagination">
 
     <% int pages=size/limit;

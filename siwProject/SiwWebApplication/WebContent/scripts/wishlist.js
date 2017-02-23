@@ -8,7 +8,8 @@ $(document).ready(function() {
 			url: reference,
 			method:"post",
 			success:function(){
-				$(elem.target).closest("#products").remove();				
+				$(elem.target).closest("#products").remove();	
+				location.reload();
 			},
 			error : function(){
 				console.log("remove wishlist error ajax");

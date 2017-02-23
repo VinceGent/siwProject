@@ -1,3 +1,4 @@
+<%@page import="java.util.HashMap"%>
 <%@page import="elements.Insertion"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -27,22 +28,29 @@
 <body>
 	<%@include file="template/navbar.jsp"%>
 
-	<div class="container wishlist-container">
+	<div class="container wishlist-container" style="background-color: transparent;">
 		<div class="row">
 			<h1 class="col-md-12" style="text-align: center;">Wishlist</h1>
 		</div>
 
 		<%
-			List<Insertion> wishlist = (List<Insertion>) request.getSession().getAttribute("wishlist");
-			for (Insertion i : wishlist) {
-				request.getSession().setAttribute("insertion", i);
+			HashMap<Insertion, List<Insertion>> wishlist = (HashMap<Insertion, List<Insertion>>) request.getSession()
+					.getAttribute("wishlist");
+			for (Insertion i : wishlist.keySet()) {
+				request.getSession().setAttribute("insertion", i);		
+				request.getSession().setAttribute("image", wishlist.get(i));		
+				
 		%>
 		<%@include file="template/wishlist_item.jsp"%>
 
 		<%
 			}
 		%>
-
+<%if(wishlist.isEmpty()){ %>
+		<div class=" container  thumbnail">
+		<p style="font-size: 2em; text-align: center;">Non hai oggetti nella wishlist</p>
+		</div>
+		<%} %>
 	</div>
 
 

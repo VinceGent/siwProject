@@ -17,6 +17,9 @@ public class ServletImage extends Servlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if(req.getParameter("nameImage").contains("..")||req.getParameter("id_item").contains(".."))
+			return;
+		
 		 String filePath =ServletUpload.uploadPathFolder+"insertion_"+req.getParameter("id_item")+"/"+req.getParameter("nameImage");
 	        File downloadFile = new File(filePath);
 	        FileInputStream inStream = new FileInputStream(downloadFile);

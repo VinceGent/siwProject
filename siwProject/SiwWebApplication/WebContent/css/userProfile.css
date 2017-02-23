@@ -118,9 +118,7 @@ body {
 	/* font-size: 2em; */
 }
 
-.profile-content #overview-div h4{
-	font-size: 1.5em;
-} 
+ 
 
 .profile-content #overview-div label{
 	font-weight: 700;
@@ -177,7 +175,6 @@ h3 h4 h5 h6 {
 }
 
 .box-left {
-	border-right: 1px solid #e5e5e5;
 	font-size: 12px;
 }
 

@@ -45,7 +45,6 @@
 								out.print(info1.getName() + " " + info1.getSurname());
 							%>
 						</div>
-						<div class="profile-usertitle-job">Developer</div>
 					</div>
 					<!-- END SIDEBAR USER TITLE -->
 					<!-- SIDEBAR BUTTONS -->

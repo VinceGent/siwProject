@@ -22,7 +22,6 @@ public class WishlistDAO extends DbManager {
 
 	public List<Insertion> getWishlist(int user) {
 		List<Insertion> insertions = null;
-		System.out.println("called getWishlist");
 		String query = "select * from wishlist_item where id_user=?;";
 		try {
 			final Connection mConnection = createConnection();

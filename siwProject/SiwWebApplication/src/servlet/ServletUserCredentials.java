@@ -17,6 +17,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import dbconnection.UserDAO;
+import elements.Insertion;
 import elements.Order;
 import elements.OrderState;
 import elements.User;
@@ -27,7 +28,8 @@ import elements.UserInformation;
  */
 @WebServlet(description = "login", urlPatterns = { ServletUserCredentials.addUser, ServletUserCredentials.loginUser,
 		ServletUserCredentials.logoutUser, ServletUserCredentials.userinfo, ServletUserCredentials.modifyUser,
-		ServletUserCredentials.modifyPassword, ServletUserCredentials.userProfile })
+		ServletUserCredentials.modifyPassword, ServletUserCredentials.userProfile,
+		ServletUserCredentials.googleUserPresent })
 // @WebServlet("/AddUser")
 public class ServletUserCredentials extends Servlet {
 	static final long serialVersionUID = 1L;
@@ -38,6 +40,7 @@ public class ServletUserCredentials extends Servlet {
 	static final String modifyUser = "/modifyUser";
 	static final String modifyPassword = "/modifyPassword";
 	static final String userProfile = "/userProfile";
+	static final String googleUserPresent = "/googleUserPresent";
 
 	public ServletUserCredentials() {
 		super();
@@ -45,7 +48,6 @@ public class ServletUserCredentials extends Servlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		String path = request.getServletPath();
 		switch (path) {
 		case logoutUser:
@@ -67,6 +69,7 @@ public class ServletUserCredentials extends Servlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
 		String path = request.getServletPath();
 		switch (path) {
 		case addUser:
@@ -84,8 +87,26 @@ public class ServletUserCredentials extends Servlet {
 		case modifyPassword:
 			modifyPassword(request, response);
 			break;
+		case googleUserPresent:
+			checkUserGooglePresent(request, response);
+			break;
 		}
 
+	}
+
+	private void checkUserGooglePresent(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String id_google = userDAO.getGoogleUserId(request.getParameter("id_profile"));
+		JsonObject jsonObject = new JsonObject();
+		if (id_google != null) {
+			writeStateSuccess(jsonObject);
+			User user = userDAO.getUserByGoogleId(id_google);
+			jsonObject.addProperty("username", user.getUsername());
+			request.getSession().setAttribute("user_id",user.getId());
+			setLoginAttribute(request, user);
+		} else
+			writeStateFailed(jsonObject);
+
+		writeResponse(response, jsonObject);
 	}
 
 	private void modifyPassword(HttpServletRequest request, HttpServletResponse response) {
@@ -127,7 +148,12 @@ public class ServletUserCredentials extends Servlet {
 	}
 
 	private void logoutUser(HttpServletRequest request, HttpServletResponse response) {
+		Enumeration<String> atr = request.getSession().getAttributeNames();
+		while (atr.hasMoreElements()) {
+			request.getSession().removeAttribute(atr.nextElement());
+		}
 		request.getSession().invalidate();
+
 	}
 
 	private void loginUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -158,6 +184,11 @@ public class ServletUserCredentials extends Servlet {
 				request.getParameter("country"));
 
 		setLoginAttribute(request, userDAO.getUserByEmail(request.getParameter("email")));
+		if (request.getParameter("id_google") != null) {
+			userDAO.addUserGoogle(request.getParameter("id_google"),
+					userDAO.getIdByUsername(request.getParameter("user")));
+
+		}
 		response.getWriter().write("OK");
 
 	}
@@ -166,7 +197,9 @@ public class ServletUserCredentials extends Servlet {
 		session.setAttribute("username", username);
 		session.setAttribute("email", email);
 		session.setAttribute("userinfo", userDAO.getUserInfo(username));
-		session.setAttribute("ordersCompleted", getOrdersCompletedByIdUser(getUserId(req)));
+		
+	
+		session.setAttribute("orderInsertion", getIdInsertionOrdersByIdUser(getUserId(req)));
 
 	}
 
@@ -176,6 +209,18 @@ public class ServletUserCredentials extends Servlet {
 		for (Order order : orders) {
 			if (order.getState() == OrderState.pagato) {
 				ordersName.add(insertionDAO.getInsertionById(order.getId_insertion()).getName());
+
+			}
+		}
+		return ordersName;
+	}
+	
+	public List<Insertion> getIdInsertionOrdersByIdUser(int id_user) {
+		List<Insertion> ordersName = new LinkedList<Insertion>();
+		List<Order> orders = tradingManagerDAO.getOrdersByIdUser(id_user);
+		for (Order order : orders) {
+			if (order.getState() == OrderState.pagato) {
+				ordersName.add(insertionDAO.getInsertionById(order.getId_insertion()));
 
 			}
 		}

@@ -17,10 +17,10 @@
   rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700"
   rel="stylesheet">
-
-
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"
 	type="text/css" />
+<link href="css/star-rating.css" rel="stylesheet" type="text/css" />
+<link href="css/star-rating.min.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 <link href="css/styleItem.css" rel="stylesheet" type="text/css" />
 <link href="css/reset.css" rel="stylesheet" type="text/css" />
@@ -28,6 +28,9 @@
 <link href="css/customStyle.css" rel="stylesheet" type="text/css" />
 <link href="css/heroic-features.css" rel="stylesheet" type="text/css" />
 <script src="scripts/modernizr.js"></script>
+<script type="text/javascript" src="scripts/star-rating.js"></script>
+<script type="text/javascript" src="scripts/star-rating.min.js"></script>
+<script type="text/javascript" src="scripts/star.js"></script>
 <!-- Modernizr -->
 
 <script src="scripts/main.js"></script>

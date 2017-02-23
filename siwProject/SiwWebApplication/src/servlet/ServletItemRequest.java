@@ -2,25 +2,39 @@ package servlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale.Category;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Interval;
+import org.joda.time.Minutes;
+
 import com.google.gson.JsonObject;
 import dbconnection.InsertionDAO;
 import dbconnection.TradingManagerDAO;
 import dbconnection.WishlistDAO;
 import elements.AuctionOffer;
+import elements.Feedback;
 import elements.Insertion;
 import elements.Order;
 import elements.OrderState;
 import elements.Sales_type;
+import utility.JavaMail;
 
 @WebServlet(description = "item", urlPatterns = { ServletItemRequest.item_selected, ServletItemRequest.buy_now,
 		ServletItemRequest.auction_sales, ServletItemRequest.update_item, ServletItemRequest.buyNowInformation,
@@ -46,6 +60,8 @@ public class ServletItemRequest extends Servlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if (missingParameter(req, resp))
+			return;
 
 		String path = req.getServletPath();
 		switch (path) {
@@ -65,7 +81,12 @@ public class ServletItemRequest extends Servlet {
 			addToCartAndPay(req, resp);
 			break;
 		case payItem:
-			payItem(req, resp);
+			try {
+				payItem(req, resp);
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 		case addToCart:
 			addToCart(req, resp);
@@ -79,6 +100,8 @@ public class ServletItemRequest extends Servlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		String path = req.getServletPath();
+		if (!path.equals(payAllCart) && missingParameter(req, resp))
+			return;
 		switch (path) {
 		case item_selected:
 			getInsertion(req, resp);
@@ -90,19 +113,25 @@ public class ServletItemRequest extends Servlet {
 			addToCart(req, resp);
 			break;
 		case payAllCart:
-			payAllCart(req, resp);
+			try {
+				payAllCart(req, resp);
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 		}
 
 	}
 
-	private void payAllCart(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	private void payAllCart(HttpServletRequest req, HttpServletResponse resp) throws IOException, AddressException, MessagingException {
 		JsonObject jsonObject = new JsonObject();
 		if (!isLogged(req))
 			writeStateFailed(jsonObject);
 		else {
 			tradingManagerDAO.buyAllCart(getUserId(req));
 			writeStateSuccess(jsonObject);
+
 		}
 		writeResponse(resp, jsonObject);
 	}
@@ -120,15 +149,20 @@ public class ServletItemRequest extends Servlet {
 	}
 
 	private void payment(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if (!isLogged(req)) {
+			badRequestPage(req, resp);
+			return;
+		}
 		RequestDispatcher dispatcher = req.getRequestDispatcher("PaymentPage.jsp");
 		if (getIdItem(req) != 0) {
 			Insertion insertion = insertionDAO.getInsertionById(getIdItem(req));
 			req.getSession().setAttribute("insertion", insertion);
 		} else {
+			req.getSession().removeAttribute("insertion");
 			float total = 0;
 			List<Order> orders = tradingManagerDAO.getOrdersByIdUser(getUserId(req));
 			for (Order order : orders) {
-				if(order.getState()==OrderState.pagato)
+				if (order.getState() == OrderState.pagato)
 					continue;
 				Insertion insertion = insertionDAO.getInsertionById(order.getId_insertion());
 				if (insertion.getAmount() > 0 && insertion.getSales_type() == Sales_type.compraora)
@@ -144,21 +178,14 @@ public class ServletItemRequest extends Servlet {
 		dispatcher.forward(req, resp);
 	}
 
-	private float getMaxOffertPrice(Insertion insertion) {
-		ArrayList<AuctionOffer> offers = tradingManagerDAO.getOfferByIdItem(insertion.getId_item());
-		float max = offers.get(0).getOffer();
-		for (AuctionOffer auctionOffer : offers) {
-			if (auctionOffer.getOffer() > max)
-				max = auctionOffer.getOffer();
-		}
-		return max;
-	}
-
-	private void payItem(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	private void payItem(HttpServletRequest req, HttpServletResponse resp)
+			throws IOException, AddressException, MessagingException {
 		JsonObject jsonObject = new JsonObject();
 		if (isLogged(req)) {
 			if (getIdItem(req) != 0) {
-				tradingManagerDAO.buyItem(getIdItem(req), getUserId(req));
+				if (tradingManagerDAO.buyItem(getIdItem(req), getUserId(req))) {
+					sendMail(getIdItem(req));
+				}
 			}
 			writeStateSuccess(jsonObject);
 
@@ -179,20 +206,29 @@ public class ServletItemRequest extends Servlet {
 		writeResponse(resp, jsonObject);
 	}
 
-	private void doOffer(HttpServletRequest req, HttpServletResponse resp) {
-		if (isLogged(req))
+	private void doOffer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if (isLogged(req) && !isExpired(getIdItem(req)))
 			tradingManagerDAO.insertOffer(getIdItem(req), getUserId(req), req.getParameter("offer"));
+		else
+			badRequestPage(req, resp);
 	}
 
-	private void buyItem(HttpServletRequest req, HttpServletResponse resp) {
+	private boolean isExpired(int idItem) {
+		return new Date(insertionDAO.getInsertionById(idItem).getExpiration_date().getTime()).before(new Date());
+	}
 
-		if (isLogged(req))
+	private void buyItem(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+		if (isLogged(req)) {
 			tradingManagerDAO.buyItem(getIdItem(req), getUserId(req));
-		// vai a jsp di schermata completamento pagamento
+
+		} else
+			badRequestPage(req, resp);
 
 	}
 
-	private void getBuyNowInformation(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	private void getBuyNowInformation(HttpServletRequest req, HttpServletResponse resp)
+			throws IOException, ServletException {
 		int id_item = -1;
 		id_item = getIdItem(req);
 		JsonObject obj = new JsonObject();
@@ -201,6 +237,9 @@ public class ServletItemRequest extends Servlet {
 			if (insertion != null) {
 				obj.addProperty("quantity", String.valueOf(insertion.getAmount()));
 			}
+		} else {
+			badRequestPage(req, resp);
+			return;
 		}
 		writeResponse(resp, obj);
 	}
@@ -234,28 +273,47 @@ public class ServletItemRequest extends Servlet {
 
 		} else {
 
-			// go to error jsp page
+			badRequestPage(req, resp);
 		}
 
 	}
 
 	private void getInsertion(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	    int id_item = -1;
-	    id_item = Integer.parseInt(req.getParameter("id_item"));
-	    if (id_item != -1) {
-	      Insertion insertion = insertionDAO.getInsertionById(id_item);
-	      req.setAttribute("insertion", insertion);
-	      List<String>images=resource.getImageInsertion(id_item);  
-	      req.getSession().setAttribute("images", images);
-	      RequestDispatcher dispatcher = req.getRequestDispatcher("item.jsp");
-	      dispatcher.forward(req, resp);
-	    } else {
+		int id_item = -1;
+		id_item = Integer.parseInt(req.getParameter("id_item"));
+		if (id_item != -1) {
+			Insertion insertion = insertionDAO.getInsertionById(id_item);
+			req.setAttribute("insertion", insertion);
+			List<String> images = resource.getImageInsertion(id_item);
+			req.getSession().setAttribute("images", images);
+			List<Feedback> feedbacks = feedbackDAO.getCommentsByID(id_item);
+			Feedback feed = feedbackDAO.getAvgFeedback(id_item);
+			req.getSession().setAttribute("feedbacks", feedbacks);
+			req.getSession().setAttribute("feedback", feed);
+			RequestDispatcher dispatcher = req.getRequestDispatcher("item.jsp");
+			dispatcher.forward(req, resp);
+		} else {
 
-	      // go to error jsp page
-	    }
+			badRequestPage(req, resp);
+		}
 
-	  }
+	}
 
-	
+	public static void main(String[] args) {
+		InsertionDAO dao = new InsertionDAO();
+		Date expirationDate = null;
+		Date insertionDate = new Date();
+		try {
+			expirationDate = new SimpleDateFormat("dd/MM/yyyy").parse("22/02/2017");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		expirationDate.setHours(insertionDate.getHours());
+		expirationDate.setMinutes(insertionDate.getMinutes() + 3);
+		expirationDate.setSeconds(insertionDate.getSeconds());
+		dao.addNewInsertion(1, "c", insertionDate, expirationDate, 10, Sales_type.asta, 1f, "aa", "Modellismo");
+		System.out.println("data inserimento   " + expirationDate.toInstant());
+
+	}
 
 }

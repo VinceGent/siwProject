@@ -25,8 +25,8 @@ public class ServletUpload extends Servlet {
 	private static final long serialVersionUID = 1L;
 
 	private static final String DATA_DIRECTORY = "data";
-	private static final int MAX_MEMORY_SIZE = 1024 * 1024 * 8;
-	private static final int MAX_REQUEST_SIZE = 1024 * 1024 * 2;
+	private static final int MAX_MEMORY_SIZE = 1024 * 1024 * 16;
+	private static final int MAX_REQUEST_SIZE = 1024 * 1024 * 8;
 	public static final String uploadPathFolder = System.getProperty("user.home") + "/Siw/images/";
 	private int id_insertion;
 

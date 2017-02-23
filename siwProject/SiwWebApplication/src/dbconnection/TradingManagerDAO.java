@@ -10,10 +10,15 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+
 import elements.AuctionOffer;
 import elements.Insertion;
 import elements.Order;
 import elements.OrderState;
+import servlet.Servlet;
+import utility.JavaMail;
 
 public class TradingManagerDAO extends DbManager {
 
@@ -41,7 +46,7 @@ public class TradingManagerDAO extends DbManager {
 	}
 
 	public void insertOffer(int id_item, int user_id, String offer) {
-
+		System.out.println(offer);
 		AuctionOffer auctionOffer = new AuctionOffer(user_id, id_item, Float.parseFloat(offer));
 
 		String query = "INSERT INTO auction_offer (id_user, id_insertion, offer) VALUES (?,?,?);";
@@ -102,11 +107,11 @@ public class TradingManagerDAO extends DbManager {
 
 	}
 
-	public void buyItem(int id_item, int id_user) {
+	public boolean buyItem(int id_item, int id_user) {
 		InsertionDAO insertionDao = new InsertionDAO();
 		Insertion insertion = insertionDao.getInsertionById(id_item);
 		if (insertion.getAmount() < 1)
-			return;
+			return false;
 		final String query = "UPDATE insertion SET amount=? WHERE id_item=?;";
 		try {
 			final Connection mConnection = createConnection();
@@ -114,11 +119,12 @@ public class TradingManagerDAO extends DbManager {
 			mPreparedStatement.setInt(1, insertion.getAmount() - 1);
 			mPreparedStatement.setInt(2, id_item);
 			mPreparedStatement.executeUpdate();
-			closeConnection(mConnection);
 			setOrderStateCompleted(insertion.getId_item(), id_user);
+			closeConnection(mConnection);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return true;
 
 	}
 
@@ -145,7 +151,6 @@ public class TradingManagerDAO extends DbManager {
 			mPreparedStatement.setInt(2, id_item);
 			mPreparedStatement.setInt(3, id_user);
 			mPreparedStatement.executeUpdate();
-
 			closeConnection(mConnection);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -153,16 +158,16 @@ public class TradingManagerDAO extends DbManager {
 
 	}
 
-	public void buyAllCart(int id_user) {
+	public void buyAllCart(int id_user) throws AddressException, MessagingException {
 		List<Order> orders = getOrdersByIdUser(id_user);
 		for (Order order : orders) {
-			if(order.getState()==OrderState.nonpagato)
-			buyItem(order.getId_insertion(), id_user);
-		}
-		
-	}
-
+			if (order.getState() == OrderState.nonpagato)
+				if (buyItem(order.getId_insertion(), id_user)) {
+					Servlet.sendMail(order.getId_insertion());
 	
+				}
+		}
 
+	}
 
 }

@@ -28,7 +28,7 @@ function auctionSale(priceInsertion) {
 
 // grafica
 function logged() {
-	$('#login, #signup').addClass('hidden');
+	$('#login, #signup, #login-google').addClass('hidden');
 	if ($('#wishlist-button,#shopping-button,#user-dropdown')
 			.hasClass('hidden')) {
 		$('#wishlist-button,#shopping-button,#user-dropdown').removeClass(
@@ -41,9 +41,9 @@ function logged() {
 // grafica
 function notLogged() {
 	$('#wishlist-button,#shopping-button,#user-dropdown').addClass('hidden');
-	if ($('#login, #signup').hasClass('hidden')) {
+	if ($('#login, #signup, #login-google').hasClass('hidden')) {
 		if (logoutUser()) {
-			$('#login, #signup').removeClass('hidden');
+			$('#login, #signup, #login-google').removeClass('hidden');
 			var index = /index/;
 			var search = /searchInsertion/;
 			var item = /item_Selected/;

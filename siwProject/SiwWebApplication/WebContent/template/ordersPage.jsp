@@ -1,6 +1,7 @@
 
+<%@page import="elements.Insertion"%>
 <%@page import="java.util.List"%>
-<%List<String>orders=(List<String>)request.getSession().getAttribute("ordersCompleted"); %>
+<%List<Insertion>insertion=(List<Insertion>)request.getSession().getAttribute("orderInsertion"); %>
 
 <div class="box-title-main row col-md-12">
 	<h2 style="text-align: center;">Lista Ordini</h2>
@@ -17,8 +18,8 @@
 				<thead>
 					<tr>
 						<%
-							for (String order: orders) {
-								request.getSession().setAttribute("currentOrder", order);
+							for (Insertion ins: insertion) {
+								request.getSession().setAttribute("currentOrder", ins);
 						%>
 						<%@include file="ordersItem.jsp"%>
 						<%

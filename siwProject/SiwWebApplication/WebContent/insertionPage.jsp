@@ -46,15 +46,8 @@
 
 </head>
 <body>
-
 	<%@ include file="template/navbar.jsp"%>
-	<%-- <%@ include file="template/newInsertionTemplate.jsp"%> --%>
-	<%@ include file="template/insertionForm.jsp"%>
 	<%@ include file="template/checkSession.jsp"%>
-
-
-
-
-
+	<%@ include file="template/insertionForm.jsp"%>
 </body>
 </html>

@@ -2,8 +2,8 @@
 <%@page import="elements.Sales_type"%>
 <%@page import="elements.Insertion"%>
 
-<div class="item  col-xs-4 col-lg-4">
-	<div class="thumbnail" style="min-height: 21em;max-height: 21em;" >
+<div class="item col-xs-12 col-sm-6 col-md-4 col-lg-4">
+	<div class="thumbnail"  >
 		<img class="group list-group-image" style="min-height: 13em; max-height: 13em;"
 			src="<%if (!((List<String>) request.getSession().getAttribute("currentImages")).isEmpty()) {
 				out.print("ServletImage?id_item="
@@ -20,10 +20,7 @@
 				%>
 			</h4>
 			<p class="group inner list-group-item-text">
-				<%
-					out.print(((Insertion) request.getSession().getAttribute("currentInsertion")).getDescription());
-				%>
-
+				Go to Item for Description.
 			</p>
 			<div class="row">
 				<div class="col-xs-12 col-md-5">
@@ -33,7 +30,14 @@
 						%>
 					</p>
 				</div>
-				<div class="col-xs-12 col-md-3">
+			</div>
+			<div class="row">
+				<div class="col-xs-6 col-md-6 col-lg-6">
+					<a class="btn btn-info go-to-item"
+						id="<%=((Insertion) request.getSession().getAttribute("currentInsertion")).getId_item()%>">Go
+						to item</a>
+				</div>
+				<div class="col-xs-6 col-md-6 col-lg-6">
 					<%
 						if (((Insertion) request.getSession().getAttribute("currentInsertion")).getSales_type().toString()
 								.equals(Sales_type.compraora.toString())) {
@@ -45,16 +49,8 @@
 						}
 					%>
 				</div>
-
-				<div class="col-xs-12 col-md-3">
-					<a class="btn btn-info go-to-item"
-						id="<%=((Insertion) request.getSession().getAttribute("currentInsertion")).getId_item()%>">Go
-						to item</a>
-				</div>
-
-
+			
 			</div>
-
 
 		</div>
 	</div>

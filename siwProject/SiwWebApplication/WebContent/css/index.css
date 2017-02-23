@@ -1,0 +1,15 @@
+@CHARSET "UTF-8";
+
+
+#jumbo-main{
+	
+	background: url("../img/shopping03.jpg") no-repeat !important;
+	border-radius:11px !important;
+	background-size: cover !important; 
+}
+
+#jumbo-container{
+	border-radius:11px !important;
+	
+	background-color: rgba(252, 252, 252, 0.75) !important;
+}

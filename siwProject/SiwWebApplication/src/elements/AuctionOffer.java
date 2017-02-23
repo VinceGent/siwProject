@@ -16,7 +16,7 @@ public class AuctionOffer implements Serializable {
 		this.id_user = id_user;
 		this.id_item = id_item;
 		this.offer = offer;
-		this.id_offer = id_offer;
+		this.setId_offer(id_offer);
 	}
 
 	public float getOffer() {
@@ -41,6 +41,14 @@ public class AuctionOffer implements Serializable {
 
 	public void setId_user(int id_user) {
 		this.id_user = id_user;
+	}
+
+	public int getId_offer() {
+		return id_offer;
+	}
+
+	public void setId_offer(int id_offer) {
+		this.id_offer = id_offer;
 	}
 
 	private float offer;

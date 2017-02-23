@@ -1,3 +1,7 @@
+<%@page import="elements.Sales_type"%>
+<%@page import="elements.Feedback"%>
+<%@page import="org.joda.time.Days"%>
+<%@page import="org.joda.time.DateTime"%>
 <%@page import="java.util.List"%>
 <%@page import="elements.Insertion"%>
 <div class="container">
@@ -7,41 +11,65 @@
 				<div class="preview col-md-5">
 					<%
 						Insertion insertion = (Insertion) request.getAttribute("insertion");
-					List<String>images=(List<String>)request.getSession().getAttribute("images");
-					
+						List<String> images = (List<String>) request.getSession().getAttribute("images");
+						Feedback feedbackAvg = (Feedback) request.getSession().getAttribute("feedback");
 					%>
-					
-					<div class="preview-pic tab-content">	
-							<% 
-							if(images.isEmpty()) {%>				
-							<div class="tab-pane active" id="pic-1">
-								<img id="image-selected" src="images/default.jpg" style="min-height:34em" />
-							</div>
-							<%}
-							
-					for(int i=0;i<images.size();i++ ){ 
-					if(i<1) {%>				
+
+
+					<div class="preview-pic tab-content"
+						style="text-align: center; max-height: 450px; min-height: 450px;">
+						<%
+							if (images.isEmpty()) {
+						%>
+						<div class="tab-pane active" id="pic-1">
+							<img id="image-selected" src="images/default.jpg"
+								style="max-height: 450px; min-height: 450px;" />
+						</div>
+						<%
+							}
+
+							for (int i = 0; i < images.size(); i++) {
+								if (i < 1) {
+						%>
 						<div class="tab-pane active" id="pic-<%out.print(i);%>">
-							<img id="image-selected" src="<%out.print("ServletImage?id_item="+insertion.getId_item()+"&nameImage="+images.get(i));%>" />
+							<img id="image-selected"
+								src="<%out.print("ServletImage?id_item=" + insertion.getId_item() + "&nameImage=" + images.get(i));%>"
+								style="max-height: 450px; min-height: 450px;" />
 						</div>
-						<%} else {%>
-						
-					<div class="tab-pane" id="pic-<%out.print(i);%>">
-							<img id="image-selected" src="<%out.print("ServletImage?id_item="+insertion.getId_item()+"&nameImage="+images.get(i));%>" />
+						<%
+							} else {
+						%>
+
+						<div class="tab-pane" id="pic-<%out.print(i);%>">
+							<img id="image-selected"
+								style="max-height: 450px; min-height: 450px;"
+								src="<%out.print("ServletImage?id_item=" + insertion.getId_item() + "&nameImage=" + images.get(i));%>" />
 						</div>
-						<%}} %>
+						<%
+							}
+							}
+						%>
 					</div>
-					
+
 					<ul class="preview-thumbnail nav nav-tabs">
-					<% 
-					for(int i=0;i<images.size();i++ ){ %>
-					<%if(i<1) {%>
-						<li class="active"><a data-target="#pic-<%out.print(i);%>" data-toggle="tab"><img
-								src="<%out.print("ServletImage?id_item="+insertion.getId_item()+"&nameImage="+images.get(i));%>"/></a></li>
-						<%} else{%>
+						<%
+							for (int i = 0; i < images.size(); i++) {
+						%>
+						<%
+							if (i < 1) {
+						%>
+						<li class="active"><a data-target="#pic-<%out.print(i);%>"
+							data-toggle="tab"><img
+								src="<%out.print("ServletImage?id_item=" + insertion.getId_item() + "&nameImage=" + images.get(i));%>" /></a></li>
+						<%
+							} else {
+						%>
 						<li><a data-target="#pic-<%out.print(i);%>" data-toggle="tab"><img
-								src="<%out.print("ServletImage?id_item="+insertion.getId_item()+"&nameImage="+images.get(i));%>" /></a></li>
-					<%}} %>
+								src="<%out.print("ServletImage?id_item=" + insertion.getId_item() + "&nameImage=" + images.get(i));%>" /></a></li>
+						<%
+							}
+							}
+						%>
 					</ul>
 
 				</div>
@@ -51,15 +79,35 @@
 							out.print(insertion.getName());
 						%>
 					</h3>
-					<div class="rating">
-						<div class="stars">
-							<span class="fa fa-star checked"></span> <span
-								class="fa fa-star checked"></span> <span
-								class="fa fa-star checked"></span> <span class="fa fa-star"></span>
-							<span class="fa fa-star"></span>
-						</div>
-						<span class="review-no">41 reviews</span>
+					<div class="row lead">
+						<div id="stars-existing" class="starrr col-md-7"
+							style="color: #FFBF18"
+							data-rating="<%out.print(feedbackAvg.getAvg());%>"></div>
 					</div>
+
+
+
+					<%
+						if (insertion.getSales_type() == Sales_type.asta) {
+					%>
+					<h3 id="timer-title" style="text-transform: uppercase; font-weight: bold;" >Time left</h3>
+					<div id="timer" class="col-md-10"
+						style="border-radius: 10px; margin: 7px 0;">
+						<div id="days"></div>
+						<div id="hours"></div>
+						<div id="minutes"></div>
+						<div id="seconds"></div>
+					</div>
+
+					<div id="expired" class="hidden">
+						<h3>EXIPIRED</h3>
+					</div>
+
+					<%
+						}
+					%>
+
+
 
 					<!--  panel  descrizione   -->
 					<div class="panel panel-info">
@@ -76,47 +124,36 @@
 
 					<!--  panel descrizione  -->
 					<h4 id="category" class="item-info">
-						category: <span>category</span>
-					</h4>
-					<h4 id="quantity" class="item-info">
-						quantity: <span> <%
- 	out.print(insertion.getAmount());
+						category: <span> <%
+ 	out.print(insertion.getCategory());
  %>
 						</span>
 					</h4>
-					<h4 id="sales_type" class="item-info">
-						sales type: <span> <%
- 	out.print(insertion.getSales_type());
+					<h4 id="quantity" class="item-info hidden">
+						quantity: <span> <%
+ 	out.print(insertion.getAmount());
  %>
 						</span>
 					</h4>
 					<h4 id="price" class="item-info">
 						price: <span> <%
  	out.print(insertion.getPrice());
- %> &euro;
-						</span>
+ %>
+						</span><span>&euro;</span>
 					</h4>
-					<!-- <p class="vote"><strong>91%</strong> of buyers enjoyed this product! <strong>(87 votes)</strong></p> -->
-					<!-- <h5 class="sizes">sizes:
-							<span class="size" data-toggle="tooltip" title="small">s</span>
-							<span class="size" data-toggle="tooltip" title="medium">m</span>
-							<span class="size" data-toggle="tooltip" title="large">l</span>
-							<span class="size" data-toggle="tooltip" title="xtra large">xl</span>
-						</h5>
-						<h5 class="colors">colors:
-							<span class="color orange not-available" data-toggle="tooltip" title="Not In store"></span>
-							<span class="color green"></span>
-							<span class="color blue"></span>
-						</h5>  -->
-					<div class="auction-offer col-md-5 col-sm-9 hidden">
+					<div>
+					<div class="auction-offer col-lg-6 col-md-6 col-sm-6 col-xs-6 hidden">
 						<div class="input-auction input-group">
-							<span class="input-group-addon">&euro;</span> <input type="text"
-								class="form-control" aria-label="Amount (to the nearest dollar)" placeholder="Insert Your Offer Here">
-							
+							<span class="input-group-addon">&euro;</span> <input id="offer"
+								type="text" class="form-control"
+								aria-label="Amount (to the nearest dollar)"
+								placeholder="Insert Your Offer Here" style="text-align: center;" >
+
 						</div>
-						<div class="action col-md-12" style="margin-top:5px;">
+						<div class="action col-md-12" style="margin-top: 5px;" >
 							<a class="offer-button btn" type="button">Offer</a>
 						</div>
+					</div>
 					</div>
 					<div class="action button-container">
 						<a class="add-to-cart btn btn-default hidden" type="button">buy
@@ -128,19 +165,26 @@
 				</div>
 			</div>
 		</div>
+		<%@ include file="showComment.jsp"%>
 	</div>
 </div>
-<%if(request.getSession().getAttribute("login")!=null){%>
+<%
+	if (request.getSession().getAttribute("login") != null) {
+%>
 <script type="text/javascript">var loggato=true;</script>
-<% }else{%>
+<%
+	} else {
+%>
 <script type="text/javascript">var loggato=false;</script>
-<%} %>
+<%
+	}
+	System.out.println("skasdkjasjd     " + insertion.getExpiration_date());
+%>
 <script type="text/javascript">var sale_type="<%=insertion.getSales_type()%>"; 
-
 	var id_item ="<%=insertion.getId_item()%>";
 	loadPage(id_item, sale_type,loggato);
 	var price_insertion="<%=insertion.getPrice()%>";
 	var sales_type="<%=insertion.getSales_type()%>";
 	var amount="<%=insertion.getAmount()%>";
-
+	var endtime="<%=insertion.getExpiration_date().toInstant()%>";
 </script>

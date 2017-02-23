@@ -38,12 +38,15 @@ jQuery(document)
 						}
 						
 					});
-					$(document).keypress(function(event) {
-						
-						if (event.which == '13') {
-							event.preventDefault();
-						}
-					});
+//					$(document).keypress(function(event) {
+//					if($('#search-input').is(":focus"))
+//						console.log("focussssssssssssss");
+////					event.preventDefault();
+//					console.log($('#search-input'));
+////						if (event.which == '13') {
+////							event.preventDefault();
+////						}
+//					});
 					
 					
 
@@ -93,19 +96,11 @@ jQuery(document)
 						if ($(event.target).is(formModal)
 								|| $(event.target).is('.cd-close-form')) {
 							formModal.removeClass('is-visible');
+							closeFormSignup();
 						}
 					}
 
-					function signup_selected() {
-						mainNav.children('ul').removeClass('is-visible');
-						formModal.addClass('is-visible');
-						formLogin.removeClass('is-selected');
-						formSignup.addClass('is-selected');
-						formForgotPassword.removeClass('is-selected');
-						tabLogin.removeClass('selected');
-						tabSignup.addClass('selected');
-					}
-
+					
 					function forgot_password_selected() {
 						formLogin.removeClass('is-selected');
 						formSignup.removeClass('is-selected');
@@ -168,6 +163,15 @@ function login_selected() {
 	formForgotPassword.removeClass('is-selected');
 	tabLogin.addClass('selected');
 	tabSignup.removeClass('selected');
+}
+function signup_selected() {
+	mainNav.children('ul').removeClass('is-visible');
+	formModal.addClass('is-visible');
+	formLogin.removeClass('is-selected');
+	formSignup.addClass('is-selected');
+	formForgotPassword.removeClass('is-selected');
+	tabLogin.removeClass('selected');
+	tabSignup.addClass('selected');
 }
 
 // credits

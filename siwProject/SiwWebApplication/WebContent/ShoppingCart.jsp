@@ -47,15 +47,17 @@
 					</thead>
 					<tbody>
 						<%
+							HashMap<Order, List<String>>imagesMap=(HashMap<Order, List<String>>) request.getSession().getAttribute("images");
 							HashMap<Order, Insertion> orders = (HashMap<Order, Insertion>) request.getSession().getAttribute("orders");
 							int total = 0;
 							for (Order order : orders.keySet()) {
 								if (order.getState().equals(OrderState.pagato))
 									continue;
 								request.getSession().setAttribute("currentOrder", order);
+								request.getSession().setAttribute("currentImage", imagesMap.get(order));
 						%>
-
-						<%@ include file="template/ShoppingCartItem.jsp"%>
+<%@ include file="template/ShoppingCartItem.jsp"%>
+						
 						<%
 							if (orders.get(order).getAmount() > 0) {
 									total += orders.get(order).getPrice();

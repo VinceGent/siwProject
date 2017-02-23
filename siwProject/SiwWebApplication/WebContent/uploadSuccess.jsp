@@ -25,7 +25,7 @@
 		<div class="row">
 			
 			<div class="col-md-7" style="text-align:center">
-				<img src="images/ok.png" height="50%" width="50%">
+				<img src="images/ok.png" >
 			</div>
 			<div class="col-md-5" style="margin-top: 20px">
 <h1 style="text-align:center">Congratulations!</h1>
